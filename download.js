@@ -7,7 +7,7 @@ export default async function () {
 
   const componentConnection = await componentGetAll()
   componentConnection.nodes.forEach(async (component) => {
-    const path = `components/${component.collection.slug || 'global'}/${component.slug}`
+    const path = `components/${component.collection?.slug || 'global'}/${component.slug}`
     await fs.mkdirSync(path, { recursive: true })
     fs.writeFileSync(`${path}/index.jsx`, component.jsx || '')
     fs.writeFileSync(`${path}/index.scss`, component.sass || '')
