@@ -1,0 +1,38 @@
+{
+  "name": "spore-component-sync",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spore-gg/spore-component-sync.git"
+  },
+  "author": "Spore",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/spore-gg/spore-component-sync/issues"
+  },
+  "homepage": "https://github.com/spore-gg/spore-component-sync#readme",
+  "dependencies": {
+    "axios": "^0.24.0",
+    "esm": "https://github.com/jsg2021/esm/releases/download/v3.x.x-pr883/esm-3.x.x-pr883.tgz",
+    "node-watch": "^0.7.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/eslint-parser": "^7.12.1",
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@babel/preset-react": "^7.14.5",
+    "eslint": "^7.32.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.2.0",
+    "eslint-plugin-react": "^7.28.0"
+  },
+  "bin": "./cli.js"
+}
