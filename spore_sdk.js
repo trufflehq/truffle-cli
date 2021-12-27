@@ -53,6 +53,10 @@ export async function componentGetAll () {
           slug
           jsx
           sass
+          componentTemplateId
+          type
+          data
+          # propTypes need a way to pull entire json for this, not just [ComponentPropType]
           collection {
             slug
           }
