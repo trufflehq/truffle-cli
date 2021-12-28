@@ -35,7 +35,7 @@ export async function componentUpsert ({ id, slug, type, data, componentTemplate
         slug: $slug
         type: $type
         data: $data
-        componentTemplateId: $componentInstanceId
+        componentTemplateId: $componentTemplateId
         # childComponentConfigs: $childComponentConfigs
         sass: $sass
         # sassMixins: $sassMixins
