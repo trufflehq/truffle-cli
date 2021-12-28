@@ -14,14 +14,32 @@ export default async function () {
     const nameParts = name.split('/')
     nameParts.pop()
     const path = nameParts.join('/')
-    const slug = nameParts[nameParts.length - 1]
+    const folderName = nameParts[nameParts.length - 1]
     const jsx = fs.readFileSync(`${path}/index.jsx`).toString()
     const sass = fs.readFileSync(`${path}/index.scss`).toString()
-    const meta = JSON.parse(fs.readFileSync(`${path}/config.json`).toString())
-    const id = meta.id
-    await componentUpsert({ id, jsx, sass })
-    console.log(`Saved ${slug}`)
+    const componentConfig = JSON.parse(fs.readFileSync(`${path}/config.json`).toString())
+    const { id, slug, componentTemplateId, type, data } = componentConfig
+    await componentUpsert(pickBy({
+      id,
+      slug: slug || folderName,
+      componentTemplateId,
+      type,
+      data,
+      jsx,
+      sass
+    }))
+    console.log(`Saved ${folderName}`)
   })
 
   console.log('Listening for changes...')
+}
+
+function pickBy (object) {
+  const obj = {}
+  for (const key in object) {
+    if (object[key]) {
+      obj[key] = object[key]
+    }
+  }
+  return obj
 }

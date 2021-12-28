@@ -17,29 +17,33 @@ export async function setConfig (config = {}) {
   apiUrl = config.apiUrl || sporeConfig?.apiUrl
 }
 
-export async function componentUpsert ({ id, jsx, sass }) {
+export async function componentUpsert ({ id, slug, type, data, componentTemplateId, jsx, sass }) {
   const query = `
     mutation ComponentUpsert(
       $id: ID
-      # $slug: String
+      $slug: String
+      $type: String
+      $data: JSON
+      $componentTemplateId: ID
       # $childComponentConfigs: JSON
       $sass: String
       # $sassMixins: String
       $jsx: String
-      # $componentInstanceId: ID
     ) {
       componentUpsert(
         id: $id
-        # slug: $slug
+        slug: $slug
+        type: $type
+        data: $data
+        componentTemplateId: $componentInstanceId
         # childComponentConfigs: $childComponentConfigs
         sass: $sass
         # sassMixins: $sassMixins
         jsx: $jsx
-        # componentInstanceId: $componentInstanceId
       ) { id }
     }`
 
-  const variables = { id, jsx, sass }
+  const variables = { id, slug, type, data, componentTemplateId, jsx, sass }
   const response = await request({ query, variables })
   return response.data.data.componentUpsert
 }
