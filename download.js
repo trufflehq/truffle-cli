@@ -15,6 +15,7 @@ export default async function () {
       id: component.id,
       componentTemplateId: component.componentTemplateId,
       slug: component.slug,
+      name: component.name,
       type: component.type,
       data: component.data
     }

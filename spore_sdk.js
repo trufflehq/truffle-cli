@@ -17,11 +17,12 @@ export async function setConfig (config = {}) {
   apiUrl = config.apiUrl || sporeConfig?.apiUrl
 }
 
-export async function componentUpsert ({ id, slug, type, data, componentTemplateId, jsx, sass }) {
+export async function componentUpsert ({ id, slug, name, type, data, componentTemplateId, jsx, sass }) {
   const query = `
     mutation ComponentUpsert(
       $id: ID
       $slug: String
+      $name: String
       $type: String
       $data: JSON
       $componentTemplateId: ID
@@ -33,6 +34,7 @@ export async function componentUpsert ({ id, slug, type, data, componentTemplate
       componentUpsert(
         id: $id
         slug: $slug
+        name: $name
         type: $type
         data: $data
         componentTemplateId: $componentTemplateId
@@ -43,7 +45,7 @@ export async function componentUpsert ({ id, slug, type, data, componentTemplate
       ) { id }
     }`
 
-  const variables = { id, slug, type, data, componentTemplateId, jsx, sass }
+  const variables = { id, slug, name, type, data, componentTemplateId, jsx, sass }
   const response = await request({ query, variables })
   return response.data.data.componentUpsert
 }
@@ -87,7 +89,7 @@ async function request ({ query, variables }) {
   })
   // console.log('res', JSON.stringify(response.data, null, 2))
   if (response?.data?.errors?.length) {
-    throw new Error('Error saving', JSON.stringify(response.data.errors))
+    throw new Error('Request error', JSON.stringify(response.data.errors))
   }
   return response
 }
