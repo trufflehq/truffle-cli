@@ -17,7 +17,7 @@ export async function setConfig (config = {}) {
   apiUrl = config.apiUrl || sporeConfig?.apiUrl
 }
 
-export async function componentUpsert ({ id, slug, name, type, data, componentTemplateId, jsx, sass }) {
+export async function componentUpsert ({ id, slug, name, type, data, componentTemplateId, jsx, sass, propTypes }) {
   const query = `
     mutation ComponentUpsert(
       $id: ID
@@ -30,6 +30,7 @@ export async function componentUpsert ({ id, slug, name, type, data, componentTe
       $sass: String
       # $sassMixins: String
       $jsx: String
+      $propTypes: JSON
     ) {
       componentUpsert(
         id: $id
@@ -42,10 +43,11 @@ export async function componentUpsert ({ id, slug, name, type, data, componentTe
         sass: $sass
         # sassMixins: $sassMixins
         jsx: $jsx
+        propTypes: $propTypes
       ) { id }
     }`
 
-  const variables = { id, slug, name, type, data, componentTemplateId, jsx, sass }
+  const variables = { id, slug, name, type, data, componentTemplateId, jsx, sass, propTypes }
   const response = await request({ query, variables })
   return response.data.data.componentUpsert
 }
