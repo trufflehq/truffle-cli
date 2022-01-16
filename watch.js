@@ -18,7 +18,7 @@ export default async function () {
     const jsx = fs.readFileSync(`${path}/index.jsx`).toString()
     const sass = fs.readFileSync(`${path}/index.scss`).toString()
     const componentConfig = JSON.parse(fs.readFileSync(`${path}/config.json`).toString())
-    const { id, slug, name, componentTemplateId, type, data } = componentConfig
+    const { id, slug, name, componentTemplateId, type, data, propTypes } = componentConfig
     await componentUpsert(pickBy({
       id,
       slug: slug || folderName,
@@ -27,7 +27,8 @@ export default async function () {
       type,
       data,
       jsx,
-      sass
+      sass,
+      propTypes
     }))
     console.log(`Saved ${folderName}`)
   })

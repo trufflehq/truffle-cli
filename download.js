@@ -17,7 +17,8 @@ export default async function () {
       slug: component.slug,
       name: component.name,
       type: component.type,
-      data: component.data
+      data: component.data,
+      propTypes: component.propTypes
     }
     fs.writeFileSync(`${path}/config.json`, JSON.stringify(config, null, 2))
   })
