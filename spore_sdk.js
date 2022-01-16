@@ -47,7 +47,7 @@ export async function componentUpsert ({ id, slug, name, type, data, componentTe
       ) { id }
     }`
 
-  const variables = { id, slug, name, type, data, componentTemplateId, jsx, sass, propTypes }
+  const variables = { id, slug, name, type, data, componentTemplateId, jsx, sass, propTypes: JSON.stringify(propTypes) }
   const response = await request({ query, variables })
   return response.data.data.componentUpsert
 }
