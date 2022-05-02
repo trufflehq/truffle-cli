@@ -1,10 +1,9 @@
 import watch from 'node-watch'
 import fs from 'fs'
 
-import { setConfig, componentUpsert } from './spore_sdk.js'
+import { componentUpsert } from './spore_sdk.js'
 
 export default async function () {
-  await setConfig()
   watch('./components', { recursive: true }, async (event, filename) => {
     // event is `update` or `remove`
     if (event === 'remove') {

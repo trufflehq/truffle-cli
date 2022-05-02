@@ -1,13 +1,16 @@
 import fs from 'fs'
 
-import { setConfig, componentGetAll } from './spore_sdk.js'
+import { getConfig } from './config.js'
+import { componentGetAllByPackageId } from './spore_sdk.js'
+
+// TODO: read truffle.config.js for orgId, packageId
 
 export default async function () {
-  await setConfig()
-
-  const componentConnection = await componentGetAll()
+  const { orgId, packageId } = await getConfig()
+  const componentConnection = await componentGetAllByPackageId(orgId, packageId)
   componentConnection.nodes.forEach(async (component) => {
-    const path = `components/${component.collection?.slug || 'global'}/${component.slug}`
+    const dir = component.type === 'page' ? 'pages' : 'components'
+    const path = `${dir}/${component.slug}`
     await fs.mkdirSync(path, { recursive: true })
     fs.writeFileSync(`${path}/index.jsx`, component.jsx || '')
     fs.writeFileSync(`${path}/index.scss`, component.sass || '')

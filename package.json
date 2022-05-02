@@ -1,5 +1,5 @@
 {
-  "name": "spore-component-sync",
+  "name": "truffle-cli",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/spore-gg/spore-component-sync.git"
+    "url": "git+https://github.com/trufflehq/truffle-cli.git"
   },
   "author": "Spore",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/spore-gg/spore-component-sync/issues"
+    "url": "https://github.com/trufflehq/truffle-cli/issues"
   },
-  "homepage": "https://github.com/spore-gg/spore-component-sync#readme",
+  "homepage": "https://github.com/trufflehq/truffle-cli#readme",
   "dependencies": {
     "axios": "^0.24.0",
     "esm": "https://github.com/jsg2021/esm/releases/download/v3.x.x-pr883/esm-3.x.x-pr883.tgz",

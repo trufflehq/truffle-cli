@@ -1,21 +1,5 @@
 import axios from 'axios'
-import fs from 'fs'
-
-// TODO: spore-sdk npm package
-let secretKey, apiUrl
-
-export async function setConfig (config = {}) {
-  let sporeConfig, sporeSecretConfig
-  try {
-    sporeSecretConfig = JSON.parse(fs.readFileSync('./spore.secret.json'))
-    sporeConfig = JSON.parse(fs.readFileSync('./spore.config.json'))
-  } catch (err) {
-    console.log('err', err)
-  }
-
-  secretKey = config.secretKey || sporeSecretConfig?.secretKey
-  apiUrl = config.apiUrl || sporeConfig?.apiUrl
-}
+import { getConfig } from './config.js'
 
 export async function componentUpsert ({ id, slug, name, type, data, componentTemplateId, jsx, sass, propTypes }) {
   const query = `
@@ -52,10 +36,10 @@ export async function componentUpsert ({ id, slug, name, type, data, componentTe
   return response.data.data.componentUpsert
 }
 
-export async function componentGetAll () {
+export async function componentGetAllByPackageId (packageId) {
   const query = `
-    query ComponentGetAll($shouldFetchByDevOrgId: Boolean) {
-      components(shouldFetchByDevOrgId: $shouldFetchByDevOrgId) {
+    query ComponentGetAll($packageId: ID) {
+      components(packageId: $packageId) {
         nodes {
           id
           slug
@@ -72,16 +56,14 @@ export async function componentGetAll () {
       }
     }
   `
-  const variables = { shouldFetchByDevOrgId: true }
+  const variables = { packageId }
 
   const response = await request({ query, variables })
   return response.data.data.components
 }
 
 async function request ({ query, variables }) {
-  if (!secretKey) {
-    throw new Error('Must specify secretKey (use setConfig())')
-  }
+  const { apiUrl, secretKey } = await getConfig()
   const response = await axios.post(apiUrl, { query, variables }, {
     withCredentials: true,
     headers: {
