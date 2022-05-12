@@ -6,8 +6,8 @@ import { componentGetAllByPackageId } from './spore_sdk.js'
 // TODO: read truffle.config.js for orgId, packageId
 
 export default async function () {
-  const { orgId, packageId } = await getConfig()
-  const componentConnection = await componentGetAllByPackageId(orgId, packageId)
+  const { packageId } = await getConfig()
+  const componentConnection = await componentGetAllByPackageId(packageId)
   componentConnection.nodes.forEach(async (component) => {
     const dir = component.type === 'page' ? 'pages' : 'components'
     const path = `${dir}/${component.slug}`
