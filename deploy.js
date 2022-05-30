@@ -1,6 +1,7 @@
 import watchGlob from 'watch-glob'
 import glob from 'glob'
 import fs from 'fs'
+import gitignoreToGlob from 'gitignore-to-glob'
 
 import { moduleUpsert } from './truffle-sdk.js'
 
@@ -9,15 +10,20 @@ const IGNORE = [
   'node_modules/**/*', '.git/**/*', '*.secret.js', 'package.json', 'package-lock.json', 'tsconfig.json'
 ]
 
+function getIgnore () {
+  // gitignoreToGlob starts with ! so it's double negative (we don't want)
+  return IGNORE.concat(gitignoreToGlob()).map((ignore) => ignore.replace('!', ''))
+}
+
 export async function deploy () {
-  glob(GLOB, { ignore: IGNORE }, async (err, filenames) => {
+  glob(GLOB, { ignore: getIgnore() }, async (err, filenames) => {
     if (err) throw err
     for (const filename of filenames) await handleFilename(filename)
   })
 }
 
 export async function watch () {
-  watchGlob([GLOB], { ignore: IGNORE, callbackArg: 'relative' }, handleFilename)
+  watchGlob([GLOB], { ignore: getIgnore(), callbackArg: 'relative' }, handleFilename)
   console.log('Listening for changes...')
 }
 

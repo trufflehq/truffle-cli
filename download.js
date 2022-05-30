@@ -1,7 +1,7 @@
 import fs from 'fs'
 
 import { getConfig } from './config.js'
-import { componentGetAllByPackageId } from './spore_sdk.js'
+import { componentGetAllByPackageId } from './truffle-sdk.js'
 
 // TODO: read truffle.config.js for orgId, packageId
 

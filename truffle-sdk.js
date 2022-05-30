@@ -3,6 +3,11 @@ import { getConfig } from './config.js'
 
 export async function moduleUpsert ({ id, filename, type, code }) { //, propTypes }) {
   const { packageId, packageVersion } = await getConfig()
+
+  if (code.indexOf('sk_') !== -1) {
+    throw new Error('It looks like you\'re trying to deploy code with a secret key')
+  }
+
   const query = `
     mutation ModuleUpsert(
       $id: ID
