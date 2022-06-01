@@ -5,7 +5,7 @@ import gitignoreToGlob from 'gitignore-to-glob'
 
 import { moduleUpsert } from './truffle-sdk.js'
 
-const GLOB = '**/*.@(js|jsx|scss|json)'
+const GLOB = '**/*.@(js|jsx|scss|css|json)'
 const IGNORE = [
   'node_modules/**/*', '.git/**/*', '*.secret.js', 'package.json', 'package-lock.json', 'tsconfig.json'
 ]
