@@ -2,7 +2,10 @@ import axios from 'axios'
 import { getConfig } from './config.js'
 
 export async function moduleUpsert ({ id, filename, type, code }) { //, propTypes }) {
-  const { packageId, packageVersion } = await getConfig()
+  const { name, version } = await getConfig()
+
+  const packageNameParts = name.split('/')
+  const packageSlug = packageNameParts[packageNameParts.length - 1]
 
   if (code.indexOf('sk_') !== -1) {
     throw new Error('It looks like you\'re trying to deploy code with a secret key')
@@ -11,7 +14,7 @@ export async function moduleUpsert ({ id, filename, type, code }) { //, propType
   const query = `
     mutation ModuleUpsert(
       $id: ID
-      $packageId: ID
+      $packageSlug: String
       $packageVersionSemver: String
       $filename: String
       $type: String
@@ -19,7 +22,7 @@ export async function moduleUpsert ({ id, filename, type, code }) { //, propType
     ) {
       moduleUpsert(
         id: $id
-        packageId: $packageId
+        packageSlug: $packageSlug
         packageVersionSemver: $packageVersionSemver
         filename: $filename
         type: $type
@@ -28,17 +31,17 @@ export async function moduleUpsert ({ id, filename, type, code }) { //, propType
     }`
 
   const variables = {
-    id, packageId, packageVersionSemver: packageVersion, filename, type, code
+    id, packageSlug, packageVersionSemver: version, filename, type, code
   }
   const response = await request({ query, variables })
   return response.data.data.componentUpsert
 }
 
 // TODO: moduleGetAll
-export async function componentGetAllByPackageId (packageId) {
+export async function componentGetAllByPackageId (packageSlug) {
 //   const query = `
-//     query ComponentGetAll($packageId: ID) {
-//       components(packageId: $packageId) {
+//     query ComponentGetAll($packageSlug: ID) {
+//       components(packageSlug: $packageSlug) {
 //         nodes {
 //           id
 //           slug
@@ -54,7 +57,7 @@ export async function componentGetAllByPackageId (packageId) {
 //       }
 //     }
 //   `
-//   const variables = { packageId }
+//   const variables = { packageSlug }
 
 //   const response = await request({ query, variables })
 //   return response.data.data.components
