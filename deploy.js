@@ -7,7 +7,7 @@ import { moduleUpsert } from './truffle-sdk.js'
 
 const GLOB = '**/*.@(js|jsx|scss|css|json)'
 const IGNORE = [
-  'node_modules/**/*', '.git/**/*', '*.secret.js', 'package.json', 'package-lock.json', 'tsconfig.json'
+  'node_modules/**/*', '.git/**/*', '*.secret.js', 'package.json', 'package-lock.json', 'tsconfig.json', 'yarn.lock'
 ]
 
 function getIgnore () {
