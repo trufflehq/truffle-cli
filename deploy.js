@@ -58,8 +58,8 @@ async function handleFilename (filename) {
       type,
       code
     }))
+    console.log(`Saved ${filename}`)
   } catch (err) {
     console.log('failed upsert for', filename, err)
   }
-  console.log(`Saved ${filename}`)
 }
