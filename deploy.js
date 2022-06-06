@@ -44,18 +44,10 @@ async function handleFilename (filename) {
   }
   const filenameParts = filename.split('/')
   filenameParts.pop()
-  const path = filenameParts.join('/')
-  let moduleConfig = {}
-  try {
-    moduleConfig = JSON.parse(fs.readFileSync(`${path}/module.config.json`).toString())
-  } catch {}
   const code = fs.readFileSync(filename).toString()
-  const { id, type } = moduleConfig
   try {
     await moduleUpsert(pickBy({
-      id,
       filename: `/${filename}`,
-      type,
       code
     }))
     console.log(`Saved ${filename}`)

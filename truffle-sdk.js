@@ -37,30 +37,28 @@ export async function moduleUpsert ({ id, filename, type, code }) { //, propType
   return response.data.data.componentUpsert
 }
 
-// TODO: moduleGetAll
-export async function componentGetAllByPackageId (packageSlug) {
-//   const query = `
-//     query ComponentGetAll($packageSlug: ID) {
-//       components(packageSlug: $packageSlug) {
-//         nodes {
-//           id
-//           slug
-//           jsx
-//           sass
-//           componentTemplateId
-//           type
-//           data
-//           collection {
-//             slug
-//           }
-//         }
-//       }
-//     }
-//   `
-//   const variables = { packageSlug }
+export async function packageVersionGet () {
+  const { name, version } = await getConfig()
 
-//   const response = await request({ query, variables })
-//   return response.data.data.components
+  const packageNameParts = name.split('/')
+  const packageSlug = packageNameParts[packageNameParts.length - 1]
+
+  const query = `
+    query PackageVersionGet($packageSlug: String, $semver: String) {
+      packageVersion(packageSlug: $packageSlug, semver: $semver) {
+        moduleConnection {
+          nodes {
+            filename
+            code
+          }
+        }
+      }
+    }
+  `
+  const variables = { packageSlug, semver: version }
+
+  const response = await request({ query, variables })
+  return response.data.data.packageVersion
 }
 
 async function request ({ query, variables }) {
