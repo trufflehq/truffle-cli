@@ -3,7 +3,7 @@ import glob from 'glob'
 import fs from 'fs'
 import gitignoreToGlob from 'gitignore-to-glob'
 
-import { moduleUpsert } from './truffle-sdk.js'
+import { moduleUpsert } from './util/module.js'
 
 const GLOB = '**/*.@(js|jsx|scss|css|json)'
 const IGNORE = [
