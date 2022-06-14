@@ -1,16 +1,22 @@
 import { request } from './request.js'
+import { getPackageParts } from './package.js'
 import { getPackageConfig } from './config.js'
 
-export async function packageVersionGet ({ id }) {
-  const { name, version } = await getPackageConfig() || {}
-
-  const packageNameParts = name?.split('/')
-  const packageSlug = packageNameParts?.[packageNameParts.length - 1]
+export async function packageVersionGet ({ id, combinedPackageSlug }) {
+  let packageSlug, packageVersionSemver
+  if (combinedPackageSlug) {
+    ({ packageSlug, packageVersionSemver } = getPackageParts(combinedPackageSlug))
+  } else if (!id) {
+    const { name, semver } = getPackageConfig()
+    ;({ packageSlug } = getPackageParts(name))
+    packageVersionSemver = semver
+  }
 
   const query = `
     query PackageVersionGet($id: ID, $packageSlug: String, $semver: String) {
       packageVersion(id: $id, packageSlug: $packageSlug, semver: $semver) {
-        package { slug }
+        semver
+        package { slug, org { slug } }
         moduleConnection {
           nodes {
             filename
@@ -20,7 +26,7 @@ export async function packageVersionGet ({ id }) {
       }
     }
   `
-  const variables = { id, packageSlug, semver: version }
+  const variables = { id, packageSlug, semver: packageVersionSemver }
 
   const response = await request({ query, variables })
   return response.data.data.packageVersion

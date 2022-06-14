@@ -1,7 +1,5 @@
-import clone from './clone.js'
-import { packageFork } from './util/package.js'
+import fork from './fork.js'
 
-export default async function create (packageName) {
-  const pkg = await packageFork({ orgSlug: 'truffle', packageSlug: 'default-site' })
-  await clone({ packageVersionId: pkg.latestPackageVersionId })
+export default async function create ({ toPackageSlug }) {
+  await fork({ combinedPackageSlug: '@truffle/default-site', toPackageSlug })
 }

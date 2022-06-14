@@ -3,19 +3,34 @@ import path from 'path'
 
 import { packageVersionGet } from './util/package-version.js'
 
-// packageVersionId optional, uses config file if not spec'd
-export default async function clone ({ packageVersionId, packageCombinedSlug } = {}) {
-  // packageCombinedSlug is @<org-slug>/<package-slug>
-  const packageVersion = await packageVersionGet({ id: packageVersionId, combinedSlug: packageCombinedSlug })
+export default async function clone (options = {}) {
+  const { packageVersionId, combinedPackageSlug, toPackageSlug, shouldCreateConfigFile } = options
+  const packageVersion = await packageVersionGet({ id: packageVersionId, combinedPackageSlug })
 
-  const packagePath = path.resolve('./', packageVersion.package.slug)
-  fs.mkdirSync(packagePath)
+  let packagePath = path.resolve('./', toPackageSlug || packageVersion.package.slug)
+  try {
+    fs.mkdirSync(packagePath)
+  } catch (err) {
+    console.log('Directory exists')
+    packagePath = `${packagePath}-${Date.now()}`
+  }
 
   packageVersion.moduleConnection.nodes.forEach((module) => {
-    const filename = `.${module.filename}`
+    const filename = `${packagePath}${module.filename}`
     fs.mkdirSync(path.dirname(filename), { recursive: true })
     fs.writeFileSync(path.resolve(filename), module.code)
   })
+
+  if (shouldCreateConfigFile) {
+    const filename = `${packagePath}/truffle.config.js`
+    fs.writeFileSync(filename, `export default {
+  name: '@${packageVersion.package.org.slug}/${packageVersion.package.slug}',
+  version: '${packageVersion.semver}',
+  // apiUrl: 'https://mycelium.truffle.vip/graphql',
+  // apiUrl: 'https://mycelium.staging.bio/graphql'
+  apiUrl: 'http://localhost:50420/graphql'
+}`)
+  }
 
   console.log(`Created, now you can cd into ${packagePath}`)
 }
