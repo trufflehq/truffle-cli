@@ -20,7 +20,7 @@ switch (action) {
     create({ toPackageSlug: process.argv[3] })
     break
   case 'deploy':
-    deploy()
+    deploy({ shouldUpdateDomain: true })
     break
   case 'fork':
     fork({ combinedPackageSlug: process.argv[3], toPackageSlug: process.argv[4] })

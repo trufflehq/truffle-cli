@@ -3,9 +3,12 @@ import glob from 'glob'
 import fs from 'fs'
 import gitignoreToGlob from 'gitignore-to-glob'
 
+import { domainMigrate } from './util/domain.js'
 import { moduleUpsert } from './util/module.js'
+import { packageGet } from './util/package.js'
+import { packageVersionGet, packageVersionIncrement } from './util/package-version.js'
 
-const GLOB = '**/*.@(js|jsx|scss|css|json)'
+const GLOB = '**/*.@(js|jsx|ts|tsx|scss|css|json)'
 const IGNORE = [
   'node_modules/**/*', '.git/**/*', '*.secret.js', 'package.json', 'package-lock.json', 'tsconfig.json', 'yarn.lock'
 ]
@@ -15,10 +18,26 @@ function getIgnore () {
   return IGNORE.concat(gitignoreToGlob()).map((ignore) => ignore.replace('!', ''))
 }
 
-export async function deploy () {
-  glob(GLOB, { ignore: getIgnore() }, async (err, filenames) => {
+export async function deploy ({ shouldUpdateDomain } = {}) {
+  const packageVersion = await packageVersionGet()
+  let packageVersionId = packageVersion?.id
+  let incrementedPackageVersion
+  if (!packageVersionId) {
+    const pkg = await packageGet()
+    packageVersionId = pkg.latestPackageVersionId
+    console.log('New package version, creating...')
+    console.log(pkg)
+    incrementedPackageVersion = await packageVersionIncrement({ fromId: packageVersionId })
+    console.log('New version created')
+  }
+  await glob(GLOB, { ignore: getIgnore() }, async (err, filenames) => {
     if (err) throw err
     for (const filename of filenames) await handleFilename(filename)
+    if (shouldUpdateDomain && incrementedPackageVersion) {
+      console.log('Updating domains')
+      const domains = await domainMigrate({ fromPackageVersionId: packageVersionId, toPackageVersionId: incrementedPackageVersion.id })
+      console.log('Domains updated', domains)
+    }
   })
 }
 

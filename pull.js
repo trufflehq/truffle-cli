@@ -8,7 +8,7 @@ export default async function clone () {
   console.log('module', JSON.stringify(packageVersion.moduleConnection.nodes, null, 2))
 
   packageVersion.moduleConnection.nodes.forEach((module) => {
-    if (module.filename === '/truffle.config.js') {
+    if (module.filename.startsWith('/truffle.config.')) {
       console.log('skipping config file')
       return
     }

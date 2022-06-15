@@ -22,15 +22,16 @@ export default async function clone (options = {}) {
   })
 
   if (shouldCreateConfigFile) {
-    const filename = `${packagePath}/truffle.config.js`
+    const filename = `${packagePath}/truffle.config.mjs`
     fs.writeFileSync(filename, `export default {
   name: '@${packageVersion.package.org.slug}/${packageVersion.package.slug}',
   version: '${packageVersion.semver}',
   // apiUrl: 'https://mycelium.truffle.vip/graphql',
-  // apiUrl: 'https://mycelium.staging.bio/graphql'
-  apiUrl: 'http://localhost:50420/graphql'
+  apiUrl: 'https://mycelium.staging.bio/graphql'
+  // apiUrl: 'http://localhost:50420/graphql'
 }`)
   }
 
   console.log(`Created, now you can cd into ${packagePath}`)
+  console.log(`You can also access this package at: https://package-version-${packageVersion.id}.sporocarp.dev`)
 }
