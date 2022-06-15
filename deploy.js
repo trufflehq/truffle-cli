@@ -8,9 +8,9 @@ import { moduleUpsert } from './util/module.js'
 import { packageGet } from './util/package.js'
 import { packageVersionGet, packageVersionIncrement } from './util/package-version.js'
 
-const GLOB = '**/*.@(js|jsx|ts|tsx|scss|css|json)'
+const GLOB = '**/*'
 const IGNORE = [
-  'node_modules/**/*', '.git/**/*', '*.secret.js', 'package.json', 'package-lock.json', 'tsconfig.json', 'yarn.lock'
+  'node_modules/**/*', '.git/**/*', '*.secret.js', 'package.json', 'package-lock.json', 'yarn.lock'
 ]
 
 function getIgnore () {
