@@ -3,7 +3,7 @@ import glob from 'glob'
 import fs from 'fs'
 import gitignoreToGlob from 'gitignore-to-glob'
 
-import { domainMigrate } from './util/domain.js'
+import { domainGetConnection, domainMigrate } from './util/domain.js'
 import { moduleUpsert } from './util/module.js'
 import { packageGet } from './util/package.js'
 import { routeUpsert } from './util/route.js'
@@ -43,6 +43,10 @@ export async function deploy ({ shouldUpdateDomain } = {}) {
       const domains = await domainMigrate({ fromPackageVersionId, toPackageVersionId: packageVersionId })
       console.log('Domains updated', domains)
     }
+    const domainConnection = await domainGetConnection({ packageVersionId })
+    const domainsStr = domainConnection.nodes
+      .map(({ domainName }) => `https://${domainName}`).join(', ') || 'no domain'
+    console.log(`Deployed to ${domainsStr}`)
   })
 }
 
@@ -88,7 +92,6 @@ async function saveRoute ({ filenameParts, module, packageVersionId }) {
   const filenamePath = `/${filenameParts.slice(1, filenameParts.length - 1).join('/')}`
   const pathParts = filenamePath.split('/')
   const paths = pathParts.map((routerPath, i) => `${pathParts.slice(0, i + 1).join('/')}`)
-  console.log('bases', paths)
   let prevRoute
   // create a top level router and another router for any folders w/ layout.tsx
   await Promise.all(paths.map(async (path, i) => {
@@ -103,7 +106,6 @@ async function saveRoute ({ filenameParts, module, packageVersionId }) {
 
     let layoutDefaultExportComponentId
     if (hasLayoutFile) {
-      console.log('has layout')
       const layoutModule = await moduleUpsert({
         packageVersionId,
         filename: layoutFilename,
@@ -126,7 +128,7 @@ async function saveRoute ({ filenameParts, module, packageVersionId }) {
 
   await routeUpsert({
     packageVersionId,
-    parentId: prevRoute.id,
+    parentId: prevRoute?.id,
     pathWithVariables: `/${filenameParts.slice(1, filenameParts.length - 1).join('/')}`,
     componentId: defaultExportComponentId
   })
