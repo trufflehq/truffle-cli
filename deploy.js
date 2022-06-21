@@ -7,7 +7,6 @@ import { domainMigrate } from './util/domain.js'
 import { moduleUpsert } from './util/module.js'
 import { packageGet } from './util/package.js'
 import { routeUpsert } from './util/route.js'
-import { routerUpsert } from './util/router.js'
 import { packageVersionGet, packageVersionIncrement } from './util/package-version.js'
 
 const GLOB = '**/*'
@@ -23,24 +22,25 @@ function getIgnore () {
 export async function deploy ({ shouldUpdateDomain } = {}) {
   const packageVersion = await packageVersionGet()
   let packageVersionId = packageVersion?.id
+  let fromPackageVersionId = packageVersionId
   let incrementedPackageVersion
   if (!packageVersionId) {
     const pkg = await packageGet()
-    packageVersionId = pkg.latestPackageVersionId
+    fromPackageVersionId = pkg.latestPackageVersionId
     console.log('New package version, creating...')
     console.log(pkg)
-    incrementedPackageVersion = await packageVersionIncrement({ fromId: packageVersionId })
+    incrementedPackageVersion = await packageVersionIncrement({ fromId: fromPackageVersionId })
     packageVersionId = incrementedPackageVersion.id
-    console.log('New version created')
+    console.log('New version created', packageVersionId)
   }
   await glob(GLOB, { ignore: getIgnore(), nodir: true }, async (err, filenames) => {
     if (err) throw err
     for (const filename of filenames) {
       await handleFilename(filename, { packageVersionId })
     }
-    if (shouldUpdateDomain && incrementedPackageVersion) {
-      console.log('Updating domains')
-      const domains = await domainMigrate({ fromPackageVersionId: packageVersionId, toPackageVersionId: incrementedPackageVersion.id })
+    if (shouldUpdateDomain && fromPackageVersionId !== packageVersionId) {
+      console.log(`Updating domains from ${fromPackageVersionId} to ${packageVersionId}`)
+      const domains = await domainMigrate({ fromPackageVersionId, toPackageVersionId: packageVersionId })
       console.log('Domains updated', domains)
     }
   })
@@ -87,15 +87,14 @@ async function saveRoute ({ filenameParts, module, packageVersionId }) {
 
   const filenamePath = `/${filenameParts.slice(1, filenameParts.length - 1).join('/')}`
   const pathParts = filenamePath.split('/')
-  const routerBases = pathParts.map((routerPath, i) => `${pathParts.slice(0, i + 1).join('/')}`)
-  console.log('bases', routerBases)
-  let prevRouter
+  const paths = pathParts.map((routerPath, i) => `${pathParts.slice(0, i + 1).join('/')}`)
+  console.log('bases', paths)
+  let prevRoute
   // create a top level router and another router for any folders w/ layout.tsx
-  await Promise.all(routerBases.map(async (routerBase, i) => {
-    const parent = prevRouter
+  await Promise.all(paths.map(async (path, i) => {
+    const parent = prevRoute
     // FIXME: support .ts|.jsx|.js too
-    const layoutFilename = `/routes${routerBase}/layout.tsx`
-    console.log('check', layoutFilename)
+    const layoutFilename = `/routes${path}/layout.tsx`
     let hasLayoutFile, code
     try {
       code = fs.readFileSync(`.${layoutFilename}`).toString()
@@ -111,22 +110,23 @@ async function saveRoute ({ filenameParts, module, packageVersionId }) {
         code
       })
       layoutDefaultExportComponentId = layoutModule.exports.find(({ type }) => type === 'default')?.componentRel?.id
-      console.log('exp', layoutDefaultExportComponentId)
     }
 
-    if (hasLayoutFile || !prevRouter) {
-      prevRouter = await routerUpsert({
+    if (hasLayoutFile) {
+      // TODO: technically there can be 2 routes per path now. 1 layout, 1 non-layout. need to account for that
+      prevRoute = await routeUpsert({
         packageVersionId,
         parentId: parent?.id,
-        base: routerBase,
-        componentId: layoutDefaultExportComponentId
+        pathWithVariables: path,
+        componentId: layoutDefaultExportComponentId,
+        data: { isLayout: true }
       })
     }
   }))
 
   await routeUpsert({
     packageVersionId,
-    routerId: prevRouter.id,
+    parentId: prevRoute.id,
     pathWithVariables: `/${filenameParts.slice(1, filenameParts.length - 1).join('/')}`,
     componentId: defaultExportComponentId
   })
