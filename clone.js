@@ -1,9 +1,11 @@
 import fs from 'fs'
 import path from 'path'
 
+import { getPackageConfig, getGlobalConfig } from './util/config.js'
 import { packageVersionGet } from './util/package-version.js'
 
 export default async function clone (options = {}) {
+  const { apiUrl, secretKey } = await getPackageConfig() || getGlobalConfig()
   const { packageVersionId, combinedPackageSlug, toPackageSlug, shouldCreateConfigFile } = options
   const packageVersion = await packageVersionGet({ id: packageVersionId, combinedPackageSlug })
 
@@ -22,14 +24,18 @@ export default async function clone (options = {}) {
   })
 
   if (shouldCreateConfigFile) {
-    const filename = `${packagePath}/truffle.config.mjs`
-    fs.writeFileSync(filename, `export default {
+    const configFilename = `${packagePath}/truffle.config.mjs`
+    fs.writeFileSync(configFilename, `export default {
   name: '@${packageVersion.package.org.slug}/${packageVersion.package.slug}',
   version: '${packageVersion.semver}',
-  // apiUrl: 'https://mycelium.truffle.vip/graphql',
-  apiUrl: 'https://mycelium.staging.bio/graphql'
-  // apiUrl: 'http://localhost:50420/graphql'
+  apiUrl: '${apiUrl}'
 }`)
+    const secretFilename = `${packagePath}/truffle.secret.mjs`
+    fs.writeFileSync(secretFilename, `export default {
+  secretKey: '${secretKey}'
+}`)
+    const gitignoreFilename = `${packagePath}/.gitignore`
+    fs.writeFileSync(gitignoreFilename, 'truffle.secret.*')
   }
 
   console.log(`Created, now you can cd into ${packagePath}`)
