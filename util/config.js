@@ -3,7 +3,7 @@ import path from 'path'
 import os from 'os'
 
 export function getConfigFilename (fiename) {
-  return path.resolve(os.homedir(), '.truffle/config.json')
+  return path.resolve(os.homedir(), path.normalize('.truffle/config.json'))
 }
 
 export function getGlobalConfig () {

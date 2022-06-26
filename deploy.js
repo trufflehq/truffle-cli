@@ -100,7 +100,7 @@ async function saveRoute ({ filenameParts, module, packageVersionId }) {
     const layoutFilename = `/routes${path}/layout.tsx`
     let hasLayoutFile, code
     try {
-      code = fs.readFileSync(`.${layoutFilename}`).toString()
+      code = fs.readFileSync(path.normalize(`.${layoutFilename}`)).toString()
       hasLayoutFile = true
     } catch {}
 
