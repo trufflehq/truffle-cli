@@ -9,28 +9,34 @@ import pull from './pull.js'
 
 const action = process.argv[2]
 
-switch (action) {
-  case 'auth':
-    auth({ secretKey: process.argv[3] })
-    break
-  case 'clone':
-    clone({ combinedPackageSlug: process.argv[3], toPackageSlug: process.argv[4] })
-    break
-  case 'create':
-    create({ toPackageSlug: process.argv[3] })
-    break
-  case 'deploy':
-    deploy({ shouldUpdateDomain: true })
-    break
-  case 'fork':
-    fork({ combinedPackageSlug: process.argv[3], toPackageSlug: process.argv[4] })
-    break
-  case 'pull':
-    pull()
-    break
-  case 'watch':
-    watch()
-    break
-  default:
-    console.log('unknown action')
-}
+;(async () => {
+  try {
+    switch (action) {
+      case 'auth':
+        await auth({ secretKey: process.argv[3] })
+        break
+      case 'clone':
+        await clone({ combinedPackageSlug: process.argv[3], toPackageSlug: process.argv[4] })
+        break
+      case 'create':
+        await create({ toPackageSlug: process.argv[3] })
+        break
+      case 'deploy':
+        await deploy({ shouldUpdateDomain: true })
+        break
+      case 'fork':
+        await fork({ combinedPackageSlug: process.argv[3], toPackageSlug: process.argv[4] })
+        break
+      case 'pull':
+        await pull()
+        break
+      case 'watch':
+        await watch()
+        break
+      default:
+        console.log('unknown action')
+    }
+  } catch (err) {
+    console.error(err.message)
+  }
+})()

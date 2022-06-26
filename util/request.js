@@ -11,7 +11,7 @@ export async function request ({ query, variables }) {
     }
   })
   if (response?.data?.errors?.length) {
-    throw new Error('Request error', JSON.stringify(response.data.errors))
+    throw new Error(`Request error: ${JSON.stringify(response.data.errors[0].extensions.info)}`)
   }
   return response
 }
