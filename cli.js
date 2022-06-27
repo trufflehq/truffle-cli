@@ -16,7 +16,7 @@ const action = process.argv[2]
         await auth({ secretKey: process.argv[3] })
         break
       case 'clone':
-        await clone({ combinedPackageSlug: process.argv[3], toPackageSlug: process.argv[4] })
+        await clone({ packagePath: process.argv[3], toPackageSlug: process.argv[4] })
         break
       case 'create':
         await create({ toPackageSlug: process.argv[3] })
@@ -25,7 +25,7 @@ const action = process.argv[2]
         await deploy({ shouldUpdateDomain: true })
         break
       case 'fork':
-        await fork({ combinedPackageSlug: process.argv[3], toPackageSlug: process.argv[4] })
+        await fork({ packagePath: process.argv[3], toPackageSlug: process.argv[4] })
         break
       case 'pull':
         await pull()

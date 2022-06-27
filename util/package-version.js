@@ -2,10 +2,10 @@ import { request } from './request.js'
 import { getPackageParts } from './package.js'
 import { getPackageConfig } from './config.js'
 
-export async function packageVersionGet ({ id, combinedPackageSlug } = {}) {
+export async function packageVersionGet ({ id, packagePath } = {}) {
   let packageSlug, packageVersionSemver
-  if (combinedPackageSlug) {
-    ({ packageSlug, packageVersionSemver } = getPackageParts(combinedPackageSlug))
+  if (packagePath) {
+    ({ packageSlug, packageVersionSemver } = getPackageParts(packagePath))
   } else if (!id) {
     const { name, version } = await getPackageConfig()
     ;({ packageSlug } = getPackageParts(name))
@@ -33,18 +33,16 @@ export async function packageVersionGet ({ id, combinedPackageSlug } = {}) {
   return response.data.data.packageVersion
 }
 
-export async function packageVersionIncrement ({ fromId }) {
-  const { version } = await getPackageConfig()
-
+export async function packageVersionCreate ({ packageId, semver, installActionRel }) {
   const query = `
-    mutation PackageVersionIncrement($fromId: ID, $toSemver: String) {
-      packageVersionIncrement(fromId: $fromId, toSemver: $toSemver) {
+    mutation PackageVersionCreate($packageId: ID, $semver: String, $installActionRel: JSON) {
+      packageVersionCreate(packageId: $packageId, semver: $semver, installActionRel: $installActionRel) {
         id
       }
     }
   `
-  const variables = { fromId, toSemver: version }
+  const variables = { packageId, semver, installActionRel }
 
   const response = await request({ query, variables })
-  return response.data.data.packageVersionIncrement
+  return response.data.data.packageVersionCreate
 }

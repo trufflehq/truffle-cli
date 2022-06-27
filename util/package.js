@@ -3,8 +3,8 @@ import { request } from './request.js'
 
 const MODULE_REGEX = /@(.*?)\/([^@]+)(?:@([0-9.]+))?([^?#]*)$/i
 
-export async function packageFork ({ combinedPackageSlug, toPackageSlug }) {
-  const { orgSlug, packageSlug, packageVersionSemver } = getPackageParts(combinedPackageSlug)
+export async function packageFork ({ packagePath, toPackageSlug }) {
+  const { orgSlug, packageSlug, packageVersionSemver } = getPackageParts(packagePath)
   const query = `
     mutation PackageFork(
       $fromOrgSlug: String

@@ -7,7 +7,8 @@ import { domainGetConnection, domainMigrate } from './util/domain.js'
 import { moduleUpsert } from './util/module.js'
 import { packageGet } from './util/package.js'
 import { saveRoute } from './util/route.js'
-import { packageVersionGet, packageVersionIncrement } from './util/package-version.js'
+import { packageVersionGet, packageVersionCreate } from './util/package-version.js'
+import { getPackageConfig } from './util/config.js'
 
 const GLOB = '**/*'
 const IGNORE = [
@@ -25,11 +26,16 @@ export async function deploy ({ shouldUpdateDomain } = {}) {
   let fromPackageVersionId = packageVersionId
   let incrementedPackageVersion
   if (!packageVersionId) {
+    const { version, installActionRel } = await getPackageConfig()
     const pkg = await packageGet()
     fromPackageVersionId = pkg.latestPackageVersionId
     console.log('New package version, creating...')
     console.log(pkg)
-    incrementedPackageVersion = await packageVersionIncrement({ fromId: fromPackageVersionId })
+    incrementedPackageVersion = await packageVersionCreate({
+      packageId: pkg.id,
+      semver: version,
+      installActionRel
+    })
     packageVersionId = incrementedPackageVersion.id
     console.log('New version created', packageVersionId)
   }
