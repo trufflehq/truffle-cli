@@ -5,8 +5,8 @@ import { getPackageConfig, getGlobalConfig } from './util/config.js'
 import { packageVersionGet } from './util/package-version.js'
 
 export default async function clone (options = {}) {
-  const { apiUrl, secretKey } = await getPackageConfig() || getGlobalConfig()
-  const { packageVersionId, packagePath, toPackageSlug, shouldCreateConfigFile } = options
+  const { apiUrl } = await getPackageConfig() || getGlobalConfig()
+  const { packageVersionId, packagePath, toPackageSlug, shouldCreateConfigFile, secretKey } = options
   const packageVersion = await packageVersionGet({ id: packageVersionId, packagePath })
 
   let toPath = path.resolve('./', toPackageSlug || packageVersion.package.slug)
