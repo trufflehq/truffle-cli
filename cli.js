@@ -4,6 +4,7 @@ import auth from './auth.js'
 import { deploy, watch } from './deploy.js'
 import clone from './clone.js'
 import create from './create.js'
+import install from './install.js'
 import fork from './fork.js'
 import pull from './pull.js'
 
@@ -26,6 +27,9 @@ const action = process.argv[2]
         break
       case 'fork':
         await fork({ packagePath: process.argv[3], toPackageSlug: process.argv[4] })
+        break
+      case 'install':
+        await install({ installedPackageVersionPath: process.argv[3] })
         break
       case 'pull':
         await pull()

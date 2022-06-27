@@ -33,6 +33,26 @@ export async function packageFork ({ packagePath, toPackageSlug }) {
   return response.data.data.packageFork
 }
 
+export async function packageInstall ({ installPackagePath, toPackageVersionId }) {
+  const query = `
+    mutation PackageInstall(
+      $installPackagePack: String
+      $toPackageVersionId: String
+    ) {
+      packageInstall(
+        installPackagePack: $installPackagePack
+        toPackageVersionId: $toPackageVersionId
+      ) { id }
+    }`
+  const variables = {
+    installPackagePath,
+    toPackageVersionId
+  }
+
+  const response = await request({ query, variables })
+  return response.data.data.packageInstall
+}
+
 export async function packageGet () {
   const { name } = await getPackageConfig()
   const { packageSlug } = getPackageParts(name)

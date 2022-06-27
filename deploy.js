@@ -26,7 +26,7 @@ export async function deploy ({ shouldUpdateDomain } = {}) {
   let fromPackageVersionId = packageVersionId
   let incrementedPackageVersion
   if (!packageVersionId) {
-    const { version, installActionRel } = await getPackageConfig()
+    const { version, installActionRel, requestedPermissions } = await getPackageConfig()
     const pkg = await packageGet()
     fromPackageVersionId = pkg.latestPackageVersionId
     console.log('New package version, creating...')
@@ -34,7 +34,8 @@ export async function deploy ({ shouldUpdateDomain } = {}) {
     incrementedPackageVersion = await packageVersionCreate({
       packageId: pkg.id,
       semver: version,
-      installActionRel
+      installActionRel,
+      requestedPermissions
     })
     packageVersionId = incrementedPackageVersion.id
     console.log('New version created', packageVersionId)

@@ -33,15 +33,15 @@ export async function packageVersionGet ({ id, packagePath } = {}) {
   return response.data.data.packageVersion
 }
 
-export async function packageVersionCreate ({ packageId, semver, installActionRel }) {
+export async function packageVersionCreate ({ packageId, semver, installActionRel, requestedPermissions }) {
   const query = `
-    mutation PackageVersionCreate($packageId: ID, $semver: String, $installActionRel: JSON) {
-      packageVersionCreate(packageId: $packageId, semver: $semver, installActionRel: $installActionRel) {
+    mutation PackageVersionCreate($packageId: ID, $semver: String, $installActionRel: JSON, $requestedPermissions: JSON) {
+      packageVersionCreate(packageId: $packageId, semver: $semver, installActionRel: $installActionRel, requestedPermissions: $requestedPermissions) {
         id
       }
     }
   `
-  const variables = { packageId, semver, installActionRel }
+  const variables = { packageId, semver, installActionRel, requestedPermissions }
 
   const response = await request({ query, variables })
   return response.data.data.packageVersionCreate
