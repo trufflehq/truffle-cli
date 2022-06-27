@@ -6,7 +6,7 @@ import gitignoreToGlob from 'gitignore-to-glob'
 import { domainGetConnection, domainMigrate } from './util/domain.js'
 import { moduleUpsert } from './util/module.js'
 import { packageGet } from './util/package.js'
-import { routeUpsert } from './util/route.js'
+import { saveRoute } from './util/route.js'
 import { packageVersionGet, packageVersionIncrement } from './util/package-version.js'
 
 const GLOB = '**/*'
@@ -84,52 +84,4 @@ async function handleFilename (filename, { packageVersionId }) {
   } catch (err) {
     console.log('failed upsert for', filename, err)
   }
-}
-
-async function saveRoute ({ filenameParts, module, packageVersionId }) {
-  const defaultExportComponentId = module.exports.find(({ type }) => type === 'default')?.componentRel?.id
-
-  const filenamePath = `/${filenameParts.slice(1, filenameParts.length - 1).join('/')}`
-  const pathParts = filenamePath.split('/')
-  const paths = pathParts.map((routerPath, i) => `${pathParts.slice(0, i + 1).join('/')}`)
-  let prevRoute
-  // create a top level router and another router for any folders w/ layout.tsx
-  await Promise.all(paths.map(async (path, i) => {
-    const parent = prevRoute
-    // FIXME: support .ts|.jsx|.js too
-    const layoutFilename = `/routes${path}/layout.tsx`
-    let hasLayoutFile, code
-    try {
-      code = fs.readFileSync(path.normalize(`.${layoutFilename}`)).toString()
-      hasLayoutFile = true
-    } catch {}
-
-    let layoutDefaultExportComponentId
-    if (hasLayoutFile) {
-      const layoutModule = await moduleUpsert({
-        packageVersionId,
-        filename: layoutFilename,
-        code
-      })
-      layoutDefaultExportComponentId = layoutModule.exports.find(({ type }) => type === 'default')?.componentRel?.id
-    }
-
-    if (hasLayoutFile) {
-      // TODO: technically there can be 2 routes per path now. 1 layout, 1 non-layout. need to account for that
-      prevRoute = await routeUpsert({
-        packageVersionId,
-        parentId: parent?.id,
-        pathWithVariables: path,
-        componentId: layoutDefaultExportComponentId,
-        data: { isLayout: true }
-      })
-    }
-  }))
-
-  await routeUpsert({
-    packageVersionId,
-    parentId: prevRoute?.id,
-    pathWithVariables: `/${filenameParts.slice(1, filenameParts.length - 1).join('/')}`,
-    componentId: defaultExportComponentId
-  })
 }
