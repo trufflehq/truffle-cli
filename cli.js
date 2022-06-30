@@ -7,7 +7,7 @@ import create from './create.js'
 import install from './install.js'
 import fork from './fork.js'
 import pull from './pull.js'
-
+import regeneratePackageApiKey from './regenerate.js'
 const action = process.argv[2]
 
 ;(async () => {
@@ -27,6 +27,9 @@ const action = process.argv[2]
         break
       case 'fork':
         await fork({ packagePath: process.argv[3], toPackageSlug: process.argv[4] })
+        break
+      case 'regenerate-api-key':
+        await regeneratePackageApiKey()
         break
       case 'install':
         await install({ installedPackageVersionPath: process.argv[3] })
