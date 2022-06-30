@@ -1,4 +1,4 @@
-import { getPackageConfig } from './config.js'
+import { getPublicPackageConfig } from './config.js'
 import { request } from './request.js'
 
 const MODULE_REGEX = /@(.*?)\/([^@]+)(?:@([0-9.]+))?([^?#]*)$/i
@@ -54,7 +54,7 @@ export async function packageInstall ({ installPackagePath, toPackageVersionId }
 }
 
 export async function packageGet () {
-  const { name } = await getPackageConfig()
+  const { name } = await getPublicPackageConfig()
   const { packageSlug } = getPackageParts(name)
 
   const query = `

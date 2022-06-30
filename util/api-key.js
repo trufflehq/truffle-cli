@@ -9,6 +9,6 @@ export async function apiKeyCreate ({ type, sourceType, sourceId }) {
     input: { type, sourceType, sourceId }
   }
 
-  const response = await request({ query, variables })
+  const response = await request({ query, variables, shouldUseGlobal: true })
   return response.data.data.apiKeyCreate
 }
