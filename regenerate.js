@@ -4,7 +4,8 @@ import { packageGet } from './util/package.js'
 import { apiKeyCreate } from './util/api-key.js'
 
 export default async function regeneratePackageApiKey () {
-  const pkg = await packageGet()
+  const pkg = await packageGet({ shouldUseGlobal: true })
+  console.log('pkg', pkg)
 
   if (!pkg?.id) {
     console.log('\nPackage not found. If the package doesn\'t exist yet run `truffle-cli create <package-slug>`.')

@@ -3,6 +3,7 @@ import { getPackageConfig, getGlobalConfig } from './config.js'
 
 export async function request ({ query, variables, shouldUseGlobal = false }) {
   const { apiUrl, secretKey } = shouldUseGlobal ? getGlobalConfig() : await getPackageConfig() || getGlobalConfig()
+
   const response = await axios.post(apiUrl, { query, variables }, {
     withCredentials: true,
     headers: {

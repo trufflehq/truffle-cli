@@ -53,7 +53,7 @@ export async function packageInstall ({ installPackagePath, toPackageVersionId }
   return response.data.data.packageInstall
 }
 
-export async function packageGet () {
+export async function packageGet ({ shouldUseGlobal = false } = {}) {
   const { name } = await getPublicPackageConfig()
   const { packageSlug } = getPackageParts(name)
 
@@ -67,7 +67,7 @@ export async function packageGet () {
   `
   const variables = { slug: packageSlug }
 
-  const response = await request({ query, variables })
+  const response = await request({ query, variables, shouldUseGlobal })
   return response.data.data.package
 }
 
