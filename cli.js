@@ -32,7 +32,7 @@ const action = process.argv[2]
         await regeneratePackageApiKey()
         break
       case 'install':
-        await install({ installedPackageVersionPath: process.argv[3] })
+        await install({ installedPackageVersionPath: process.argv[3], isForceInstall: process.argv[4] === '-f' })
         break
       case 'pull':
         await pull()
