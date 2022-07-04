@@ -17,6 +17,8 @@ export async function packageVersionGet ({ id, packagePath } = {}) {
       packageVersion(id: $id, packageSlug: $packageSlug, semver: $semver) {
         id
         semver
+        requestedPermissions
+        installActionRel
         package { slug, org { slug } }
         moduleConnection {
           nodes {
