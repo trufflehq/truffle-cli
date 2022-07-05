@@ -4,6 +4,7 @@ import prettier from 'prettier'
 
 import { getPackageConfig, getGlobalConfig } from './util/config.js'
 import { packageVersionGet } from './util/package-version.js'
+import { deepOmit } from './util/deep-omit.js'
 
 export default async function clone (options = {}) {
   const { apiUrl } = await getPackageConfig() || getGlobalConfig()
@@ -31,7 +32,7 @@ export default async function clone (options = {}) {
   version: '${semver || packageVersion.semver}',
   apiUrl: '${apiUrl}',
   requestedPermissions: ${JSON.stringify(packageVersion.requestedPermissions ? packageVersion.requestedPermissions : [])},
-  installActionRel: ${JSON.stringify(packageVersion.installActionRel ? packageVersion.installActionRel : {})}
+  installActionRel: ${JSON.stringify(packageVersion.installActionRel ? deepOmit(packageVersion.installActionRel, 'actionId') : {})}
 }`, { semi: false, parser: 'babel' }))
     const secretFilename = `${toPath}/truffle.secret.mjs`
     fs.writeFileSync(secretFilename, `export default {
