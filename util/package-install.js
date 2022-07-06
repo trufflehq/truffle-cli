@@ -1,5 +1,4 @@
 import { request } from './request.js'
-import chalk from 'chalk'
 import { packageVersionGet } from './package-version.js'
 
 export async function packageInstallCreate ({ installedPackageVersionPath, isForceInstall = false }) {

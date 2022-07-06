@@ -2,7 +2,51 @@ import { request } from './request.js'
 import { getPackageParts } from './package.js'
 import { getPackageConfig } from './config.js'
 
-export async function packageVersionGet ({ id, packagePath } = {}) {
+const BASE_PACKAGE_VERSION_FIELDS = `id
+semver
+requestedPermissions
+installActionRel
+`
+
+const BASE_MODULE_CONNECTION_FIELDS = `
+moduleConnection {
+  nodes {
+    filename
+    code
+  }
+}
+`
+
+const BASE_PACKAGE_FIELDS = `package { id, slug, org { slug } name }`
+
+const BASE_EVENT_SUBSCRIPTION_FIELDS = `eventSubscriptionConnection {
+  nodes {
+      id
+      status
+      eventTopicPath
+      actionRel {
+          actionPath
+          action {
+              type
+          }
+          runtimeData
+      }
+  }
+}`
+
+const BASE_EVENT_TOPIC_FIELDS = `eventTopicConnection {
+  nodes {
+      id
+      slug
+      eventTopicPath
+  }
+}`
+
+export async function packageVersionGet (options) {
+  const {
+    id, packagePath, includeModules = true, includePackage = true,
+    includeEventSubscriptions = false, includeEventTopics = false
+  } = options || {}
   let packageSlug, packageVersionSemver
   if (packagePath) {
     ({ packageSlug, packageVersionSemver } = getPackageParts(packagePath))
@@ -13,21 +57,15 @@ export async function packageVersionGet ({ id, packagePath } = {}) {
   }
 
   const query = `
-    query PackageVersionGet($id: ID, $packageSlug: String, $semver: String) {
-      packageVersion(id: $id, packageSlug: $packageSlug, semver: $semver) {
-        id
-        semver
-        requestedPermissions
-        installActionRel
-        package { slug, org { slug } }
-        moduleConnection {
-          nodes {
-            filename
-            code
-          }
-        }
-      }
+  query PackageVersionGet($id: ID, $packageSlug: String, $semver: String) {
+    packageVersion(id: $id, packageSlug: $packageSlug, semver: $semver) {
+      ${BASE_PACKAGE_VERSION_FIELDS}
+      ${includeModules ? BASE_MODULE_CONNECTION_FIELDS : ''}
+      ${includePackage ? BASE_PACKAGE_FIELDS : ''}
+      ${includeEventSubscriptions ? BASE_EVENT_SUBSCRIPTION_FIELDS : ''}
+      ${includeEventTopics ? BASE_EVENT_TOPIC_FIELDS : ''}
     }
+  }
   `
   const variables = { id, packageSlug, semver: packageVersionSemver }
 

@@ -7,6 +7,8 @@ import create from './create.js'
 import install from './install.js'
 import fork from './fork.js'
 import pull from './pull.js'
+import list from './list.js'
+import describe from './describe.js'
 import regeneratePackageApiKey from './regenerate.js'
 const action = process.argv[2]
 
@@ -39,6 +41,12 @@ const action = process.argv[2]
         break
       case 'watch':
         await watch()
+        break
+      case 'ls':
+        await list()
+        break
+      case 'describe':
+        await describe({ model: process.argv[3] })
         break
       default:
         console.log('unknown action')

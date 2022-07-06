@@ -71,6 +71,36 @@ export async function packageGet ({ shouldUseGlobal = false } = {}) {
   return response.data.data.package
 }
 
+export async function packageList () {
+  const { name } = await getPublicPackageConfig()
+  const { packageSlug } = getPackageParts(name)
+
+  const query = `
+  query PackageConnection ($first: Int, $after: String, $last: Int, $before: String) {
+    packageConnection(first: $first, after: $after, last: $last, before: $before) {
+        totalCount
+        pageInfo {
+            endCursor
+            hasNextPage
+        }
+        nodes {
+            id
+            slug
+            packageVersionConnection (filter: DESC) {
+                nodes {
+                  semver
+                }
+            }
+        }
+    }
+}
+  `
+  const variables = { slug: packageSlug }
+
+  const response = await request({ query, variables, shouldUseGlobal: true })
+  return response.data.data.packageConnection
+}
+
 export function getPackageParts (urlOrStr) {
   const [all, orgSlug, packageSlug, packageVersionSemver, filename] = urlOrStr?.match(MODULE_REGEX) || []
   if (!all) {

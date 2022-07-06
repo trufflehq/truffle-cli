@@ -8,7 +8,8 @@ module.exports = {
   // https://stackoverflow.com/questions/60046847/eslint-does-not-allow-static-class-properties
   parser: '@babel/eslint-parser',
   rules: {
-    'react/prop-types': 0
+    'react/prop-types': 0,
+    quotes: 0
   },
   globals: {
     Atomics: 'readonly',
