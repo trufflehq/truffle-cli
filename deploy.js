@@ -40,10 +40,8 @@ export async function deploy ({ shouldUpdateDomain } = {}) {
     packageVersionId = incrementedPackageVersion.id
     console.log('New version created', packageVersionId)
   }
-  console.log(getIgnore())
   await glob(GLOB, { ignore: getIgnore(), nodir: true }, async (err, filenames) => {
     if (err) throw err
-    console.log('filenames', filenames)
     for (const filename of filenames) {
       await handleFilename(filename, { packageVersionId })
     }
