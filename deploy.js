@@ -12,7 +12,7 @@ import { getPackageConfig } from './util/config.js'
 
 const GLOB = '**/*'
 const IGNORE = [
-  'node_modules/**/*', '.git/**/*', '*.secret.js', 'package.json', 'package-lock.json', 'yarn.lock'
+  'node_modules/**/*', '.git/**/*', '*.secret.js', 'package-lock.json', 'yarn.lock'
 ]
 
 function getIgnore () {

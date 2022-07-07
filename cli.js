@@ -1,9 +1,11 @@
-#!/usr/bin/env node
+#!/bin/sh
+":" //# comment; exec /usr/bin/env node --experimental-import-meta-resolve --experimental-network-imports --no-warnings "$0" "$@"
 'use strict'
 import auth from './auth.js'
 import { deploy, watch } from './deploy.js'
 import clone from './clone.js'
 import create from './create.js'
+import dev from './dev.js'
 import install from './install.js'
 import fork from './fork.js'
 import pull from './pull.js'
@@ -23,6 +25,9 @@ const action = process.argv[2]
         break
       case 'create':
         await create({ toPackageSlug: process.argv[3] })
+        break
+      case 'dev':
+        await dev()
         break
       case 'deploy':
         await deploy({ shouldUpdateDomain: true })

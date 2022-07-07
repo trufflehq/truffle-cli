@@ -12,7 +12,11 @@ export async function request ({ query, variables, shouldUseGlobal = false }) {
     }
   })
   if (response?.data?.errors?.length) {
-    throw new Error(`Request error: ${JSON.stringify(response.data.errors[0].extensions.info)}`)
+    throw new Error(`Request error: ${
+      JSON.stringify(
+        response.data.errors[0].extensions.info || response.data.errors[0].message
+      )
+    }`)
   }
   return response
 }
