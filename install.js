@@ -1,7 +1,7 @@
 import { packageInstallCreate } from './util/package-install.js'
 import chalk from 'chalk'
 export default async function install ({ installedPackageVersionPath, isForceInstall = false } = {}) {
-  const packageInstall = await packageInstallCreate({ installedPackageVersionPath, isForceInstall })
+  const { packageInstall, userErrors } = await packageInstallCreate({ installedPackageVersionPath, isForceInstall })
 
   const installStatus = packageInstall?.installStatus
 
@@ -10,7 +10,7 @@ export default async function install ({ installedPackageVersionPath, isForceIns
   } else if (installStatus === 'installing') {
     console.log(chalk.yellow('Package is caught installing'))
   } else {
-    const reason = typeof packageInstall === 'object' ? JSON.stringify(packageInstall) : packageInstall
+    const reason = JSON.stringify(userErrors)
     console.log(chalk.red.bold(`Package install failed (${reason})`))
   }
 }

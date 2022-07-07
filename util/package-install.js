@@ -13,6 +13,7 @@ export async function packageInstallCreate ({ installedPackageVersionPath, isFor
           id
           installStatus
         } 
+        userErrors
       }
     }`
   const variables = {
@@ -25,7 +26,7 @@ export async function packageInstallCreate ({ installedPackageVersionPath, isFor
 
   try {
     const response = await request({ query, variables })
-    return response.data.data.packageInstallCreate.packageInstall
+    return { packageInstall: response.data.data.packageInstallCreate.packageInstall, userErrors: response.data.data.packageInstallCreate.userErrors }
   } catch (err) {
     return err.message
   }
