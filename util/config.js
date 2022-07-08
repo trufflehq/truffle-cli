@@ -29,7 +29,13 @@ export async function getPackageConfig () {
   const secretConfig = await getPackageConfigJson('truffle.secret')
 
   if (!publicConfig || !secretConfig) {
-    // console.log('No package config/secret found, will fall back to global config')
+    if (!publicConfig) {
+      console.log('Unable to find truffle.config.(js|mjs)')
+    }
+
+    if (!secretConfig) {
+      console.log('Unable to find truffle.secret.(js|mjs)')
+    }
     return
   }
 
