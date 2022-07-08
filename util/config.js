@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
+import chalk from 'chalk'
 
 export function getConfigFilename (fiename) {
   return path.resolve(os.homedir(), path.normalize('.truffle/config.json'))
@@ -30,11 +31,11 @@ export async function getPackageConfig () {
 
   if (!publicConfig || !secretConfig) {
     if (!publicConfig) {
-      console.log('Unable to find truffle.config.(js|mjs)')
+      console.log(chalk.yellow.bold('Unable to find truffle.config.(js|mjs)'))
     }
 
     if (!secretConfig) {
-      console.log('Unable to find truffle.secret.(js|mjs)')
+      console.log(chalk.yellow.bold('Unable to find truffle.secret.(js|mjs)'))
     }
     return
   }
