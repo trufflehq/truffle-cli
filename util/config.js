@@ -30,13 +30,6 @@ export async function getPackageConfig () {
   const secretConfig = await getPackageConfigJson('truffle.secret')
 
   if (!publicConfig || !secretConfig) {
-    if (!publicConfig) {
-      console.log(chalk.yellow.bold('Unable to find truffle.config.(js|mjs)'))
-    }
-
-    if (!secretConfig) {
-      console.log(chalk.yellow.bold('Unable to find truffle.secret.(js|mjs)'))
-    }
     return
   }
 
