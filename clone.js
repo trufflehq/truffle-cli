@@ -8,7 +8,7 @@ import { deepOmit } from './util/deep-omit.js'
 
 export default async function clone (options = {}) {
   const { apiUrl } = await getPackageConfig() || getGlobalConfig()
-  const { packageVersionId, packagePath, toPackageSlug, shouldCreateConfigFile, secretKey, semver } = options
+  const { packageVersionId, packagePath, toPackageSlug, shouldCreateConfigFile, secretKey } = options
   const packageVersion = await packageVersionGet({ id: packageVersionId, packagePath })
 
   let toPath = path.resolve('./', toPackageSlug || packageVersion.package.slug)
