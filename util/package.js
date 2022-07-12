@@ -72,9 +72,6 @@ export async function packageGet ({ shouldUseGlobal = false } = {}) {
 }
 
 export async function packageList () {
-  const { name } = await getPublicPackageConfig()
-  const { packageSlug } = getPackageParts(name)
-
   const query = `
   query PackageConnection ($first: Int, $after: String, $last: Int, $before: String) {
     packageConnection(first: $first, after: $after, last: $last, before: $before) {
@@ -95,9 +92,8 @@ export async function packageList () {
     }
 }
   `
-  const variables = { slug: packageSlug }
 
-  const response = await request({ query, variables, shouldUseGlobal: true })
+  const response = await request({ query, variables: {}, shouldUseGlobal: true })
   return response.data.data.packageConnection
 }
 
