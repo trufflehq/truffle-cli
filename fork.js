@@ -12,7 +12,6 @@ export default async function fork ({ packagePath, toPackageSlug } = {}) {
     packageVersionId,
     toPackageSlug,
     shouldCreateConfigFile: true,
-    secretKey: apiKeyPayload.apiKey.key,
-    semver: '0.0.1'
+    secretKey: apiKeyPayload.apiKey.key
   })
 }

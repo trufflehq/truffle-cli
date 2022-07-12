@@ -29,7 +29,7 @@ export default async function clone (options = {}) {
     const configFilename = `${toPath}/truffle.config.mjs`
     fs.writeFileSync(configFilename, prettier.format(`export default {
   name: '@${packageVersion.package.org.slug}/${packageVersion.package.slug}',
-  version: '${semver || packageVersion.semver}',
+  version: '${packageVersion.semver}',
   apiUrl: '${apiUrl}',
   requestedPermissions: ${JSON.stringify(packageVersion.requestedPermissions ? packageVersion.requestedPermissions : [])},
   installActionRel: ${JSON.stringify(packageVersion.installActionRel ? deepOmit(packageVersion.installActionRel, 'actionId') : {})}
