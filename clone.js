@@ -8,7 +8,7 @@ import { deepOmit } from './util/deep-omit.js'
 
 export default async function clone (options = {}) {
   const { apiUrl } = await getPackageConfig() || getGlobalConfig()
-  const { packageVersionId, packagePath, toPackageSlug, shouldCreateConfigFile, secretKey, semver } = options
+  const { packageVersionId, packagePath, toPackageSlug, shouldCreateConfigFile, secretKey } = options
   const packageVersion = await packageVersionGet({ id: packageVersionId, packagePath })
 
   let toPath = path.resolve('./', toPackageSlug || packageVersion.package.slug)
@@ -29,7 +29,7 @@ export default async function clone (options = {}) {
     const configFilename = `${toPath}/truffle.config.mjs`
     fs.writeFileSync(configFilename, prettier.format(`export default {
   name: '@${packageVersion.package.org.slug}/${packageVersion.package.slug}',
-  version: '${semver || packageVersion.semver}',
+  version: '${packageVersion.semver}',
   apiUrl: '${apiUrl}',
   requestedPermissions: ${JSON.stringify(packageVersion.requestedPermissions ? packageVersion.requestedPermissions : [])},
   installActionRel: ${JSON.stringify(packageVersion.installActionRel ? deepOmit(packageVersion.installActionRel, 'actionId') : {})}
