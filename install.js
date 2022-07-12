@@ -1,6 +1,12 @@
 import { packageInstallCreate } from './util/package-install.js'
 import chalk from 'chalk'
 export default async function install ({ installedPackageVersionPath, isForceInstall = false } = {}) {
+  if (!installedPackageVersionPath) {
+    console.log(chalk.red.bold('Must specify the package path during install'))
+    console.log(chalk.red.bold(`  -'truffle-cli install @truffle-dev-early-access/<package-slug>@latest'`))
+    return
+  }
+
   const { packageInstall, userErrors } = await packageInstallCreate({ installedPackageVersionPath, isForceInstall })
 
   const installStatus = packageInstall?.installStatus
