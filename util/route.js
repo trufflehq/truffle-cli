@@ -36,7 +36,12 @@ export async function saveRoute ({ filenameParts, module, packageVersionId }) {
   const fileParts = filenamePath.split('/')
   const paths = pathParts.map((routerPath, i) => `${pathParts.slice(0, i + 1).join('/')}`)
   const filenames = fileParts.map((routerPath, i) => `${fileParts.slice(0, i + 1).join('/')}`)
-  let prevRoute
+  // make sure there's a top level route
+  let prevRoute = await routeUpsert({
+    packageVersionId,
+    pathWithVariables: '',
+    type: 'empty'
+  })
   // create a top level router and another router for any folders w/ layout.tsx
   for await (const [i, path] of paths.entries()) {
     if (path === '/') { break } // we already upsert one for path = ''
