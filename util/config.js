@@ -42,10 +42,10 @@ export async function getPackageConfig () {
 async function getPackageConfigJson (prefix) {
   let config
   try {
-    config = await import(path.join(process.cwd(), path.normalize(`./${prefix}.js`)))
+    config = await import(new URL(`file://${path.join(process.cwd(), `/${prefix}.js`)}`).href)
   } catch {
     try {
-      config = await import(path.join(process.cwd(), path.normalize(`./${prefix}.mjs`)))
+      config = await import(new URL(`file://${path.join(process.cwd(), `/${prefix}.mjs`)}`).href)
     } catch {}
   }
   return config
