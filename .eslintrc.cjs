@@ -7,6 +7,21 @@ module.exports = {
   // only necessary because we use clsas properties
   // https://stackoverflow.com/questions/60046847/eslint-does-not-allow-static-class-properties
   parser: '@babel/eslint-parser',
+  parserOptions: {
+    babelOptions: {
+      parserOpts: {
+        plugins: ['importAssertions']
+      }
+    }
+  },
+  overrides: [
+    {
+      files: 'cli.js',
+      rules: {
+        'spaced-comment': 0
+      }
+    }
+  ],
   rules: {
     'react/prop-types': 0,
     quotes: 0
