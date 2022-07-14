@@ -20,6 +20,7 @@
   "dependencies": {
     "axios": "^0.24.0",
     "chalk": "^5.0.1",
+    "commander": "^9.3.0",
     "esm": "https://github.com/jsg2021/esm/releases/download/v3.x.x-pr883/esm-3.x.x-pr883.tgz",
     "gitignore-to-glob": "^0.3.0",
     "glob": "^8.0.3",
