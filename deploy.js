@@ -9,6 +9,7 @@ import { packageGet } from './util/package.js'
 import { saveRoute } from './util/route.js'
 import { packageVersionGet, packageVersionCreate } from './util/package-version.js'
 import { getPackageConfig } from './util/config.js'
+import { applyTransforms } from './util/transform.js'
 
 const GLOB = '**/*'
 const IGNORE = [
@@ -72,7 +73,7 @@ async function handleFilename (filename, { packageVersionId }) {
     console.log('skipping secret file')
   }
 
-  const code = fs.readFileSync(filename).toString()
+  const code = applyTransforms(filename, fs.readFileSync(filename).toString())
 
   try {
     const module = await moduleUpsert({

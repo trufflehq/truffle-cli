@@ -1,6 +1,6 @@
 {
   "name": "truffle-cli",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "main": "index.js",
   "type": "module",
@@ -29,7 +29,7 @@
     "node-watch": "^0.7.2",
     "prettier": "^2.7.1",
     "prettify": "^0.1.7",
-    "truffle-dev-server": "github:trufflehq/truffle-dev-server",
+    "truffle-dev-server": "file:../truffle-dev-server",
     "watch-glob": "^0.1.3"
   },
   "devDependencies": {
