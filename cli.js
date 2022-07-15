@@ -84,7 +84,7 @@ program.addCommand(
     .description('Install a new package.')
     .argument('<package-path>', 'The name of the package to install.')
     .option('-f, --force', 'Force install the package.', false)
-    .action(async (packagePath, force) => {
+    .action(async (packagePath, { force }) => {
       const { default: install } = await import('./install.js')
       await install({
         installedPackageVersionPath: packagePath,
