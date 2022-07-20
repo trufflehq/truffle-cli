@@ -73,10 +73,34 @@ export async function packageVersionGet (options) {
   return response.data.data.packageVersion
 }
 
+export async function packageVersionPathGetLatest() {
+  const packageVersion = await packageVersionGet()
+
+  const orgSlug = packageVersion.package?.org?.slug
+  const packageSlug = packageVersion.package?.slug
+
+  return `@${orgSlug}/${packageSlug}@latest`
+}
+
 export async function packageVersionCreate ({ packageId, semver, installActionRel, requestedPermissions }) {
   const query = `
     mutation PackageVersionCreate($packageId: ID, $semver: String, $installActionRel: JSON, $requestedPermissions: JSON) {
       packageVersionCreate(packageId: $packageId, semver: $semver, installActionRel: $installActionRel, requestedPermissions: $requestedPermissions) {
+        id
+      }
+    }
+  `
+  const variables = { packageId, semver, installActionRel, requestedPermissions }
+
+  const response = await request({ query, variables })
+  return response.data.data.packageVersionCreate
+}
+
+
+export async function packageVersionUpdate ({ packageId, semver, installActionRel, requestedPermissions }) {
+  const query = `
+    mutation PackageVersionUpdate($packageId: ID, $semver: String, $installActionRel: JSON, $requestedPermissions: JSON) {
+      packageVersionUpdate(packageId: $packageId, semver: $semver, installActionRel: $installActionRel, requestedPermissions: $requestedPermissions) {
         id
       }
     }
