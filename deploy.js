@@ -11,25 +11,12 @@ import { saveRoute } from './util/route.js'
 import { packageVersionGet, packageVersionCreate, packageVersionUpdate, packageVersionPathGetLatest } from './util/package-version.js'
 import { getPackageConfig } from './util/config.js'
 import { applyTransforms } from './util/transform.js'
+import _ from 'lodash'
 
 const GLOB = '**/*'
 const IGNORE = [
   'node_modules/**/*', '.git/**/*', '*.secret.js', '*.secret.mjs', 'package-lock.json', 'yarn.lock'
 ]
-
-function areEqual (array1, array2) {
-  if (array1.length === array2.length) {
-    return array1.every(element => {
-      if (array2.includes(element)) {
-        return true
-      }
-
-      return false
-    })
-  }
-
-  return false
-}
 
 function getIgnore () {
   // gitignoreToGlob starts with ! so it's double negative (we don't want)
@@ -41,7 +28,9 @@ export async function deploy ({ shouldUpdateDomain } = {}) {
   let packageVersionId = packageVersion?.id
   let fromPackageVersionId = packageVersionId
   let incrementedPackageVersion
-  const { version, installActionRel, requestedPermissions } = await getPackageConfig()
+  // `installActionRel` and `requestedPermissions` need to default to a truthy value
+  // so that they are set in the db when a dev removes them from their config.
+  const { version, installActionRel = {}, requestedPermissions = [] } = await getPackageConfig()
   const pkg = await packageGet()
   if (!packageVersionId) {
     fromPackageVersionId = pkg.latestPackageVersionId
@@ -56,8 +45,8 @@ export async function deploy ({ shouldUpdateDomain } = {}) {
     packageVersionId = incrementedPackageVersion.id
     console.log('New version created', packageVersionId)
   } else if (
-    !areEqual(packageVersion?.requestedPermissions, requestedPermissions) ||
-    !areEqual(packageVersion?.installActionRel, installActionRel)
+    !_.isEqual(packageVersion?.requestedPermissions, requestedPermissions) ||
+    !_.isEqual(packageVersion?.installActionRel, installActionRel)
   ) {
     console.log(chalk.yellowBright.bold('Updating package version config'))
     await packageVersionUpdate({
