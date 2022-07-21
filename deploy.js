@@ -11,25 +11,12 @@ import { saveRoute } from './util/route.js'
 import { packageVersionGet, packageVersionCreate, packageVersionUpdate, packageVersionPathGetLatest } from './util/package-version.js'
 import { getPackageConfig } from './util/config.js'
 import { applyTransforms } from './util/transform.js'
+import { hashObj } from './util/hash_obj.js'
 
 const GLOB = '**/*'
 const IGNORE = [
   'node_modules/**/*', '.git/**/*', '*.secret.js', '*.secret.mjs', 'package-lock.json', 'yarn.lock'
 ]
-
-function areEqual (array1, array2) {
-  if (array1.length === array2.length) {
-    return array1.every(element => {
-      if (array2.includes(element)) {
-        return true
-      }
-
-      return false
-    })
-  }
-
-  return false
-}
 
 function getIgnore () {
   // gitignoreToGlob starts with ! so it's double negative (we don't want)
@@ -56,8 +43,8 @@ export async function deploy ({ shouldUpdateDomain } = {}) {
     packageVersionId = incrementedPackageVersion.id
     console.log('New version created', packageVersionId)
   } else if (
-    !areEqual(packageVersion?.requestedPermissions ?? [], requestedPermissions ?? []) ||
-    !areEqual(packageVersion?.installActionRel ?? [], installActionRel ?? [])
+    hashObj(packageVersion?.requestedPermissions) !== hashObj(requestedPermissions) ||
+    hashObj(packageVersion?.installActionRel) !== hashObj(installActionRel)
   ) {
     console.log(chalk.yellowBright.bold('Updating package version config'))
     await packageVersionUpdate({
