@@ -56,8 +56,8 @@ export async function deploy ({ shouldUpdateDomain } = {}) {
     packageVersionId = incrementedPackageVersion.id
     console.log('New version created', packageVersionId)
   } else if (
-    !areEqual(packageVersion?.requestedPermissions, requestedPermissions) ||
-    !areEqual(packageVersion?.installActionRel, installActionRel)
+    !areEqual(packageVersion?.requestedPermissions ?? [], requestedPermissions ?? []) ||
+    !areEqual(packageVersion?.installActionRel ?? [], installActionRel ?? [])
   ) {
     console.log(chalk.yellowBright.bold('Updating package version config'))
     await packageVersionUpdate({
