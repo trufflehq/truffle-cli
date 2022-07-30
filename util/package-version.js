@@ -42,6 +42,22 @@ const BASE_EVENT_TOPIC_FIELDS = `eventTopicConnection {
   }
 }`
 
+/**
+ * Options to pass to `packageVersionCreate`
+ * @typedef {Object} PackageVersionGetOptions
+ * @property {string} id - The id of the package version to get
+ * @property {string} packagePath - The path to the package
+ * @property {boolean} includeModules - Whether to include the modules in the response
+ * @property {boolean} includePackage - Whether to include the package in the response
+ * @property {boolean} includeEventSubscriptions - Whether to include the event subscriptions in the response
+ * @property {boolean} includeEventTopics - Whether to include the event topics in the response
+ */
+
+/**
+ *
+ * @param {PackageVersionGetOptions} options
+ * @returns {Promise<Object>} The package version
+ */
 export async function packageVersionGet (options) {
   const {
     id, packagePath, includeModules = true, includePackage = true,
@@ -73,7 +89,7 @@ export async function packageVersionGet (options) {
   return response.data.data.packageVersion
 }
 
-export async function packageVersionPathGetLatest() {
+export async function packageVersionPathGetLatest () {
   const packageVersion = await packageVersionGet()
 
   const orgSlug = packageVersion.package?.org?.slug
@@ -95,7 +111,6 @@ export async function packageVersionCreate ({ packageId, semver, installActionRe
   const response = await request({ query, variables })
   return response.data.data.packageVersionCreate
 }
-
 
 export async function packageVersionUpdate ({ packageId, semver, installActionRel, requestedPermissions }) {
   const query = `

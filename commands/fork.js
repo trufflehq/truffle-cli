@@ -1,5 +1,5 @@
-import { packageFork } from './util/package.js'
-import { apiKeyCreate } from './util/api-key.js'
+import { packageFork } from '../util/package.js'
+import { apiKeyCreate } from '../util/api-key.js'
 import clone from './clone.js'
 
 export default async function fork ({ packagePath, toPackageSlug } = {}) {

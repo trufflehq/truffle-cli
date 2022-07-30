@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 
-import { packageVersionGet } from './util/package-version.js'
+import { packageVersionGet } from '../util/package-version.js'
 
 export default async function clone () {
   const packageVersion = await packageVersionGet()

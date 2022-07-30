@@ -1,5 +1,5 @@
 import chalk from 'chalk'
-import { packageVersionGet } from './util/package-version.js'
+import { packageVersionGet } from '../util/package-version.js'
 
 function helpInfo () {
   console.log('`truffle-cli describe` options:')

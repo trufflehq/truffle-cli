@@ -4,13 +4,13 @@ import fs from 'fs'
 import chalk from 'chalk'
 import gitignoreToGlob from 'gitignore-to-glob'
 import install from './install.js'
-import { domainGetConnection, domainMigrate } from './util/domain.js'
-import { moduleUpsert } from './util/module.js'
-import { packageGet } from './util/package.js'
-import { saveRoute } from './util/route.js'
-import { packageVersionGet, packageVersionCreate, packageVersionUpdate, packageVersionPathGetLatest } from './util/package-version.js'
-import { getPackageConfig } from './util/config.js'
-import { applyTransforms } from './util/transform.js'
+import { domainGetConnection, domainMigrate } from '../util/domain.js'
+import { moduleUpsert } from '../util/module.js'
+import { packageGet } from '../util/package.js'
+import { saveRoute } from '../util/route.js'
+import { packageVersionGet, packageVersionCreate, packageVersionUpdate, packageVersionPathGetLatest } from '../util/package-version.js'
+import { getPackageConfig } from '../util/config.js'
+import { applyTransforms } from '../util/transform.js'
 import _ from 'lodash'
 
 const GLOB = '**/*'
@@ -44,9 +44,8 @@ export async function deploy ({ shouldUpdateDomain } = {}) {
     })
     packageVersionId = incrementedPackageVersion.id
     console.log('New version created', packageVersionId)
-  } else if (
-    !_.isEqual(packageVersion?.requestedPermissions, requestedPermissions) ||
-    !_.isEqual(packageVersion?.installActionRel, installActionRel)
+  } else if (!_.isEqual(packageVersion?.requestedPermissions, requestedPermissions) ||
+        !_.isEqual(packageVersion?.installActionRel, installActionRel)
   ) {
     console.log(chalk.yellowBright.bold('Updating package version config'))
     await packageVersionUpdate({

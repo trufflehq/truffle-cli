@@ -1,7 +1,7 @@
 import fs from 'fs'
 
-import { packageGet } from './util/package.js'
-import { apiKeyCreate } from './util/api-key.js'
+import { packageGet } from '../util/package.js'
+import { apiKeyCreate } from '../util/api-key.js'
 
 export default async function regeneratePackageApiKey () {
   const pkg = await packageGet({ shouldUseGlobal: true })

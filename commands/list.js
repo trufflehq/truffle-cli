@@ -1,4 +1,4 @@
-import { packageList } from './util/package.js'
+import { packageList } from '../util/package.js'
 import chalk from 'chalk'
 import _ from 'lodash'
 

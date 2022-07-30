@@ -2,9 +2,9 @@ import fs from 'fs'
 import path from 'path'
 import prettier from 'prettier'
 
-import { getPackageConfig, getGlobalConfig } from './util/config.js'
-import { packageVersionGet } from './util/package-version.js'
-import { deepOmit } from './util/deep-omit.js'
+import { getPackageConfig, getGlobalConfig } from '../util/config.js'
+import { packageVersionGet } from '../util/package-version.js'
+import { deepOmit } from '../util/deep-omit.js'
 
 export default async function clone (options = {}) {
   const { apiUrl } = await getPackageConfig() || getGlobalConfig()

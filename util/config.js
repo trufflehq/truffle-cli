@@ -1,7 +1,6 @@
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
-import chalk from 'chalk'
 
 export function getConfigFilename (fiename) {
   return path.resolve(os.homedir(), path.normalize('.truffle/config.json'))
@@ -25,6 +24,35 @@ export async function getPublicPackageConfig () {
   return { ...publicConfig.default }
 }
 
+/**
+ * @typedef {Object} RequestedPermissions
+ * @property {string} action
+ * @property {boolean} value
+ * @property {Record<string, { isAll: boolean; rank: number; }>} filters
+ */
+
+/**
+ * @typedef {Object} TruffleFunction
+ * @property {string} name
+ * @property {string} [description]
+ * @property {string} entrypoint
+ * @property {string[]} [cnames]
+ */
+
+/**
+ * @typedef {Object} PublicPackageConfig
+ * @property {string} name
+ * @property {string} version
+ * @property {string} apiUrl
+ * @property {string} secretKey
+ * @property {RequestedPermissions[]} requestedPermissions
+ * @property {TruffleFunction[]} functions
+ */
+
+/**
+ * Fetches the package configuration
+ * @returns {Promise<PublicPackageConfig>}
+ */
 export async function getPackageConfig () {
   const publicConfig = await getPackageConfigJson('truffle.config')
   const secretConfig = await getPackageConfigJson('truffle.secret')

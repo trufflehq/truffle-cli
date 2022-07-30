@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 
-import { getConfigFilename } from './util/config.js'
+import { getConfigFilename } from '../util/config.js'
 
 // org-wide secretKey. or could use oauth when we build
 export default async function auth ({ secretKey }) {

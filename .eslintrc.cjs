@@ -10,7 +10,8 @@ module.exports = {
   parserOptions: {
     babelOptions: {
       parserOpts: {
-        plugins: ['importAssertions']
+        plugins: ['importAssertions'],
+        ecmaVersion: 2020
       }
     }
   },
