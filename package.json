@@ -8,8 +8,7 @@
     "postinstall": "npm run build",
     "build": "tsc && chmod +x dist/cli.js",
     "watch": "tsc --watch",
-    "format": "eslint --fix --ext .ts,.js src",
-    "generate": "VERBOSE=1 DEBUG=1 graphql-codegen --config codegen.yml"
+    "format": "eslint --fix --ext .ts,.js src"
   },
   "repository": {
     "type": "git",
