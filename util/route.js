@@ -18,7 +18,7 @@ export async function routeUpsert ({ packageVersionId, pathWithVariables, parent
   }
 
   const response = await request({ query, variables })
-  return response.data.data.routeUpsert.route
+  return response.data.routeUpsert.route
 }
 
 export async function saveRoute ({ filenameParts, module, packageVersionId }) {

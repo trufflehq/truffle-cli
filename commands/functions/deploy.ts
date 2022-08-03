@@ -1,14 +1,19 @@
-
-import { getPackageConfig } from '../../util/config.js'
 import chalk from 'chalk'
-import { packageGet } from '../../util/package.js'
-import { createDeployment, createEsZIP, upsertFunction } from '../../util/functions.js'
+import { join } from 'path'
 import readline from 'readline'
-import FormData from '@discordjs/form-data'
+import { getPackageConfig } from '../../util/config.js'
+import { createDeployment, createEsZIP, upsertFunction } from '../../util/functions.js'
+import { packageGet } from '../../util/package.js'
 
-const debug = (message) => console.log(chalk.blue(message))
+interface TruffleFunction {
+  name: string
+  entrypoint: string;
+  description?: string
+}
 
-export default async function deploy ({ functionName, all } = {}) {
+const debug = (message: string) => console.log(chalk.blue(message))
+
+export default async function deploy ({ functionName, all }: { functionName?: string, all?: boolean } = {}) {
   const pkgConfig = await getPackageConfig()
   if (!pkgConfig) {
     console.log(chalk.red`package config not found, make sure truffle.config.mjs exists`)
@@ -22,11 +27,7 @@ export default async function deploy ({ functionName, all } = {}) {
     return
   }
 
-  /**
-   * Handles upserting a function and creates a deployment
-   * @param {TruffleFunction} fn The truffle function in iteration
-   */
-  const handleFunction = async (fn) => {
+  const handleFunction = async (fn: TruffleFunction) => {
     debug('here P')
     const { name, description, entrypoint } = fn
     const upsertedFn = await upsertFunction({ name, description, packageId })
@@ -34,13 +35,11 @@ export default async function deploy ({ functionName, all } = {}) {
 
     debug(`process.cwd(): ${process.cwd()}`)
     debug(`entrypoint: ${entrypoint}`)
-    const ep = new URL(entrypoint, 'file://')
+    const ep = new URL(join(process.cwd(), entrypoint), 'file://')
     const build = await createEsZIP(ep)
     debug('created eszip')
-    const form = new FormData()
-    form.append('file', build, { filename: 'build.eszip2' })
 
-    const deployment = await createDeployment({ packageId, functionId: upsertedFn.id, entrypoint }, form)
+    const deployment = await createDeployment({ packageId, functionId: upsertedFn.id, entrypoint }, build.buffer)
     debug('created deployment')
     console.dir(deployment)
 

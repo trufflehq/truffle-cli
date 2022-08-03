@@ -26,7 +26,7 @@ export async function packageInstallCreate ({ installedPackageVersionPath, isFor
 
   try {
     const response = await request({ query, variables })
-    return { packageInstall: response.data.data.packageInstallCreate.packageInstall, userErrors: response.data.data.packageInstallCreate.userErrors }
+    return { packageInstall: response.data.packageInstallCreate.packageInstall, userErrors: response.data.packageInstallCreate.userErrors }
   } catch (err) {
     return err.message
   }

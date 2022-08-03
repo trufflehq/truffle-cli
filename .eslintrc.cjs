@@ -1,19 +1,14 @@
 module.exports = {
   env: {
-    browser: true,
-    es6: true
+    node: true
   },
   extends: ['standard', 'plugin:react/recommended'],
   // only necessary because we use clsas properties
   // https://stackoverflow.com/questions/60046847/eslint-does-not-allow-static-class-properties
-  parser: '@babel/eslint-parser',
+  parser: '@typescript-eslint/parser',
   parserOptions: {
-    babelOptions: {
-      parserOpts: {
-        plugins: ['importAssertions'],
-        ecmaVersion: 2020
-      }
-    }
+    ecmaVersion: 'latest',
+    sourceType: 'module'
   },
   overrides: [
     {

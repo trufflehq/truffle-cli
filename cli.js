@@ -1,6 +1,5 @@
-#!/bin/sh
+#!/usr/bin/env -S node --experimental-modules --experimental-import-meta-resolve --experimental-network-imports --no-warnings
 
-":" //# comment; exec /usr/bin/env node --experimental-import-meta-resolve --experimental-network-imports --no-warnings "$0" "$@"
 'use strict'
 import { Argument, Command, program } from 'commander'
 import truffleCli from './package.json' assert { type: 'json' }

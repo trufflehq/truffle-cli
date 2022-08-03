@@ -1,0 +1,33 @@
+{
+	"compileOnSave": true,
+	"compilerOptions": {
+		"baseUrl": ".",
+		"alwaysStrict": true,
+		"lib": ["es2022"],
+		"allowJs": true,
+		"module": "nodenext",
+		"noUnusedParameters": true,
+		"sourceMap": true,
+		"skipLibCheck": true,
+		"moduleResolution": "nodenext",
+		"noUnusedLocals": true,
+		"removeComments": false,
+		"target": "ES2022",
+		"strictNullChecks": true,
+		"outDir": "dist",
+		"esModuleInterop": true,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"resolveJsonModule": true,
+		"newLine": "lf",
+		"allowSyntheticDefaultImports": true
+	},
+	"exclude": [
+		"node_modules"
+	],
+	"include": [
+		"commands",
+		"util",
+		"cli.js"
+	]
+}

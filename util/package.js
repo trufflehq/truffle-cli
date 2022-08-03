@@ -1,5 +1,6 @@
 import { getPublicPackageConfig } from './config.js'
 import { request } from './request.js'
+import gql from 'graphql-tag'
 
 const MODULE_REGEX = /@(.*?)\/([^@]+)(?:@([0-9.]+))?([^?#]*)$/i
 
@@ -30,7 +31,7 @@ export async function packageFork ({ packagePath, toPackageSlug }) {
   }
 
   const response = await request({ query, variables })
-  return response.data.data.packageFork
+  return response.data.packageFork
 }
 
 export async function packageInstall ({ installPackagePath, toPackageVersionId }) {
@@ -50,7 +51,7 @@ export async function packageInstall ({ installPackagePath, toPackageVersionId }
   }
 
   const response = await request({ query, variables })
-  return response.data.data.packageInstall
+  return response.data.packageInstall
 }
 
 export async function packageGet ({ shouldUseGlobal = false } = {}) {
@@ -68,7 +69,7 @@ export async function packageGet ({ shouldUseGlobal = false } = {}) {
   const variables = { slug: packageSlug }
 
   const response = await request({ query, variables, shouldUseGlobal })
-  return response.data.data.package
+  return response.data.package
 }
 
 export async function packageList () {
@@ -94,7 +95,7 @@ export async function packageList () {
   `
 
   const response = await request({ query, variables: {}, shouldUseGlobal: true })
-  return response.data.data.packageConnection
+  return response.data.packageConnection
 }
 
 export function getPackageParts (urlOrStr) {

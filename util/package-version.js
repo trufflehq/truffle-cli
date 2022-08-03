@@ -86,7 +86,7 @@ export async function packageVersionGet (options) {
   const variables = { id, packageSlug, semver: packageVersionSemver }
 
   const response = await request({ query, variables })
-  return response.data.data.packageVersion
+  return response.data.packageVersion
 }
 
 export async function packageVersionPathGetLatest () {
@@ -109,7 +109,7 @@ export async function packageVersionCreate ({ packageId, semver, installActionRe
   const variables = { packageId, semver, installActionRel, requestedPermissions }
 
   const response = await request({ query, variables })
-  return response.data.data.packageVersionCreate
+  return response.data.packageVersionCreate
 }
 
 export async function packageVersionUpdate ({ packageId, semver, installActionRel, requestedPermissions }) {
@@ -123,5 +123,5 @@ export async function packageVersionUpdate ({ packageId, semver, installActionRe
   const variables = { packageId, semver, installActionRel, requestedPermissions }
 
   const response = await request({ query, variables })
-  return response.data.data.packageVersionCreate
+  return response.data.packageVersionCreate
 }

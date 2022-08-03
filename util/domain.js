@@ -15,7 +15,7 @@ export async function domainGetConnection ({ packageVersionId }) {
   const variables = { packageVersionId }
 
   const response = await request({ query, variables })
-  return response.data.data.domainConnection
+  return response.data.domainConnection
 }
 
 export async function domainMigrate ({ fromPackageVersionId, toPackageVersionId }) {
@@ -31,5 +31,5 @@ export async function domainMigrate ({ fromPackageVersionId, toPackageVersionId 
   const variables = { fromPackageVersionId, toPackageVersionId }
 
   const response = await request({ query, variables })
-  return response.data.data.domainMigratePackageVersionId
+  return response.data.domainMigratePackageVersionId
 }
