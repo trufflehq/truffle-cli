@@ -10,9 +10,10 @@ export interface RequestOptions {
 
 interface BaseGraphQLResponse {
   errors?: { message: string; extensions: { info: string }}[]
+  data: Record<string, unknown>
 }
 
-export async function request ({ query, variables, shouldUseGlobal = false }: RequestOptions): Promise<any> {
+export async function request ({ query, variables, shouldUseGlobal = false }: RequestOptions): Promise<BaseGraphQLResponse> {
   const { apiUrl, secretKey } = shouldUseGlobal ? getGlobalConfig() : await getPackageConfig() || getGlobalConfig()
   const response = await fetch(apiUrl, {
     method: 'POST',
