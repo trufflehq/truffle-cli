@@ -2,7 +2,7 @@ module.exports = {
   env: {
     node: true
   },
-  extends: ['standard', 'plugin:react/recommended'],
+  extends: ['standard'],
   // only necessary because we use clsas properties
   // https://stackoverflow.com/questions/60046847/eslint-does-not-allow-static-class-properties
   parser: '@typescript-eslint/parser',
