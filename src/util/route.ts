@@ -63,7 +63,7 @@ export async function saveRoute ({ filenameParts, module, packageVersionId }: { 
       hasLayoutFile = true
     } catch {}
 
-    let layoutDefaultExportComponentId: string = ''
+    let layoutDefaultExportComponentId = ''
     if (hasLayoutFile) {
       const layoutModule = await moduleUpsert({
         packageVersionId,
