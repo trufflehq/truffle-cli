@@ -2,11 +2,11 @@
   "name": "truffle-cli",
   "version": "0.0.8",
   "description": "",
-  "main": "dist/cli.js",
+  "main": "dist/src/cli.js",
   "type": "module",
   "scripts": {
     "postinstall": "npm run build",
-    "build": "tsc && chmod +x dist/cli.js",
+    "build": "tsc && chmod +x dist/src/cli.js",
     "watch": "tsc --watch",
     "format": "eslint --fix --ext .ts,.js src"
   },
@@ -54,7 +54,7 @@
     "eslint-plugin-promise": "^5.2.0",
     "typescript": "^4.7.4"
   },
-  "bin": "./dist/cli.js",
+  "bin": "./dist/src/cli.js",
   "engines": {
     "node": ">=18"
   },

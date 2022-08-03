@@ -5500,7 +5500,7 @@ __metadata:
     undici: ^5.8.0
     watch-glob: ^0.1.3
   bin:
-    truffle-cli: ./dist/cli.js
+    truffle-cli: ./dist/src/cli.js
   languageName: unknown
   linkType: soft
 

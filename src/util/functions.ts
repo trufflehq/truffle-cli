@@ -46,9 +46,7 @@ mutation CreateDeployment($input: CreateDeploymentInput!) {
   }
 }
 `
-  console.log('here 123')
   const resp = await upload({ query, variables: { input }, bundle })
-  console.log('here 456')
   return resp.data.createDeployment
 }
 

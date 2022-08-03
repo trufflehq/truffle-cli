@@ -1,7 +1,7 @@
 import { request as undici } from 'undici'
 import { getPackageConfig, getGlobalConfig } from './config.js'
 import FormData from 'form-data'
-import arrayBufferToBuffer from 'arraybuffer-to-buffer'
+// import arrayBufferToBuffer from 'arraybuffer-to-buffer'
 import fetch from 'node-fetch'
 
 export interface RequestOptions {
@@ -41,12 +41,12 @@ export interface UploadOptions {
 export async function upload ({ query, variables, bundle, shouldUseGlobal = false }: UploadOptions) {
   const { apiUrl, secretKey } = shouldUseGlobal ? getGlobalConfig() : await getPackageConfig() || getGlobalConfig()
   const url = new URL(apiUrl)
-  url.pathname = '/deployments/upload'
+  url.pathname = '/upload'
   url.searchParams.set('graphqlQuery', query)
   if (variables) url.searchParams.set('variables', JSON.stringify(variables))
 
   const form = new FormData()
-  form.append('file', arrayBufferToBuffer(bundle))
+  form.append('file', Buffer.from(bundle))
 
   const response = await fetch(url.toString(), {
     method: 'POST',
@@ -56,7 +56,6 @@ export async function upload ({ query, variables, bundle, shouldUseGlobal = fals
     },
     body: form.getBuffer()
   })
-  console.log('here 1230987')
 
   const data = await response.json() as any
   if (data?.errors?.length) {
