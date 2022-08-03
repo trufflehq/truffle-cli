@@ -13,7 +13,7 @@ interface BaseGraphQLResponse {
   data: Record<string, unknown>
 }
 
-export async function request ({ query, variables, shouldUseGlobal = false }: RequestOptions): Promise<BaseGraphQLResponse> {
+export async function request ({ query, variables, shouldUseGlobal = false }: RequestOptions): Promise<any> {
   const { apiUrl, secretKey } = shouldUseGlobal ? getGlobalConfig() : await getPackageConfig() || getGlobalConfig()
   const response = await fetch(apiUrl, {
     method: 'POST',
@@ -41,7 +41,7 @@ export interface UploadOptions {
   bundle: ArrayBufferLike;
 }
 
-export async function upload ({ query, variables, bundle, shouldUseGlobal = false }: UploadOptions) {
+export async function upload ({ query, variables, bundle, shouldUseGlobal = false }: UploadOptions): Promise<any> {
   const { apiUrl, secretKey } = shouldUseGlobal ? getGlobalConfig() : await getPackageConfig() || getGlobalConfig()
   const url = new URL(apiUrl)
   url.pathname = '/upload'
