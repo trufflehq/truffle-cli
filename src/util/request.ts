@@ -1,6 +1,7 @@
 import { request as undici } from 'undici'
-import { URL } from 'node:url'
 import { getPackageConfig, getGlobalConfig } from './config.js'
+import FormData from 'form-data'
+import arrayBufferToBuffer from 'arraybuffer-to-buffer'
 import fetch from 'node-fetch'
 
 export interface RequestOptions {
@@ -37,24 +38,26 @@ export interface UploadOptions {
   bundle: ArrayBufferLike;
 }
 
-export async function deploymentUpload ({ query, variables, bundle, shouldUseGlobal = false }: UploadOptions) {
+export async function upload ({ query, variables, bundle, shouldUseGlobal = false }: UploadOptions) {
   const { apiUrl, secretKey } = shouldUseGlobal ? getGlobalConfig() : await getPackageConfig() || getGlobalConfig()
   const url = new URL(apiUrl)
   url.pathname = '/deployments/upload'
   url.searchParams.set('graphqlQuery', query)
   if (variables) url.searchParams.set('variables', JSON.stringify(variables))
 
-  console.log('here 2319')
-  console.log('POST', url.toString())
+  const form = new FormData()
+  form.append('file', arrayBufferToBuffer(bundle))
+
   const response = await fetch(url.toString(), {
     method: 'POST',
     headers: {
       authorization: `Bearer ${secretKey}`,
-      'content-type': 'application/eszip2'
+      ...form.getHeaders()
     },
-    body: bundle
+    body: form.getBuffer()
   })
   console.log('here 1230987')
+
   const data = await response.json() as any
   if (data?.errors?.length) {
     throw new Error(`Request error: ${

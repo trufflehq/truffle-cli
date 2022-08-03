@@ -5,7 +5,16 @@ import nodePath from 'path'
 import { request } from './request.js'
 import { moduleUpsert } from './module.js'
 
-export async function routeUpsert ({ packageVersionId, pathWithVariables, parentId, componentId, type, data }) {
+export interface RouteUpsertInput {
+  packageVersionId?: string;
+  pathWithVariables?: string;
+  parentId?: string;
+  componentId?: string;
+  type?: 'layout' | 'page' | 'empty';
+  data?: Record<string, unknown>;
+}
+
+export async function routeUpsert ({ packageVersionId, pathWithVariables, parentId, componentId, type, data }: RouteUpsertInput) {
   const query = `
     mutation RouteUpsert($input: RouteUpsertInput!) {
       routeUpsert(input: $input) {
@@ -18,10 +27,10 @@ export async function routeUpsert ({ packageVersionId, pathWithVariables, parent
   }
 
   const response = await request({ query, variables })
-  return response.data.routeUpsert.route
+  return response.data.routeUpsert.route as { id: string }
 }
 
-export async function saveRoute ({ filenameParts, module, packageVersionId }) {
+export async function saveRoute ({ filenameParts, module, packageVersionId }: { filenameParts: string[], module: { id: string, exports: { type: string, componentRel: { id: string } }[] }, packageVersionId: string }) {
   const defaultExportComponentId = module.exports.find(({ type }) => type === 'default')?.componentRel?.id
 
   const filenamePath = `/${filenameParts.slice(1, filenameParts.length - 1).join('/')}`
@@ -34,8 +43,8 @@ export async function saveRoute ({ filenameParts, module, packageVersionId }) {
     .replace(/\[(.*?)\]/g, ":$1")
   const pathParts = dbPath.split('/')
   const fileParts = filenamePath.split('/')
-  const paths = pathParts.map((routerPath, i) => `${pathParts.slice(0, i + 1).join('/')}`)
-  const filenames = fileParts.map((routerPath, i) => `${fileParts.slice(0, i + 1).join('/')}`)
+  const paths = pathParts.map((_, i) => `${pathParts.slice(0, i + 1).join('/')}`)
+  const filenames = fileParts.map((_, i) => `${fileParts.slice(0, i + 1).join('/')}`)
   // make sure there's a top level route
   let prevRoute = await routeUpsert({
     packageVersionId,
@@ -54,7 +63,7 @@ export async function saveRoute ({ filenameParts, module, packageVersionId }) {
       hasLayoutFile = true
     } catch {}
 
-    let layoutDefaultExportComponentId
+    let layoutDefaultExportComponentId: string = ''
     if (hasLayoutFile) {
       const layoutModule = await moduleUpsert({
         packageVersionId,

@@ -2,7 +2,7 @@ import { packageFork } from '../util/package.js'
 import { apiKeyCreate } from '../util/api-key.js'
 import clone from './clone.js'
 
-export default async function fork ({ packagePath, toPackageSlug } = {}) {
+export default async function fork ({ packagePath, toPackageSlug }: { packagePath: string, toPackageSlug: string }) {
   const pkg = await packageFork({ packagePath, toPackageSlug })
   const packageVersionId = pkg.latestPackageVersionId
 

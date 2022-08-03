@@ -10,32 +10,32 @@ function helpInfo () {
   console.log(`\t\t-h: fetches the package version's event topics`)
 }
 
-function printPackageVersionHeader (packageVersion) {
+function printPackageVersionHeader (packageVersion: { id: string; semver: string; package: { slug: string, org: { slug: string; } }}) {
   console.log(chalk.bold(`Package Version (${packageVersion.package.slug}@${packageVersion.semver})`))
   console.log(`id: ${packageVersion.id}`)
   console.log(`org: ${packageVersion.package.org.slug}`)
 }
 
-function printPackageVersionEventSubscriptions (packageVersionWithSub) {
+function printPackageVersionEventSubscriptions (packageVersionWithSub: { eventSubscriptionConnection: { nodes: { id: string; name: string; }[] } }) {
   const eventSubscriptionConnection = packageVersionWithSub?.eventSubscriptionConnection
   console.log(chalk.bold(`Event Subscriptions:`))
   console.log(JSON.stringify(eventSubscriptionConnection.nodes, null, 2))
 }
 
-function printPackageVersionEventTopics (packageVersionWithTopics) {
+function printPackageVersionEventTopics (packageVersionWithTopics: { eventTopicConnection: { nodes: { id: string; name: string; }[] } }) {
   const eventTopicConnection = packageVersionWithTopics?.eventTopicConnection
 
   console.log(chalk.bold(`Event Topics:`))
   console.log(JSON.stringify(eventTopicConnection.nodes, null, 2))
 }
 
-function printPackageVersionPackage (packageVersionWithPkg) {
+function printPackageVersionPackage (packageVersionWithPkg: { package: { name: string; id: string; } }) {
   console.log(chalk.bold(`Package:`))
   console.log(`id: ${packageVersionWithPkg.package.id}`)
   console.log(`name: ${packageVersionWithPkg.package.name}`)
 }
 
-export default async function describe ({ model } = {}) {
+export default async function describe ({ model }: { model: 'subscriptions' | 'topics' | 'package' | '-h' }) {
   switch (model) {
     case 'subscriptions': {
       // list out event subscriptions
@@ -60,12 +60,13 @@ export default async function describe ({ model } = {}) {
 
       printPackageVersionHeader(packageVersionWithPkg)
       printPackageVersionPackage(packageVersionWithPkg)
-    }
       break
+    }
 
-    case '-h':
+    case '-h': {
       helpInfo()
       break
+    }
 
     default: {
       const packageVersionAll = await packageVersionGet({ includeEventSubscriptions: true, includeEventTopics: true })

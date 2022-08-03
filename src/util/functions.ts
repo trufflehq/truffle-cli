@@ -1,4 +1,4 @@
-import { request, deploymentUpload } from "./request.js"
+import { request, upload } from "./request.js"
 import { build, LoadResponse } from "@deno/eszip"
 import { readFile } from 'fs/promises'
 import { fetch } from 'undici'
@@ -47,7 +47,7 @@ mutation CreateDeployment($input: CreateDeploymentInput!) {
 }
 `
   console.log('here 123')
-  const resp = await deploymentUpload({ query, variables: { input }, bundle })
+  const resp = await upload({ query, variables: { input }, bundle })
   console.log('here 456')
   return resp.data.createDeployment
 }

@@ -1,11 +1,12 @@
-import { getPublicPackageConfig } from './config.js'
-import { request } from './request.js'
-import gql from 'graphql-tag'
+import { getPublicPackageConfig } from "./config.js"
+import { request } from "./request.js"
 
 const MODULE_REGEX = /@(.*?)\/([^@]+)(?:@([0-9.]+))?([^?#]*)$/i
 
 export async function packageFork ({ packagePath, toPackageSlug }) {
-  const { orgSlug, packageSlug, packageVersionSemver } = getPackageParts(packagePath)
+  const { orgSlug, packageSlug, packageVersionSemver } =
+    (getPackageParts(packagePath))!
+
   const query = `
     mutation PackageFork(
       $fromOrgSlug: String
@@ -34,7 +35,10 @@ export async function packageFork ({ packagePath, toPackageSlug }) {
   return response.data.packageFork
 }
 
-export async function packageInstall ({ installPackagePath, toPackageVersionId }) {
+export async function packageInstall ({
+  installPackagePath,
+  toPackageVersionId
+}) {
   const query = `
     mutation PackageInstall(
       $installPackagePack: String
@@ -55,8 +59,8 @@ export async function packageInstall ({ installPackagePath, toPackageVersionId }
 }
 
 export async function packageGet ({ shouldUseGlobal = false } = {}) {
-  const { name } = await getPublicPackageConfig()
-  const { packageSlug } = getPackageParts(name)
+  const { name } = (await getPublicPackageConfig())!
+  const { packageSlug } = (getPackageParts(name))!
 
   const query = `
     query PackageGet($slug: String) {
@@ -69,7 +73,7 @@ export async function packageGet ({ shouldUseGlobal = false } = {}) {
   const variables = { slug: packageSlug }
 
   const response = await request({ query, variables, shouldUseGlobal })
-  return response.data.package
+  return response.data.package as { id: string, latestPackageVersionId: string }
 }
 
 export async function packageList () {
@@ -94,14 +98,28 @@ export async function packageList () {
 }
   `
 
-  const response = await request({ query, variables: {}, shouldUseGlobal: true })
-  return response.data.packageConnection
+  const response = await request({
+    query,
+    variables: {},
+    shouldUseGlobal: true
+  })
+
+  return response.data.packageConnection as {
+    totalCount: number;
+    pageInfo: { endCursor: string; hasNextPage: boolean };
+    nodes: {
+      id: string;
+      slug: string;
+      packageVersionConnection: { nodes: { semver: string }[] };
+    }[];
+  }
 }
 
-export function getPackageParts (urlOrStr) {
-  const [all, orgSlug, packageSlug, packageVersionSemver, filename] = urlOrStr?.match(MODULE_REGEX) || []
+export function getPackageParts (urlOrStr: string) {
+  const [all, orgSlug, packageSlug, packageVersionSemver, filename] =
+    urlOrStr?.match(MODULE_REGEX) || []
   if (!all) {
-    console.log('failed to parse', urlOrStr)
+    console.log("failed to parse", urlOrStr)
   }
   return all ? { orgSlug, packageSlug, packageVersionSemver, filename } : null
 }

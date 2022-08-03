@@ -39,7 +39,7 @@ export default async function deploy ({ functionName, all }: { functionName?: st
     const build = await createEsZIP(ep)
     debug('created eszip')
 
-    const deployment = await createDeployment({ packageId, functionId: upsertedFn.id, entrypoint }, build.buffer)
+    const deployment = await createDeployment({ packageId, functionId: upsertedFn.id, entrypoint }, build)
     debug('created deployment')
     console.dir(deployment)
 

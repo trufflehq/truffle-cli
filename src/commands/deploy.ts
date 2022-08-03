@@ -23,14 +23,14 @@ function getIgnore () {
   return IGNORE.concat(gitignoreToGlob()).map((ignore) => ignore.replace('!', ''))
 }
 
-export async function deploy ({ shouldUpdateDomain } = {}) {
+export async function deploy ({ shouldUpdateDomain }: { shouldUpdateDomain?: boolean }) {
   const packageVersion = await packageVersionGet()
   let packageVersionId = packageVersion?.id
   let fromPackageVersionId = packageVersionId
   let incrementedPackageVersion
   // `installActionRel` and `requestedPermissions` need to default to a truthy value
   // so that they are set in the db when a dev removes them from their config.
-  const { version, installActionRel = {}, requestedPermissions = [] } = await getPackageConfig()
+  const { version, installActionRel = {}, requestedPermissions = [] } = (await getPackageConfig())!
   const pkg = await packageGet()
   if (!packageVersionId) {
     fromPackageVersionId = pkg.latestPackageVersionId

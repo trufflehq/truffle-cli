@@ -52,24 +52,37 @@ const BASE_EVENT_TOPIC_FIELDS = `eventTopicConnection {
  * @property {boolean} includeEventSubscriptions - Whether to include the event subscriptions in the response
  * @property {boolean} includeEventTopics - Whether to include the event topics in the response
  */
+export interface PackageVersionGetOptions {
+  id?: string
+  packagePath?: string
+  includeModules?: boolean
+  includePackage?: boolean
+  includeEventSubscriptions?: boolean
+  includeEventTopics?: boolean
+}
 
 /**
  *
  * @param {PackageVersionGetOptions} options
  * @returns {Promise<Object>} The package version
  */
-export async function packageVersionGet (options) {
+export async function packageVersionGet (options?: PackageVersionGetOptions) {
   const {
     id, packagePath, includeModules = true, includePackage = true,
     includeEventSubscriptions = false, includeEventTopics = false
   } = options || {}
-  let packageSlug, packageVersionSemver
+  let packageSlug: string | undefined
+  let packageVersionSemver: string | undefined
+
   if (packagePath) {
-    ({ packageSlug, packageVersionSemver } = getPackageParts(packagePath))
+    const parsed = getPackageParts(packagePath)
+    packageSlug = parsed?.packageSlug
+    packageVersionSemver = parsed?.packageVersionSemver
   } else if (!id) {
-    const { name, version } = await getPackageConfig()
-    ;({ packageSlug } = getPackageParts(name))
-    packageVersionSemver = version
+    const config = await getPackageConfig()
+    const parsed = getPackageParts(config!.name)
+    packageSlug = parsed?.packageSlug
+    packageVersionSemver = config?.version
   }
 
   const query = `
@@ -98,7 +111,7 @@ export async function packageVersionPathGetLatest () {
   return `@${orgSlug}/${packageSlug}@latest`
 }
 
-export async function packageVersionCreate ({ packageId, semver, installActionRel, requestedPermissions }) {
+export async function packageVersionCreate ({ packageId, semver, installActionRel, requestedPermissions }: { packageId: string, semver: string, installActionRel: Record<string, unknown>, requestedPermissions: Record<string, unknown>[] }) {
   const query = `
     mutation PackageVersionCreate($packageId: ID, $semver: String, $installActionRel: JSON, $requestedPermissions: JSON) {
       packageVersionCreate(packageId: $packageId, semver: $semver, installActionRel: $installActionRel, requestedPermissions: $requestedPermissions) {
@@ -109,10 +122,10 @@ export async function packageVersionCreate ({ packageId, semver, installActionRe
   const variables = { packageId, semver, installActionRel, requestedPermissions }
 
   const response = await request({ query, variables })
-  return response.data.packageVersionCreate
+  return response.data.packageVersionCreate as { id: string }
 }
 
-export async function packageVersionUpdate ({ packageId, semver, installActionRel, requestedPermissions }) {
+export async function packageVersionUpdate ({ packageId, semver, installActionRel, requestedPermissions }: { packageId: string, semver: string, installActionRel: Record<string, unknown>, requestedPermissions: Record<string, unknown>[] }) {
   const query = `
     mutation PackageVersionUpdate($packageId: ID, $semver: String, $installActionRel: JSON, $requestedPermissions: JSON) {
       packageVersionUpdate(packageId: $packageId, semver: $semver, installActionRel: $installActionRel, requestedPermissions: $requestedPermissions) {
@@ -123,5 +136,5 @@ export async function packageVersionUpdate ({ packageId, semver, installActionRe
   const variables = { packageId, semver, installActionRel, requestedPermissions }
 
   const response = await request({ query, variables })
-  return response.data.packageVersionCreate
+  return response.data.packageVersionCreate as { id: string }
 }

@@ -5,8 +5,11 @@
   "main": "dist/cli.js",
   "type": "module",
   "scripts": {
+    "postinstall": "npm run build",
     "build": "tsc && chmod +x dist/cli.js",
-    "watch": "tsc --watch"
+    "watch": "tsc --watch",
+    "format": "eslint --fix --ext .ts,.js src",
+    "generate": "VERBOSE=1 DEBUG=1 graphql-codegen --config codegen.yml"
   },
   "repository": {
     "type": "git",
@@ -20,19 +23,15 @@
   "homepage": "https://github.com/trufflehq/truffle-cli#readme",
   "dependencies": {
     "@deno/eszip": "^0.22.0",
-    "@discordjs/form-data": "^3.0.1",
-    "axios": "^0.24.0",
+    "arraybuffer-to-buffer": "^0.0.7",
     "chalk": "^5.0.1",
     "commander": "^9.3.0",
     "esm": "https://github.com/jsg2021/esm/releases/download/v3.x.x-pr883/esm-3.x.x-pr883.tgz",
     "form-data": "^4.0.0",
     "gitignore-to-glob": "^0.3.0",
     "glob": "^8.0.3",
-    "globby": "^13.1.1",
-    "graphql-tag": "^2.12.6",
     "lodash": "^4.17.21",
     "node-fetch": "^3.2.10",
-    "node-watch": "^0.7.2",
     "prettier": "^2.7.1",
     "prettify": "^0.1.7",
     "truffle-dev-server": "github:trufflehq/truffle-dev-server",
@@ -45,9 +44,8 @@
     "@babel/plugin-proposal-class-properties": "^7.12.1",
     "@babel/preset-react": "^7.14.5",
     "@babel/preset-typescript": "^7.18.6",
-    "@types/form-data": "^2.5.0",
+    "@types/lodash": "^4.14.182",
     "@types/node": "^18.6.2",
-    "@types/node-fetch": "^2.6.2",
     "@typescript-eslint/eslint-plugin": "^5.31.0",
     "@typescript-eslint/parser": "^5.31.0",
     "eslint": "^7.32.0",
@@ -64,5 +62,6 @@
   },
   "volta": {
     "node": "18.7.0"
-  }
+  },
+  "packageManager": "yarn@3.2.2"
 }

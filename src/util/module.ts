@@ -1,7 +1,15 @@
 import { request } from './request.js'
 
-export async function moduleUpsert ({ packageVersionId, id, filename, runtime = 'react', code }) { //, propTypes }) {
-  if (code.indexOf('sk_') !== -1) {
+export interface ModuleUpsertInput {
+  id?: string;
+  packageVersionId?: string;
+  filename?: string;
+  runtime?: 'react' | string;
+  code?: string;
+}
+
+export async function moduleUpsert ({ packageVersionId, id, filename, runtime = 'react', code }: ModuleUpsertInput) {
+  if (code?.includes('sk_')) {
     throw new Error('It looks like you\'re trying to deploy code with a secret key')
   }
 

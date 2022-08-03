@@ -2,7 +2,7 @@
 // worry about handling css in perpetuity
 import { isSassJsFile, replaceSassLiteralWithCssLiteral } from 'truffle-dev-server/src/utils/sass.js'
 
-export function applyTransforms (filename, code) {
+export function applyTransforms (filename: string, code: string) {
   if (isSassJsFile(filename)) {
     code = replaceSassLiteralWithCssLiteral(code)
   }

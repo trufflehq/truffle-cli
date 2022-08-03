@@ -2,7 +2,7 @@
 
 'use strict'
 import { Argument, Command, program } from 'commander'
-import truffleCli from './package.json' assert { type: 'json' }
+import truffleCli from '../package.json' assert { type: 'json' }
 
 program
   .name(truffleCli.name)
@@ -134,53 +134,28 @@ program.addCommand(
 // add the command `functions` with a sub command `deploy`
 // where the user can choose between providing
 // a function name or by saying --all
-program.addCommand(
-  new Command('functions')
-    .description('Manage Truffle Functions')
-    .addCommand(
-      new Command('deploy')
-        .description('Deploy functions.')
-        .option('-a, --all', 'Deploy all functions.', false)
-        .argument('[function-name]', 'The name of the function to deploy.')
-        .action(async (functionName, { all }) => {
-          const { default: deploy } = await import('./commands/functions/deploy.js')
-          await deploy({
-            all,
-            functionName
-          })
-        }).on('--help', () => {
-          console.log('  Examples:')
-          console.log()
-          console.log('    $ truffle functions deploy')
-          console.log('    $ truffle functions deploy --all')
-          console.log('    $ truffle functions deploy myFunction')
-        }))
-)
-
-program.addCommand(
-  new Command('init')
-    .description('Initialize a new project.')
-    .action(async () => {
-      const { default: init } = await
-      import('./commands/init.js')
-      await init()
-    }).on('--help', () => {
-      console.log('  Examples:')
-      console.log()
-      console.log('    $ truffle init')
-    }))
-
-program.addCommand(
-  new Command('publish')
-    .description('Publish your package.')
-    .action(async () => {
-      const { default: publish } = await
-      import('./commands/publish.js')
-      await publish()
-    }).on('--help', () => {
-      console.log('  Examples:')
-      console.log()
-    }))
+// program.addCommand(
+//   new Command('functions')
+//     .description('Manage Truffle Functions')
+//     .addCommand(
+//       new Command('deploy')
+//         .description('Deploy functions.')
+//         .option('-a, --all', 'Deploy all functions.', false)
+//         .argument('[function-name]', 'The name of the function to deploy.')
+//         .action(async (functionName, { all }) => {
+//           const { default: deploy } = await import('./commands/functions/deploy.js')
+//           await deploy({
+//             all,
+//             functionName
+//           })
+//         }).on('--help', () => {
+//           console.log('  Examples:')
+//           console.log()
+//           console.log('    $ truffle functions deploy')
+//           console.log('    $ truffle functions deploy --all')
+//           console.log('    $ truffle functions deploy myFunction')
+//         }))
+// )
 
 program.addCommand(
   new Command('describe')

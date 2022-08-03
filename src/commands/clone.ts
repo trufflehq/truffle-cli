@@ -6,7 +6,13 @@ import { getPackageConfig, getGlobalConfig } from '../util/config.js'
 import { packageVersionGet } from '../util/package-version.js'
 import { deepOmit } from '../util/deep-omit.js'
 
-export default async function clone (options = {}) {
+export default async function clone (options: {
+    packageVersionId?: string
+    toPackageSlug?: string
+    shouldCreateConfigFile?: boolean
+    secretKey?: string
+    packagePath?: string
+  }) {
   const { apiUrl } = await getPackageConfig() || getGlobalConfig()
   const { packageVersionId, packagePath, toPackageSlug, shouldCreateConfigFile, secretKey } = options
   const packageVersion = await packageVersionGet({ id: packageVersionId, packagePath })
