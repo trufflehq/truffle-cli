@@ -1,7 +1,5 @@
-import { request as undici } from 'undici'
 import { getPackageConfig, getGlobalConfig } from './config.js'
 import FormData from 'form-data'
-// import arrayBufferToBuffer from 'arraybuffer-to-buffer'
 import fetch from 'node-fetch'
 
 export interface RequestOptions {
@@ -10,9 +8,13 @@ export interface RequestOptions {
   shouldUseGlobal?: boolean;
 }
 
+interface BaseGraphQLResponse {
+  errors?: { message: string; extensions: { info: string }}[]
+}
+
 export async function request ({ query, variables, shouldUseGlobal = false }: RequestOptions): Promise<any> {
   const { apiUrl, secretKey } = shouldUseGlobal ? getGlobalConfig() : await getPackageConfig() || getGlobalConfig()
-  const response = await undici(apiUrl, {
+  const response = await fetch(apiUrl, {
     method: 'POST',
     body: JSON.stringify({ query, variables }),
     headers: {
@@ -20,7 +22,7 @@ export async function request ({ query, variables, shouldUseGlobal = false }: Re
       'Content-Type': 'application/json'
     }
   })
-  const data = await response.body.json()
+  const data = await response.json() as BaseGraphQLResponse
   if (data?.errors?.length) {
     throw new Error(`Request error: ${
       JSON.stringify(
@@ -57,7 +59,7 @@ export async function upload ({ query, variables, bundle, shouldUseGlobal = fals
     body: form.getBuffer()
   })
 
-  const data = await response.json() as any
+  const data = await response.json() as BaseGraphQLResponse
   if (data?.errors?.length) {
     throw new Error(`Request error: ${
       JSON.stringify(
