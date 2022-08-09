@@ -2,7 +2,7 @@ import watchGlob from 'watch-glob'
 import glob from 'glob'
 import fs from 'fs'
 import chalk from 'chalk'
-import gitignoreToGlob from 'gitignore-to-glob'
+import { gitIgnoreToGlob } from '../util/ignoreToGlob.js'
 import install from './install.js'
 import { domainGetConnection, domainMigrate } from '../util/domain.js'
 import { moduleUpsert } from '../util/module.js'
@@ -20,7 +20,7 @@ const IGNORE = [
 
 function getIgnore () {
   // gitignoreToGlob starts with ! so it's double negative (we don't want)
-  return IGNORE.concat(gitignoreToGlob()).map((ignore) => ignore.replace('!', ''))
+  return IGNORE.concat(gitIgnoreToGlob()).concat(gitIgnoreToGlob('.truffleignore')).map((ignore) => ignore.replace('!', ''))
 }
 
 export async function deploy ({ shouldUpdateDomain }: { shouldUpdateDomain?: boolean }) {

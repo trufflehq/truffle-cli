@@ -37,17 +37,15 @@ function humanFileSize (bytes: number, si = false, dp = 1) {
 }
 
 interface TruffleFunction {
-  name: string
+  slug: string
   entrypoint: string;
   description?: string
 }
 
-const debug = (message: string) => console.log(chalk.blue(message))
-
 export default async function deploy ({ functionName, all }: { functionName?: string, all?: boolean } = {}) {
   const pkgConfig = await getPackageConfig()
   if (!pkgConfig) {
-    console.log(chalk.red`package config not found, make sure truffle.config.mjs exists`)
+    console.log(chalk.red(`Package config file not found, make sure truffle.config.mjs exists`))
     return
   }
   const pkg = await packageGet()
@@ -59,24 +57,31 @@ export default async function deploy ({ functionName, all }: { functionName?: st
   }
 
   const handleFunction = async (fn: TruffleFunction) => {
-    const { name, description, entrypoint } = fn
-    const upsertedFn = await upsertFunction({ name, description, packageId })
+    const { slug, description, entrypoint } = fn
+    const upsertedFn = await upsertFunction({ slug, description, packageId, name: slug })
+    console.log(chalk.gray(`[commands::handleFunction] function upserted: ${upsertedFn.name ?? upsertedFn.slug}`))
 
     const ep = new URL(join(process.cwd(), entrypoint), 'file://')
     const build = await createEsZIP(ep)
-    console.log(chalk.greenBright(`bundle.eszip2 (${humanFileSize(build.byteLength, true)}) created`))
+    console.log(chalk.greenBright(`[functions::createEsZIP] ${chalk.gray('bundle.eszip2')} (${humanFileSize(build.byteLength, true)}) created`))
 
-    const deployment = await createDeployment({ packageId, functionId: upsertedFn.id, entrypoint }, build)
+    // TODO: include env vars
+    const secrets: Record<string, string> = Reflect.get(pkgConfig.secrets, slug) || {}
+    if (!Object.keys(secrets).length) console.log(chalk.yellow(`[commands::handleFunction] No secrets found for function ${slug}`))
+    else console.log(chalk.gray(`[commands::handleFunction] including secrets: ${Object.keys(secrets).join(', ')}`))
 
-    console.log(chalk.greenBright(`Truffle Function ${name} has been deployed!`))
-    console.log(chalk.greenBright(`Deployment ID: ${deployment.id}`))
+    const deployment = await createDeployment({ packageId, functionId: upsertedFn.id, entrypoint, orgId: upsertedFn.orgId, secrets }, build)
+    console.dir(deployment)
+
+    console.log(chalk.greenBright(`\nTruffle Function ${upsertedFn.slug} has been deployed!`))
+    console.log(chalk.gray(`Deployment ID: ${deployment.id}`))
     const shouldPromote = await new Promise((resolve) => {
       const rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout
       })
 
-      rl.question(chalk.greenBright(`Promote to production? [y/N]`), (answer) => {
+      rl.question(chalk.greenBright(`promote to production? [y/N]`), (answer) => {
         rl.close()
         resolve(answer.toLowerCase() === 'y')
       })
@@ -84,24 +89,21 @@ export default async function deploy ({ functionName, all }: { functionName?: st
 
     if (shouldPromote) {
       await upsertFunction({ id: upsertedFn.id, productionDeploymentId: deployment.id })
-      console.log(chalk.green(`Deployment ${deployment.id} has been promoted to production`))
+      console.log(chalk.green(`Deployment ${deployment.id} has been promoted to production!`))
     }
   }
 
   if (all) {
-    debug('here c')
     for (const fn of pkgConfig.functions) {
       await handleFunction(fn)
     }
   } else {
-    const fn = pkgConfig.functions.find(fn => fn.name === functionName)
+    const fn = pkgConfig.functions.find(fn => fn.slug === functionName)
     if (!fn) {
-      debug('here b')
       console.log(chalk.red(`Function ${functionName} not found in package config`))
-      console.log(chalk.red(`Options: ${pkgConfig.functions.map(fn => fn.name).join(', ')}`))
+      console.log(chalk.red(`Options: ${pkgConfig.functions.map(fn => fn.slug).join(', ')}`))
       return
     }
-    debug('here a')
     await handleFunction(fn)
   }
 }

@@ -4,6 +4,7 @@ import os from 'os'
 
 export interface PrivateConfig {
   secretKey: string;
+  secrets: Record<string, Record<string, string>>;
 }
 
 export interface StepActionRelRuntimeData {
@@ -38,7 +39,7 @@ export interface PublicConfig {
   }[];
   installActionRel: InstallActionRel;
   functions: {
-    name: string;
+    slug: string;
     description: string;
     entrypoint: string;
   }[]

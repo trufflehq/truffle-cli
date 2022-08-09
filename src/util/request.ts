@@ -23,6 +23,7 @@ export async function request ({ query, variables, shouldUseGlobal = false }: Re
       'Content-Type': 'application/json'
     }
   })
+  // console.log(chalk.gray(`[request] POST ${new URL(apiUrl).pathname} ${response.status} ${response.statusText}`))
   const data = await response.json() as BaseGraphQLResponse
   if (data?.errors?.length) {
     throw new Error(`Request error: ${
@@ -59,6 +60,7 @@ export async function upload ({ query, variables, bundle, shouldUseGlobal = fals
     },
     body: form.getBuffer()
   })
+  // console.log(chalk.gray(`[request] POST ${new URL(apiUrl).pathname} ${response.status} ${response.statusText}`))
 
   const data = await response.json() as BaseGraphQLResponse
   if (data?.errors?.length) {

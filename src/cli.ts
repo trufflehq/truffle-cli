@@ -150,6 +150,24 @@ program.addCommand(
           console.log('    $ truffle functions deploy --all')
           console.log('    $ truffle functions deploy myFunction')
         }))
+    .addCommand(
+      new Command('logs')
+        .description('View logs for deployed Truffle Functions.')
+        .option('-a, --all', 'View logs for all functions.', false)
+        .argument('[function-name]', 'The name of the function to view logs for.')
+        .action(async (functionName, { all }) => {
+          const { default: logs } = await import('./commands/functions/logs.js')
+          await logs({
+            all,
+            functionName
+          })
+        }).on('--help', () => {
+          console.log('  Examples:')
+          console.log()
+          console.log('    $ truffle functions logs')
+          console.log('    $ truffle functions logs --all')
+          console.log('    $ truffle functions logs myFunction')
+        }))
 )
 
 program.addCommand(
