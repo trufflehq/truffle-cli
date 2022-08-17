@@ -97,7 +97,7 @@ export async function upsertFunction (
   console.dir(input)
   const query = `
     mutation UpsertEdgeFunction($input: UpsertFunctionInput!) {
-      upsertEdgeFunction(input: $input) {
+      edgeFunctionUpsert(input: $input) {
         id
         name
         slug
@@ -110,7 +110,7 @@ export async function upsertFunction (
   `
   const resp = await request({ query, variables: { input } })
   console.dir(resp)
-  return resp.data.upsertEdgeFunction
+  return resp.data.edgeFunctionUpsert
 }
 
 interface CreateDeploymentInput {
@@ -128,13 +128,13 @@ export async function createDeployment (
 ) {
   const query = `
 mutation CreateDeployment($input: CreateDeploymentInput!) {
-  createEdgeDeployment(input: $input) {
+  edgeDeploymentCreate(input: $input) {
     id
   }
 }
 `
   const resp = await upload({ query, variables: { input }, bundle })
-  return resp.data.createEdgeDeployment
+  return resp.data.edgeDeploymentCreate
 }
 
 export async function createEsZIP (entrypoint: URL) {
