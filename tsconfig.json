@@ -1,0 +1,31 @@
+{
+	"compileOnSave": true,
+	"compilerOptions": {
+		"baseUrl": ".",
+		"alwaysStrict": true,
+		"lib": ["es2022"],
+		"allowJs": true,
+		"module": "NodeNext",
+		"noUnusedParameters": true,
+		"sourceMap": true,
+		"skipLibCheck": true,
+		"moduleResolution": "NodeNext",
+		"noUnusedLocals": true,
+		"removeComments": false,
+		"target": "ES2022",
+		"strictNullChecks": true,
+		"outDir": "dist",
+		"esModuleInterop": true,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"resolveJsonModule": true,
+		"newLine": "lf",
+		"allowSyntheticDefaultImports": true
+	},
+	"exclude": [
+		"node_modules"
+	],
+	"include": [
+		"src"
+	]
+}

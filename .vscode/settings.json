@@ -1,0 +1,7 @@
+{
+	"javascript.format.enable": true,
+	"eslint.enable": true,
+	"editor.insertSpaces": true,
+	"editor.tabSize": 2,
+	"eslint.codeActionsOnSave.mode": "all"
+}
