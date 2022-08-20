@@ -5,7 +5,7 @@
   "main": "dist/src/cli.js",
   "type": "module",
   "scripts": {
-    "postinstall": "npm run build",
+    "prepare": "npm run build",
     "build": "tsc && chmod +x dist/src/cli.js",
     "watch": "tsc --watch",
     "format": "eslint --fix --ext .ts,.js src"
