@@ -10,15 +10,22 @@ import { readFileSync } from "fs"
 import { resolve } from "path"
 
 export function gitIgnoreToGlob (path?: string, dirsToCheck?: string[]) {
-  const ignore = resolve(path ?? ".gitignore")
-  return readFileSync(ignore, { encoding: "utf8" }).split("\n")
+  let fileLines
+  try {
+    const ignoreFilename = resolve(path ?? ".gitignore")
+    fileLines = readFileSync(ignoreFilename, { encoding: "utf8" }).split("\n")
+  } catch {
+    // if file doesn't exist
+    return []
+  }
+  return fileLines
     .filter((pattern) => !!pattern && pattern[0] !== "#")
     .map((pattern) =>
       pattern[0] === "!" ? ["", pattern.substring(1)] : [pattern]
     )
     .filter(
       ([_, pattern]) =>
-        pattern.indexOf("/.") === -1 && pattern.indexOf(".") !== 0
+        pattern?.indexOf("/.") === -1 && pattern?.indexOf(".") !== 0
     )
     .filter((patternPair) => {
       const pattern = patternPair[1]

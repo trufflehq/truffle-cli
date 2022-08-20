@@ -2,6 +2,7 @@ import watchGlob from 'watch-glob'
 import glob from 'glob'
 import fs from 'fs'
 import chalk from 'chalk'
+import pMap from 'p-map'
 import { gitIgnoreToGlob } from '../util/ignoreToGlob.js'
 import install from './install.js'
 import { domainGetConnection, domainMigrate } from '../util/domain.js'
@@ -17,10 +18,14 @@ const GLOB = '**/*'
 const IGNORE = [
   'node_modules/**/*', '.git/**/*', '*.secret.js', '*.secret.mjs', 'package-lock.json', 'yarn.lock'
 ]
+const FILE_UPLOAD_CONCURRENCY = 20
 
 function getIgnore () {
-  // gitignoreToGlob starts with ! so it's double negative (we don't want)
-  return IGNORE.concat(gitIgnoreToGlob()).concat(gitIgnoreToGlob('.truffleignore')).map((ignore) => ignore.replace('!', ''))
+  return IGNORE
+    .concat(gitIgnoreToGlob())
+    .concat(gitIgnoreToGlob('.truffleignore'))
+    // gitignoreToGlob starts with ! so it's double negative (we don't want)
+    .map((ignore) => ignore.replace('!', ''))
 }
 
 export async function deploy ({ shouldUpdateDomain }: { shouldUpdateDomain?: boolean }) {
@@ -58,9 +63,12 @@ export async function deploy ({ shouldUpdateDomain }: { shouldUpdateDomain?: boo
 
   await glob(GLOB, { ignore: getIgnore(), nodir: true }, async (err, filenames) => {
     if (err) throw err
-    for (const filename of filenames) {
+    const totalFiles = filenames.length
+    let savedCount = 0
+    await pMap(filenames, async (filename, i) => {
       await handleFilename(filename, { packageVersionId })
-    }
+      console.log(`${++savedCount} / ${totalFiles}`)
+    }, { concurrency: FILE_UPLOAD_CONCURRENCY })
     if (shouldUpdateDomain && fromPackageVersionId !== packageVersionId) {
       console.log(`Updating domains from ${fromPackageVersionId} to ${packageVersionId}`)
       const domains = await domainMigrate({ fromPackageVersionId, toPackageVersionId: packageVersionId })
@@ -82,13 +90,13 @@ export async function watch () {
   const packageVersion = await packageVersionGet()
   const packageVersionId = packageVersion?.id
   watchGlob([GLOB], { ignore: getIgnore(), nodir: true, callbackArg: 'relative' }, (filename) => {
+    console.log('File changed:', filename)
     handleFilename(filename, { packageVersionId })
   })
   console.log('Listening for changes...')
 }
 
 async function handleFilename (filename, { packageVersionId }) {
-  console.log('File changed:', filename)
   if (filename.indexOf('.secret.js') !== -1) {
     console.log('skipping secret file')
   }
