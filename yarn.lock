@@ -5507,7 +5507,7 @@ __metadata:
 
 "truffle-dev-server@github:trufflehq/truffle-dev-server":
   version: 1.0.0
-  resolution: "truffle-dev-server@git+ssh://git@github.com/trufflehq/truffle-dev-server.git#commit=bd9897a5626e116699ce6f147d03d168c964af22"
+  resolution: "truffle-dev-server@https://github.com/trufflehq/truffle-dev-server.git#commit=6be43cdb276b6e6c7673462b4f1b47672552f77b"
   dependencies:
     "@vitejs/plugin-vue": ^3.0.0
     express: ^4.18.1
@@ -5517,7 +5517,7 @@ __metadata:
     typescript: ^4.7.4
     vite: "github:trufflehq/vite-url-imports-package"
     vue: ^3.2.37
-  checksum: dbc00f26dee1e2b762352b0ac0f2ebdeec2c1ed52b18408fa66ca32239c349721b9e0adad16b5b760fcde7888645b7e0c53bc28a20768be557a043f7e95891cf
+  checksum: 87265e1e617c702a05c0e5e5ab4cecfc6060721babf0dccad210a9c358839ac73678d13ccd4a18a8f03a6b7449c096125e01308d335986bd650d2edcb9f9c9d5
   languageName: node
   linkType: hard
 
