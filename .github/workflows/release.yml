@@ -37,10 +37,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Setup and Package
+      - name: Setup Volta
         uses: volta-cli/action@v3
+      
+      - name: Build and package
         run: |
           yarn
           yarn run build
@@ -52,6 +54,7 @@ jobs:
         run: |
           mv bin/linux/truffle-cli truffle-cli
           tar -cvzf truffle-cli-linux-x64.tar.gz truffle-cli
+
       - name: Upload tarball artifact
         uses: actions/upload-artifact@v2
         with:
@@ -68,10 +71,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Build and publish to NPM
+      - name: Setup Volta
         uses: volta-cli/action@v3
         with:
           registry-url: "https://registry.npmjs.org"
+
+      - name: Build and publish to NPM
         run: |
           yarn
           yarn run build
@@ -79,11 +84,12 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish to Github Packages
-        uses: volta-cli/action@v3
+      - uses: volta-cli/action@v3
         with:
           registry-url: "https://npm.pkg.github.com"
-        run: npm publish
+        
+      - name: Publish to Github Packages
+      - run: npm publish
         continue-on-error: true
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -108,6 +114,7 @@ jobs:
         run: |
           sha256sum truffle-cli-macos-x64.tar.gz >> checksums.md
           sha256sum truffle-cli-linux-x64.tar.gz >> checksums.md
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
