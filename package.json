@@ -1,8 +1,11 @@
 {
   "name": "@trufflehq/cli",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "The Truffle Developer Platform CLI",
   "main": "dist/src/cli.js",
+  "bin": {
+    "truffle-cli": "./dist/src/cli.js"
+  },
   "scripts": {
     "build": "tsc && chmod +x dist/src/cli.js",
     "watch": "tsc --watch",
@@ -14,8 +17,8 @@
     "type": "git",
     "url": "git+https://github.com/trufflehq/truffle-cli.git"
   },
-  "author": "Spore",
-  "license": "ISC",
+  "author": "Truffle",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/trufflehq/truffle-cli/issues"
   },
@@ -51,7 +54,6 @@
     "pkg": "^5.8.0",
     "typescript": "^4.7.4"
   },
-  "bin": "./dist/src/cli.js",
   "engines": {
     "node": ">=18"
   },
