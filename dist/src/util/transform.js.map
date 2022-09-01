@@ -1,1 +1,0 @@
-{"version":3,"file":"transform.js","sourceRoot":"","sources":["../../../src/util/transform.ts"],"names":[],"mappings":"AAAA,6EAA6E;AAC7E,yCAAyC;AACzC,OAAO,EAAE,YAAY,EAAE,gCAAgC,EAAE,MAAM,sCAAsC,CAAA;AAErG,MAAM,UAAU,eAAe,CAAE,QAAgB,EAAE,IAAY;IAC7D,IAAI,YAAY,CAAC,QAAQ,CAAC,EAAE;QAC1B,IAAI,GAAG,gCAAgC,CAAC,IAAI,CAAC,CAAA;KAC9C;IACD,OAAO,IAAI,CAAA;AACb,CAAC"}

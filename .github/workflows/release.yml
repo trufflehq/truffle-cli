@@ -1,0 +1,121 @@
+name: Build binaries for macOS and Linux, publish Node.js packages, create release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup and Package
+        uses: volta-cli/action@v3
+        run: |
+          yarn
+          yarn run build
+          yarn prod-install /tmp/tfl
+          cp -r dist /tmp/tfl
+          yarn run package:macos
+
+      - name: Create tarball
+        run: |
+          mv bin/macos/truffle-cli truffle-cli
+          tar -cvzf truffle-cli-macos-x64.tar.gz truffle-cli
+      - name: Upload tarball artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: bin-macos
+          path: truffle-cli-macos-x64.tar.gz
+
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup and Package
+        uses: volta-cli/action@v3
+        run: |
+          yarn
+          yarn run build
+          yarn prod-install /tmp/tfl
+          cp -r dist /tmp/tfl
+          yarn run package:linux
+
+      - name: Create tarball
+        run: |
+          mv bin/linux/truffle-cli truffle-cli
+          tar -cvzf truffle-cli-linux-x64.tar.gz truffle-cli
+      - name: Upload tarball artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: bin-linux
+          path: truffle-cli-linux-x64.tar.gz
+
+  publish-node-packages:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build and publish to NPM
+        uses: volta-cli/action@v3
+        with:
+          registry-url: "https://registry.npmjs.org"
+        run: |
+          yarn
+          yarn run build
+          yarn publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish to Github Packages
+        uses: volta-cli/action@v3
+        with:
+          registry-url: "https://npm.pkg.github.com"
+        run: npm publish
+        continue-on-error: true
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  create-release:
+    needs: [build-macos, build-linux, publish-node-packages]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download macos tarball
+        uses: actions/download-artifact@v2
+        with:
+          name: bin-macos
+
+      - name: Download linux tarball
+        uses: actions/download-artifact@v2
+        with:
+          name: bin-linux
+
+      - name: Compute checksums
+        run: |
+          sha256sum truffle-cli-macos-x64.tar.gz >> checksums.md
+          sha256sum truffle-cli-linux-x64.tar.gz >> checksums.md
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          prerelease: true
+          body_path: checksums.md
+          files: |
+            LICENSE
+            truffle-cli-macos-x64.tar.gz
+            truffle-cli-linux-x64.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

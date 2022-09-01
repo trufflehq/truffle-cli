@@ -1,5 +1,7 @@
 /node_modules
 spore.secret.js
+dist/
+bin/
 
 .yarn/*
 !.yarn/releases

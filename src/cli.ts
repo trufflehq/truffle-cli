@@ -1,6 +1,6 @@
 #!/usr/bin/env -S node --experimental-modules --experimental-import-meta-resolve --experimental-network-imports --no-warnings
 import { Argument, Command, program } from 'commander'
-import truffleCli from '../package.json' assert { type: 'json' }
+import truffleCli from '../package.json'
 
 program
   .name(truffleCli.name)
@@ -192,4 +192,6 @@ if (2 in process.argv === false) {
   program.help()
 }
 
-await program.parseAsync(process.argv)
+(async () => {
+  await program.parseAsync(process.argv)
+})()

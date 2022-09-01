@@ -65,7 +65,7 @@ export async function deploy ({ shouldUpdateDomain }: { shouldUpdateDomain?: boo
     if (err) throw err
     const totalFiles = filenames.length
     let savedCount = 0
-    await pMap(filenames, async (filename, i) => {
+    await pMap(filenames, async (filename) => {
       await handleFilename(filename, { packageVersionId })
       console.log(`${++savedCount} / ${totalFiles}`)
     }, { concurrency: FILE_UPLOAD_CONCURRENCY })
