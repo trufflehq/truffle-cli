@@ -87,7 +87,8 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - uses: volta-cli/action@v3
+      - name: Setup Volta for Github Packages
+        uses: volta-cli/action@v3
         with:
           registry-url: "https://npm.pkg.github.com"
         
