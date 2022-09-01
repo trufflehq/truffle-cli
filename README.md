@@ -23,9 +23,8 @@ $ chmod +x /usr/local/bin/truffle-cli
 
 ## Contributing
 1. once you have your changes, create your commit (`git commit -am "chore: whatever"`)
-2. push (`git push`)
-3. tag (`git tag -a "v0.0.n" -m "v0.0.n"`)
-4. push again (`git push origin v0.0.n`)
+2. tag (`git tag -a "v0.0.n" -m "v0.0.n"`)
+3. push (`git push --tags origin HEAD`)
 
 ### notes
 
