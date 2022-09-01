@@ -1,7 +1,7 @@
 {
   "name": "@trufflehq/cli",
-  "version": "0.0.12",
-  "description": "",
+  "version": "0.0.11",
+  "description": "The Truffle Developer Platform CLI",
   "main": "dist/src/cli.js",
   "scripts": {
     "build": "tsc && chmod +x dist/src/cli.js",
