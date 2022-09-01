@@ -13,10 +13,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - uses: webfactory/ssh-agent@v0.5.4
+        with:
+            ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
       - name: Setup Volta
         uses: volta-cli/action@v3
 
-      - name: Package Linux
+      - name: Build and package
         run: |
           yarn
           yarn run build
@@ -41,6 +45,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
+      - uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Setup Volta
         uses: volta-cli/action@v3
@@ -73,6 +81,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Setup Volta
         uses: volta-cli/action@v3
