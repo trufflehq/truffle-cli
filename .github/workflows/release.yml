@@ -13,8 +13,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Setup and Package
+      - name: Setup Volta
         uses: volta-cli/action@v3
+
+      - name: Package Linux
         run: |
           yarn
           yarn run build
@@ -26,6 +28,7 @@ jobs:
         run: |
           mv bin/macos/truffle-cli truffle-cli
           tar -cvzf truffle-cli-macos-x64.tar.gz truffle-cli
+
       - name: Upload tarball artifact
         uses: actions/upload-artifact@v2
         with:
