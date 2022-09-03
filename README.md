@@ -22,9 +22,11 @@ $ chmod +x /usr/local/bin/truffle-cli
 ```
 
 ## Contributing
-1. once you have your changes, create your commit (`git commit -am "chore: whatever"`)
+1. bump the version in package.json
+2. run `yarn` to update the lockfile
+1. create your commit (`git commit -am "chore: whatever"`)
 2. tag (`git tag -a "v0.0.n" -m "v0.0.n"`)
-3. push (`git push --tags origin HEAD`)
+3. push (`git push --tags origin`)
 
 ### notes
 
