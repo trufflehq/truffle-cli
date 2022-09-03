@@ -1,6 +1,6 @@
 {
   "name": "@trufflehq/cli",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "The Truffle Developer Platform CLI",
   "main": "dist/src/cli.js",
   "bin": {
@@ -36,7 +36,7 @@
     "gitignore-to-glob": "^0.3.0",
     "glob": "^8.0.3",
     "lodash": "^4.17.21",
-    "node-fetch": "^3.2.10",
+    "node-fetch": "^2",
     "p-map": "^5.5.0",
     "prettier": "^2.7.1",
     "prettify": "^0.1.7",
