@@ -111,7 +111,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   create-release:
-    needs: [build-macos, build-linux, publish-node-packages]
+    needs: [build-macos, build-linux]
 
     runs-on: ubuntu-latest
 
