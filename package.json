@@ -1,12 +1,14 @@
 {
   "name": "@trufflehq/cli",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "The Truffle Developer Platform CLI",
   "main": "dist/src/cli.js",
   "bin": {
     "truffle-cli": "./dist/src/cli.js"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc && chmod +x dist/src/cli.js",
     "watch": "tsc --watch",
