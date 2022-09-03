@@ -6,12 +6,13 @@
   "bin": {
     "truffle-cli": "./dist/src/cli.js"
   },
+  "files": ["dist"],
   "scripts": {
     "build": "tsc && chmod +x dist/src/cli.js",
     "watch": "tsc --watch",
     "format": "eslint --fix --ext .ts,.js src",
-    "package:linux": "pkg /tmp/tfl -d --targets node18-linux-x64 --output bin/linux/truffle-cli",
-    "package:macos": "pkg /tmp/tfl -d --targets node18-macos-x64 --output bin/macos/truffle-cli"
+    "package:linux": "pkg /tmp/tfl --targets node18-linux-x64 --output bin/linux/truffle-cli",
+    "package:macos": "pkg /tmp/tfl --targets node18-macos-x64 --output bin/macos/truffle-cli"
   },
   "repository": {
     "type": "git",
@@ -37,7 +38,7 @@
     "p-map": "^5.5.0",
     "prettier": "^2.7.1",
     "prettify": "^0.1.7",
-    "truffle-dev-server": "github:trufflehq/truffle-dev-server",
+    "truffle-dev-server": "trufflehq/truffle-dev-server",
     "undici": "^5.8.0",
     "watch-glob": "^0.1.3"
   },
@@ -53,6 +54,10 @@
     "eslint-plugin-promise": "^5.2.0",
     "pkg": "^5.8.0",
     "typescript": "^4.7.4"
+  },
+  "resolutions": {
+    "clean-stack": "3.0.1",
+    "indent-string": "4.0.0"
   },
   "engines": {
     "node": ">=18"
