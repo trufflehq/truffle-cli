@@ -1,6 +1,6 @@
 #!/usr/bin/env -S node --experimental-modules --experimental-import-meta-resolve --experimental-network-imports --no-warnings
 import { Argument, Command, program } from 'commander'
-import truffleCli from '../package.json'
+import truffleCli from '../package.json' assert { type: 'json' }
 
 program
   .name(truffleCli.name)

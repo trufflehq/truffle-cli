@@ -9,6 +9,7 @@
   "files": [
     "dist"
   ],
+  "type": "module",
   "scripts": {
     "build": "tsc && chmod +x dist/src/cli.js",
     "watch": "tsc --watch",
