@@ -26,7 +26,7 @@ export async function routeUpsert ({ packageVersionId, pathWithVariables, parent
     input: { pathWithVariables, packageVersionId, parentId, componentId, data, type }
   }
 
-  const response = await request({ query, variables })
+  const response = await request({ query, variables, maxAttempts: 3 })
   return response.data.routeUpsert.route as { id: string }
 }
 

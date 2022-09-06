@@ -18,7 +18,7 @@ const GLOB = '**/*'
 const IGNORE = [
   'node_modules/**/*', '.git/**/*', '*.secret.js', '*.secret.mjs', 'package-lock.json', 'yarn.lock'
 ]
-const FILE_UPLOAD_CONCURRENCY = 20
+const FILE_UPLOAD_CONCURRENCY = 40
 
 function getIgnore () {
   return IGNORE

@@ -6,6 +6,7 @@ export interface RequestOptions {
   query: string;
   variables?: Record<string, unknown>;
   shouldUseGlobal?: boolean;
+  maxAttempts?: number;
 }
 
 interface BaseGraphQLResponse {
@@ -13,16 +14,25 @@ interface BaseGraphQLResponse {
   data: Record<string, unknown>
 }
 
-export async function request ({ query, variables, shouldUseGlobal = false }: RequestOptions): Promise<any> {
+export async function request ({ query, variables, shouldUseGlobal = false, maxAttempts = 1 }: RequestOptions): Promise<any> {
   const { apiUrl, secretKey } = shouldUseGlobal ? getGlobalConfig() : await getPackageConfig() || getGlobalConfig()
-  const response = await fetch(apiUrl, {
-    method: 'POST',
-    body: JSON.stringify({ query, variables }),
-    headers: {
-      Authorization: `Bearer ${secretKey}`,
-      'Content-Type': 'application/json'
+  let response
+  let attemptsLeft = maxAttempts
+  while ((!response || response.status !== 200) && attemptsLeft > 0) {
+    if (response?.status) {
+      console.log('Retrying. Last attempt:', response.status)
     }
-  })
+    attemptsLeft -= 1
+    response = await fetch(apiUrl, {
+      method: 'POST',
+      body: JSON.stringify({ query, variables }),
+      headers: {
+        Authorization: `Bearer ${secretKey}`,
+        'Content-Type': 'application/json'
+      }
+    })
+  }
+
   // console.log(chalk.gray(`[request] POST ${new URL(apiUrl).pathname} ${response.status} ${response.statusText}`))
   const data = await response.json() as BaseGraphQLResponse
   if (data?.errors?.length) {
