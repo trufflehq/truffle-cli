@@ -70,8 +70,8 @@ export async function deploy ({ shouldUpdateDomain }: { shouldUpdateDomain?: boo
       console.log(`${++savedCount} / ${totalFiles}`)
     }, { concurrency: FILE_UPLOAD_CONCURRENCY })
     if (shouldUpdateDomain && fromPackageVersionId !== packageVersionId) {
-      console.log(`Updating domains from ${fromPackageVersionId} to ${packageVersionId}`)
-      const domains = await domainMigrate({ fromPackageVersionId, toPackageVersionId: packageVersionId })
+      console.log(`Updating domains to ${packageVersionId}`)
+      const domains = await domainMigrate({ packageId: pkg.id, toPackageVersionId: packageVersionId })
       console.log('Domains updated', domains)
     }
     const domainConnection = await domainGetConnection({ packageVersionId })

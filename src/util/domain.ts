@@ -18,17 +18,17 @@ export async function domainGetConnection ({ packageVersionId }: { packageVersio
   return response.data.domainConnection as { nodes: { id: string, domainName: string, packageVersionId: string }[] }
 }
 
-export async function domainMigrate ({ fromPackageVersionId, toPackageVersionId }: { fromPackageVersionId: string, toPackageVersionId: string }) {
+export async function domainMigrate ({ packageId, toPackageVersionId }: { packageId: string, toPackageVersionId: string }) {
   const query = `
-    mutation DomainMigratePackageVersionId($fromPackageVersionId: ID, $toPackageVersionId: ID) {
-      domainMigratePackageVersionId(fromPackageVersionId: $fromPackageVersionId, toPackageVersionId: $toPackageVersionId) {
+    mutation DomainMigratePackageVersionId($packageId: ID, $toPackageVersionId: ID) {
+      domainMigratePackageVersionId(packageId: $packageId, toPackageVersionId: $toPackageVersionId) {
         id
         domainName
         packageVersionId
       }
     }
   `
-  const variables = { fromPackageVersionId, toPackageVersionId }
+  const variables = { packageId, toPackageVersionId }
 
   const response = await request({ query, variables })
   return response.data.domainMigratePackageVersionId as { id: string, domainName: string, packageVersionId: string }
