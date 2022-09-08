@@ -1,6 +1,6 @@
 {
   "name": "@trufflehq/cli",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "description": "The Truffle Developer Platform CLI",
   "main": "dist/src/cli.js",
   "bin": {
@@ -41,7 +41,7 @@
     "p-map": "^5.5.0",
     "prettier": "^2.7.1",
     "prettify": "^0.1.7",
-    "truffle-dev-server": "trufflehq/truffle-dev-server",
+    "truffle-dev-server": "github:trufflehq/truffle-dev-server",
     "undici": "^5.8.0",
     "watch-glob": "^0.1.3"
   },

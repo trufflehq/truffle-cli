@@ -722,7 +722,7 @@ __metadata:
     pkg: ^5.8.0
     prettier: ^2.7.1
     prettify: ^0.1.7
-    truffle-dev-server: trufflehq/truffle-dev-server
+    truffle-dev-server: "github:trufflehq/truffle-dev-server"
     typescript: ^4.7.4
     undici: ^5.8.0
     watch-glob: ^0.1.3
@@ -5921,9 +5921,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-truffle-dev-server@trufflehq/truffle-dev-server:
+"truffle-dev-server@github:trufflehq/truffle-dev-server":
   version: 1.0.0
-  resolution: "truffle-dev-server@https://github.com/trufflehq/truffle-dev-server.git#commit=387b6a5a49b18b6b9678042eb68730932d763eb4"
+  resolution: "truffle-dev-server@https://github.com/trufflehq/truffle-dev-server.git#commit=689e604bf0f15fdf1983adcabe622794e5d6f31e"
   dependencies:
     "@vitejs/plugin-vue": ^3.0.0
     express: ^4.18.1
@@ -5933,7 +5933,7 @@ truffle-dev-server@trufflehq/truffle-dev-server:
     typescript: ^4.7.4
     vite: "github:trufflehq/vite-url-imports-package"
     vue: ^3.2.37
-  checksum: 52f24e20089e7d31755a271049ee3d239a60877abd0b60058ba103575a0f7a5ba5becdd1991314ef805ed1dbc180e6e7b79b984573a2d63b795569b0550f296c
+  checksum: 22114490cf72b7160a240d7373ecc51a49fa6095226865d88b012434118cd7a1cff305c8e08becd91a6b37cfb4fa49fb07719bdaad6d95092cd9f4269e3fa4b4
   languageName: node
   linkType: hard
 
