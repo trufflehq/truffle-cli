@@ -72,7 +72,7 @@ export async function fetchFunction (
   return res.data.edgeFunction
 }
 
-export interface UpsertFunctionInput {
+export interface EdgeFunctionUpsertInput {
   id?: string;
   name?: string;
   description?: string;
@@ -84,7 +84,7 @@ export interface UpsertFunctionInput {
 }
 
 export async function upsertFunction (
-  input: UpsertFunctionInput
+  input: EdgeFunctionUpsertInput
 ): Promise<{
   id: string;
   name: string;
@@ -96,7 +96,7 @@ export async function upsertFunction (
 }> {
   console.dir(input)
   const query = `
-    mutation UpsertEdgeFunction($input: UpsertFunctionInput!) {
+    mutation EdgeFunctionUpsert($input: EdgeFunctionUpsertInput!) {
       edgeFunctionUpsert(input: $input) {
         id
         name
@@ -113,7 +113,7 @@ export async function upsertFunction (
   return resp.data.edgeFunctionUpsert
 }
 
-interface CreateDeploymentInput {
+interface DeploymentCreateInput {
   id?: string;
   packageId: string;
   functionId: string;
@@ -123,11 +123,11 @@ interface CreateDeploymentInput {
 }
 
 export async function createDeployment (
-  input: CreateDeploymentInput,
+  input: DeploymentCreateInput,
   bundle: ArrayBufferLike
 ) {
   const query = `
-mutation CreateDeployment($input: CreateDeploymentInput!) {
+mutation DeploymentCreate($input: DeploymentCreateInput!) {
   edgeDeploymentCreate(input: $input) {
     id
   }
