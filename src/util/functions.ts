@@ -144,10 +144,11 @@ export async function createEsZIP (entrypoint: URL) {
     async (spec): Promise<LoadResponse | undefined> => {
       const url = new URL(spec)
       if (url.protocol === "file:") {
+        const path = `.${url.pathname}`
         console.log(
-          chalk.gray(`[functions::createEsZIP::file] loading ${url.pathname}`)
+          chalk.gray(`[functions::createEsZIP::file] loading ${path}`)
         )
-        const content = await readFile(url)
+        const content = await readFile(path)
         return {
           specifier: url.toString().replace(process.cwd(), ""),
           content: content.toString(),

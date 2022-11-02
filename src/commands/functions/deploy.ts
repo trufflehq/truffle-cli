@@ -1,5 +1,4 @@
 import chalk from 'chalk'
-import { join } from 'path'
 import readline from 'readline'
 import { getPackageConfig } from '../../util/config.js'
 import { createDeployment, createEsZIP, upsertFunction } from '../../util/functions.js'
@@ -61,12 +60,12 @@ export default async function deploy ({ functionName, all }: { functionName?: st
     const upsertedFn = await upsertFunction({ slug, description, packageId, name: slug })
     console.log(chalk.gray(`[commands::handleFunction] function upserted: ${upsertedFn.name ?? upsertedFn.slug}`))
 
-    const ep = new URL(join(process.cwd(), entrypoint), 'file://')
+    const ep = new URL(entrypoint, 'file://')
     const build = await createEsZIP(ep)
     console.log(chalk.greenBright(`[functions::createEsZIP] ${chalk.gray('bundle.eszip2')} (${humanFileSize(build.byteLength, true)}) created`))
 
     // TODO: include env vars
-    const secrets: Record<string, string> = Reflect.get(pkgConfig.secrets, slug) || {}
+    const secrets: Record<string, string> = Reflect.get(pkgConfig.secrets || {}, slug) || {}
     if (!Object.keys(secrets).length) console.log(chalk.yellow(`[commands::handleFunction] No secrets found for function ${slug}`))
     else console.log(chalk.gray(`[commands::handleFunction] including secrets: ${Object.keys(secrets).join(', ')}`))
 
