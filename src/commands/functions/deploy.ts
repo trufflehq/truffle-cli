@@ -1,5 +1,4 @@
 import chalk from 'chalk'
-import { join } from 'path'
 import readline from 'readline'
 import { getPackageConfig } from '../../util/config.js'
 import { createDeployment, createEsZIP, upsertFunction } from '../../util/functions.js'
