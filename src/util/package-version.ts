@@ -23,10 +23,10 @@ const BASE_EVENT_SUBSCRIPTION_FIELDS = `eventSubscriptionConnection {
   nodes {
       id
       status
-      eventTopicPath
+      resourcePath
       actionRel {
-          actionPath
           action {
+              resourcePath
               type
           }
           runtimeData
@@ -38,7 +38,7 @@ const BASE_EVENT_TOPIC_FIELDS = `eventTopicConnection {
   nodes {
       id
       slug
-      eventTopicPath
+      resourcePath
   }
 }`
 
@@ -96,6 +96,7 @@ export async function packageVersionGet (options?: PackageVersionGetOptions) {
     }
   }
   `
+
   const variables = { id, packageSlug, semver: packageVersionSemver }
 
   const response = await request({ query, variables })
