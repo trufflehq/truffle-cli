@@ -18,7 +18,6 @@ interface BaseGraphQLResponse {
 
 export async function request ({ query, variables, shouldUseGlobal = false, maxAttempts = 1 }: RequestOptions): Promise<any> {
   const profile = container.resolve<string>(kProfile)
-  console.log(chalk.gray(`[debug]: loaded profile ${profile}`))
 
   const { apiUrl, secretKey } = shouldUseGlobal ? getGlobalConfig(profile) : await getPackageConfig() || getGlobalConfig(profile)
   let response
@@ -59,7 +58,6 @@ export interface UploadOptions {
 
 export async function upload ({ query, variables, bundle, shouldUseGlobal = false }: UploadOptions): Promise<any> {
   const profile = container.resolve<string>(kProfile)
-  console.log(chalk.gray(`[debug]: loaded profile ${profile}`))
 
   const { apiUrl, secretKey } = shouldUseGlobal ? getGlobalConfig(profile) : await getPackageConfig() || getGlobalConfig(profile)
   const url = new URL(apiUrl)
