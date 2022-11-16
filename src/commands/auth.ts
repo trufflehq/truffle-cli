@@ -8,7 +8,9 @@ export default async function auth ({ secretKey }: { secretKey: string }) {
   const configFilename = getConfigFilename()
   fs.mkdirSync(path.dirname(configFilename), { recursive: true })
   fs.writeFileSync(configFilename, JSON.stringify({
-    apiUrl: 'https://mycelium.staging.bio/graphql', // FIXME
-    secretKey
+    default: {
+      apiUrl: 'https://mycelium.staging.bio/graphql', // FIXME
+      secretKey
+    }
   }))
 }

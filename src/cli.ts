@@ -1,21 +1,52 @@
 #!/usr/bin/env -S node --experimental-modules --experimental-import-meta-resolve --experimental-network-imports --no-warnings
-import { Argument, Command, program } from 'commander'
+import 'reflect-metadata'
+
+import { Argument, Command as BaseCommand, program } from 'commander'
 import truffleCli from '../package.json' assert { type: 'json' }
+import { container } from 'tsyringe'
+import { kProfile } from './util/config.js'
+
+class Command extends BaseCommand {
+  public action (fn: (...args: any[]) => void | Promise<void>): this {
+    // wrap around the function to extract the last element from the args array
+    // which is the global flags object
+
+    return super.action((...args: any[]) => {
+      const profile = (args[args.length - 1] as Command).parent!.opts().profile ?? 'default'
+      container.register(kProfile, { useValue: profile })
+
+      return fn(...args)
+    })
+  }
+}
 
 program
   .name(truffleCli.name)
   .description(truffleCli.description)
   .version(truffleCli.version, '-v, --version')
+  .option('-p, --profile <name>', 'The profile from your Truffle config file to use, default: "default"', 'default')
 
 program.addCommand(
   new Command('auth')
     .description('Set your API Key.')
     .alias('login')
     .argument('<secret-key>', 'Your API Key.')
-    .action(async (secretKey) => {
+    .action(async (secretKey: string) => {
       const { default: auth } = await
       import('./commands/auth.js')
       await auth({ secretKey })
+    }
+    )
+)
+
+program.addCommand(
+  new Command('whoami')
+    .description('Check your authentication status')
+    .alias('me')
+    .action(async () => {
+      const { default: whoami } = await
+      import('./commands/whoami.js')
+      await whoami()
     })
 )
 

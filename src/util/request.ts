@@ -1,6 +1,8 @@
-import { getPackageConfig, getGlobalConfig } from './config.js'
+import { getPackageConfig, getGlobalConfig, kProfile } from './config.js'
 import FormData from 'form-data'
 import fetch from 'node-fetch'
+import { container } from 'tsyringe'
+import chalk from 'chalk'
 
 export interface RequestOptions {
   query: string;
@@ -15,7 +17,10 @@ interface BaseGraphQLResponse {
 }
 
 export async function request ({ query, variables, shouldUseGlobal = false, maxAttempts = 1 }: RequestOptions): Promise<any> {
-  const { apiUrl, secretKey } = shouldUseGlobal ? getGlobalConfig() : await getPackageConfig() || getGlobalConfig()
+  const profile = container.resolve<string>(kProfile)
+  console.log(chalk.gray(`[debug]: loaded profile ${profile}`))
+
+  const { apiUrl, secretKey } = shouldUseGlobal ? getGlobalConfig(profile) : await getPackageConfig() || getGlobalConfig(profile)
   let response
   let attemptsLeft = maxAttempts
   while ((!response || response.status !== 200) && attemptsLeft > 0) {
@@ -53,7 +58,10 @@ export interface UploadOptions {
 }
 
 export async function upload ({ query, variables, bundle, shouldUseGlobal = false }: UploadOptions): Promise<any> {
-  const { apiUrl, secretKey } = shouldUseGlobal ? getGlobalConfig() : await getPackageConfig() || getGlobalConfig()
+  const profile = container.resolve<string>(kProfile)
+  console.log(chalk.gray(`[debug]: loaded profile ${profile}`))
+
+  const { apiUrl, secretKey } = shouldUseGlobal ? getGlobalConfig(profile) : await getPackageConfig() || getGlobalConfig(profile)
   const url = new URL(apiUrl)
   url.pathname = '/upload'
   url.searchParams.set('graphqlQuery', query)
