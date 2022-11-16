@@ -112,7 +112,14 @@ export async function packageVersionPathGetLatest () {
   return `@${orgSlug}/${packageSlug}@latest`
 }
 
-export async function packageVersionCreate ({ packageId, semver, installActionRel, requestedPermissions }: { packageId: string, semver: string, installActionRel: Record<string, unknown>, requestedPermissions: Record<string, unknown>[] }) {
+interface PackageVersionCreateOptions {
+  packageId: string
+  semver: string
+  installActionRel: Record<string, unknown>
+  requestedPermissions: Record<string, unknown>[]
+}
+
+export async function packageVersionCreate ({ packageId, semver, installActionRel, requestedPermissions }: PackageVersionCreateOptions) {
   const query = `
     mutation PackageVersionCreate($packageId: ID, $semver: String, $installActionRel: JSON, $requestedPermissions: JSON) {
       packageVersionCreate(packageId: $packageId, semver: $semver, installActionRel: $installActionRel, requestedPermissions: $requestedPermissions) {
@@ -126,7 +133,14 @@ export async function packageVersionCreate ({ packageId, semver, installActionRe
   return response.data.packageVersionCreate as { id: string }
 }
 
-export async function packageVersionUpdate ({ packageId, semver, installActionRel, requestedPermissions }: { packageId: string, semver: string, installActionRel: Record<string, unknown>, requestedPermissions: Record<string, unknown>[] }) {
+interface PackageVersionUpdateOptions {
+  packageId: string
+  semver: string
+  installActionRel: Record<string, unknown>
+  requestedPermissions: Record<string, unknown>[]
+}
+
+export async function packageVersionUpdate ({ packageId, semver, installActionRel, requestedPermissions }: PackageVersionUpdateOptions) {
   const query = `
     mutation PackageVersionUpdate($packageId: ID, $semver: String, $installActionRel: JSON, $requestedPermissions: JSON) {
       packageVersionUpdate(packageId: $packageId, semver: $semver, installActionRel: $installActionRel, requestedPermissions: $requestedPermissions) {

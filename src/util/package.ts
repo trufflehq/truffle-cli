@@ -3,7 +3,12 @@ import { request } from "./request.js"
 
 const MODULE_REGEX = /@(.*?)\/([^@]+)(?:@([0-9.]+))?([^?#]*)$/i
 
-export async function packageFork ({ packagePath, toPackageSlug }) {
+interface PackageForkOptions {
+  packagePath: string;
+  toPackageSlug: string;
+}
+
+export async function packageFork ({ packagePath, toPackageSlug }: PackageForkOptions) {
   const { orgSlug, packageSlug, packageVersionSemver } =
     (getPackageParts(packagePath))!
 
@@ -35,10 +40,15 @@ export async function packageFork ({ packagePath, toPackageSlug }) {
   return response.data.packageFork
 }
 
+interface PackageInstallOptions {
+  installPackagePath: string;
+  toPackageVersionId: string;
+}
+
 export async function packageInstall ({
   installPackagePath,
   toPackageVersionId
-}) {
+}: PackageInstallOptions) {
   const query = `
     mutation PackageInstall(
       $installPackagePack: String
@@ -58,7 +68,11 @@ export async function packageInstall ({
   return response.data.packageInstall
 }
 
-export async function packageGet ({ shouldUseGlobal = false } = {}) {
+interface PackageGetOptions {
+  shouldUseGlobal?: boolean;
+}
+
+export async function packageGet ({ shouldUseGlobal = false }: PackageGetOptions = {}) {
   const { name } = (await getPublicPackageConfig())!
   const { packageSlug } = (getPackageParts(name))!
 

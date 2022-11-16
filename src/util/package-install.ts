@@ -1,7 +1,12 @@
 import { request } from './request.js'
 import { packageVersionGet } from './package-version.js'
 
-export async function packageInstallCreate ({ installedPackageVersionPath, isForceInstall = false }) {
+interface PackageInstallCreateOptions {
+  installedPackageVersionPath: string
+  isForceInstall?: boolean;
+}
+
+export async function packageInstallCreate ({ installedPackageVersionPath, isForceInstall = false }: PackageInstallCreateOptions) {
   const packageVersion = await packageVersionGet()
 
   const query = `

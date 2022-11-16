@@ -1,5 +1,4 @@
 import { request } from './request.js'
-
 export interface CreateAPIKeyInput {
   type: 'secret' | 'publishable';
   sourceType: 'org' | 'package';
