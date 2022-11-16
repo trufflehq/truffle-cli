@@ -58,8 +58,9 @@ export function getConfigFilename () {
   return path.resolve(os.homedir(), path.normalize('.truffle/config.json'))
 }
 
-const warning = `[config] DepricationWarning: Housing one truffle-cli config in ~/.truffle/config.json has been deprecated.
+const warning = `[config] DeprecationWarning: Housing one truffle-cli config in ~/.truffle/config.json has been deprecated.
 Scope your profiles in an object: "{ "default": { "apiURL": "...", "secretKey": "..." } }".
+See: https://github.com/trufflehq/truffle-cli/pull/10
 `
 
 function configIsOldFormat (config: GlobalConfig): config is GlobalConfigData {
