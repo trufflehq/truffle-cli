@@ -2,7 +2,6 @@ import { getPackageConfig, getGlobalConfig, kProfile } from './config.js'
 import FormData from 'form-data'
 import fetch from 'node-fetch'
 import { container } from 'tsyringe'
-import chalk from 'chalk'
 
 export interface RequestOptions {
   query: string;
