@@ -1,18 +1,18 @@
 {
   "name": "@trufflehq/cli",
-  "version": "0.0.27",
+  "version": "0.0.28",
   "description": "The Truffle Developer Platform CLI",
   "main": "dist/src/cli.js",
   "bin": {
-    "truffle-cli": "./dist/src/cli.js"
+    "truffle-cli": "./dist/cli.js"
   },
   "files": [
     "dist"
   ],
   "type": "module",
   "scripts": {
-    "build": "tsc && chmod +x dist/src/cli.js",
-    "watch": "tsc --watch",
+    "build": "tsup-node",
+    "watch": "tsup-node --watch",
     "format": "eslint --fix --ext .ts,.js src",
     "package:linux": "pkg /tmp/tfl --targets node18-linux-x64 --output bin/linux/truffle-cli",
     "package:macos": "pkg /tmp/tfl --targets node18-macos-x64 --output bin/macos/truffle-cli"
@@ -33,7 +33,6 @@
     "chalk": "^5.0.1",
     "commander": "^9.3.0",
     "common-tags": "^1.8.2",
-    "esm": "https://github.com/jsg2021/esm/releases/download/v3.x.x-pr883/esm-3.x.x-pr883.tgz",
     "form-data": "^4.0.0",
     "gitignore-to-glob": "^0.3.0",
     "glob": "^8.0.3",
@@ -60,6 +59,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.2.0",
     "pkg": "^5.8.0",
+    "tsup": "^6.5.0",
     "typescript": "^4.7.4"
   },
   "resolutions": {
