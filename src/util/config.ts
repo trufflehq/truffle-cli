@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
+import chalk from 'chalk';
 
 export const kProfile = Symbol.for('profile')
 
@@ -80,7 +81,13 @@ export function getGlobalConfig (profile = 'default'): GlobalConfigData {
     return parsed as GlobalConfigData
   }
 
-  return parsed[profile!]
+  const config = parsed[profile]
+  if (!config) {
+    console.log(chalk.red(`No config found for profile "${profile}"`))
+    process.exit(1)
+  }
+
+  return config
 }
 
 export async function getPublicPackageConfig () {
