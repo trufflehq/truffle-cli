@@ -1,4 +1,4 @@
-#!/bin/env -S node --experimental-modules --experimental-import-meta-resolve --experimental-network-imports --no-warnings
+#!/usr/bin/env -S node --experimental-modules --experimental-import-meta-resolve --experimental-network-imports --no-warnings
 import 'reflect-metadata'
 
 import { Argument, Command as BaseCommand, program } from 'commander'
