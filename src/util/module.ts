@@ -14,28 +14,20 @@ export async function moduleUpsert ({ packageVersionId, id, filename, runtime = 
   }
 
   const query = `
-    mutation ModuleUpsert(
-      $id: ID
-      $packageVersionId: ID
-      $filename: String
-      $runtime: String
-      $code: String
-    ) {
-      moduleUpsert(
-        id: $id
-        packageVersionId: $packageVersionId
-        filename: $filename
-        runtime: $runtime
-        code: $code
-      ) { id, exports { type, componentRel { id } } }
+    mutation ModuleUpsert($input: ModuleUpsertInput!) {
+      moduleUpsert(input: $input) {
+        module {
+          id, exports { type, componentRel { id } }
+        }
+      }
     }`
 
   const variables = {
-    id, packageVersionId, filename, runtime, code
+    input: { id, packageVersionId, filename, runtime, code }
   }
   try {
     const response = await request({ query, variables, maxAttempts: 3 })
-    return response.data.moduleUpsert
+    return response.data.moduleUpsert.module
   } catch (err) {
     console.error('error upserting module', err)
   }

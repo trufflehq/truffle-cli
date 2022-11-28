@@ -20,16 +20,18 @@ export async function domainGetConnection ({ packageVersionId }: { packageVersio
 
 export async function domainMigrate ({ packageId, toPackageVersionId }: { packageId: string, toPackageVersionId: string }) {
   const query = `
-    mutation DomainMigratePackageVersionId($packageId: ID, $toPackageVersionId: ID) {
-      domainMigratePackageVersionId(packageId: $packageId, toPackageVersionId: $toPackageVersionId) {
-        id
-        domainName
-        packageVersionId
+    mutation DomainMigratePackageVersionId(input: DomainMigratePackageVersionIdInput!) {
+      domainMigratePackageVersionId(input: $input) {
+        domains {
+          id
+          domainName
+          packageVersionId
+        }
       }
     }
   `
-  const variables = { packageId, toPackageVersionId }
+  const variables = { input: { packageId, toPackageVersionId } }
 
   const response = await request({ query, variables })
-  return response.data.domainMigratePackageVersionId as { id: string, domainName: string, packageVersionId: string }
+  return response.data.domainMigratePackageVersionId.domains as { id: string, domainName: string, packageVersionId: string }
 }

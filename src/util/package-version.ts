@@ -121,13 +121,13 @@ interface PackageVersionCreateOptions {
 
 export async function packageVersionCreate ({ packageId, semver, installActionRel, requestedPermissions }: PackageVersionCreateOptions) {
   const query = `
-    mutation PackageVersionCreate($packageId: ID, $semver: String, $installActionRel: JSON, $requestedPermissions: JSON) {
-      packageVersionCreate(packageId: $packageId, semver: $semver, installActionRel: $installActionRel, requestedPermissions: $requestedPermissions) {
+    mutation PackageVersionCreate($input: PackageVersionCreateInput!) {
+      packageVersionCreate(input: $input) {
         id
       }
     }
   `
-  const variables = { packageId, semver, installActionRel, requestedPermissions }
+  const variables = { input: { packageId, semver, installActionRel, requestedPermissions } }
 
   const response = await request({ query, variables })
   return response.data.packageVersionCreate as { id: string }
@@ -142,14 +142,12 @@ interface PackageVersionUpdateOptions {
 
 export async function packageVersionUpdate ({ packageId, semver, installActionRel, requestedPermissions }: PackageVersionUpdateOptions) {
   const query = `
-    mutation PackageVersionUpdate($packageId: ID, $semver: String, $installActionRel: JSON, $requestedPermissions: JSON) {
-      packageVersionUpdate(packageId: $packageId, semver: $semver, installActionRel: $installActionRel, requestedPermissions: $requestedPermissions) {
-        id
-      }
+    mutation PackageVersionUpdate($input: PackageVersionUpdateInput!) {
+      packageVersionUpdate(input: $input) { packageVersion { id } }
     }
   `
-  const variables = { packageId, semver, installActionRel, requestedPermissions }
+  const variables = { input: { packageId, semver, installActionRel, requestedPermissions } }
 
   const response = await request({ query, variables })
-  return response.data.packageVersionCreate as { id: string }
+  return response.data.packageVersionCreate.packageVersion as { id: string }
 }
