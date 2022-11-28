@@ -57,23 +57,22 @@ export async function packageList () {
   const query = `
   query PackageConnection ($first: Int, $after: String, $last: Int, $before: String) {
     packageConnection(first: $first, after: $after, last: $last, before: $before) {
-        totalCount
-        pageInfo {
-            endCursor
-            hasNextPage
+      totalCount
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+      nodes {
+        id
+        slug
+        packageVersionConnection {
+          nodes {
+            semver
+          }
         }
-        nodes {
-            id
-            slug
-            packageVersionConnection (filter: DESC) {
-                nodes {
-                  semver
-                }
-            }
-        }
+      }
     }
-}
-  `
+  }`
 
   const response = await request({
     query,

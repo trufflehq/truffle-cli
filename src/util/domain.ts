@@ -20,7 +20,7 @@ export async function domainGetConnection ({ packageVersionId }: { packageVersio
 
 export async function domainMigrate ({ packageId, toPackageVersionId }: { packageId: string, toPackageVersionId: string }) {
   const query = `
-    mutation DomainMigratePackageVersionId(input: DomainMigratePackageVersionIdInput!) {
+    mutation DomainMigratePackageVersionId($input: DomainMigratePackageVersionIdInput!) {
       domainMigratePackageVersionId(input: $input) {
         domains {
           id

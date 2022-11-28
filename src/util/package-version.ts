@@ -123,14 +123,14 @@ export async function packageVersionCreate ({ packageId, semver, installActionRe
   const query = `
     mutation PackageVersionCreate($input: PackageVersionCreateInput!) {
       packageVersionCreate(input: $input) {
-        id
+        packageVersion { id }
       }
     }
   `
   const variables = { input: { packageId, semver, installActionRel, requestedPermissions } }
 
   const response = await request({ query, variables })
-  return response.data.packageVersionCreate as { id: string }
+  return response.data.packageVersionCreate.packageVersion as { id: string }
 }
 
 interface PackageVersionUpdateOptions {
@@ -140,14 +140,15 @@ interface PackageVersionUpdateOptions {
   requestedPermissions: Record<string, unknown>[]
 }
 
-export async function packageVersionUpdate ({ packageId, semver, installActionRel, requestedPermissions }: PackageVersionUpdateOptions) {
+export async function packageVersionUpdate ({ packageId, semver, status, installActionRel, requestedPermissions }: PackageVersionUpdateOptions) {
   const query = `
     mutation PackageVersionUpdate($input: PackageVersionUpdateInput!) {
       packageVersionUpdate(input: $input) { packageVersion { id } }
     }
   `
-  const variables = { input: { packageId, semver, installActionRel, requestedPermissions } }
+  const variables = { input: { packageId, semver, status, installActionRel, requestedPermissions } }
 
   const response = await request({ query, variables })
-  return response.data.packageVersionCreate.packageVersion as { id: string }
+
+  return response.data.packageVersionUpdate.packageVersion as { id: string }
 }
