@@ -25,10 +25,6 @@ export async function moduleUpsert ({ packageVersionId, id, filename, runtime = 
   const variables = {
     input: { id, packageVersionId, filename, runtime, code }
   }
-  try {
-    const response = await request({ query, variables, maxAttempts: 3 })
-    return response.data.moduleUpsert.module
-  } catch (err) {
-    console.error('error upserting module', err)
-  }
+  const response = await request({ query, variables, maxAttempts: 3 })
+  return response.data.moduleUpsert.module
 }

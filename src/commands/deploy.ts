@@ -110,21 +110,17 @@ async function handleFilename (filename, { packageVersionId }) {
 
   const code = applyTransforms(filename, fs.readFileSync(filename).toString())
 
-  try {
-    const module = await moduleUpsert({
-      packageVersionId,
-      filename: `/${filename}`,
-      code
-    })
+  const module = await moduleUpsert({
+    packageVersionId,
+    filename: `/${filename}`,
+    code
+  })
 
-    const filenameParts = filename.split('/')
-    const isLayoutFile = filename.indexOf('layout.tsx') !== -1
-    if (filenameParts[0] === 'routes' && !isLayoutFile) {
-      saveRoute({ filenameParts, module, packageVersionId })
-    }
-
-    console.log(`Saved ${filename}`)
-  } catch (err) {
-    console.log('failed upsert for', filename, err)
+  const filenameParts = filename.split('/')
+  const isLayoutFile = filename.indexOf('layout.tsx') !== -1
+  if (filenameParts[0] === 'routes' && !isLayoutFile) {
+    saveRoute({ filenameParts, module, packageVersionId })
   }
+
+  console.log(`Saved ${filename}`)
 }
