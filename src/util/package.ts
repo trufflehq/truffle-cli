@@ -13,59 +13,22 @@ export async function packageFork ({ packagePath, toPackageSlug }: PackageForkOp
     (getPackageParts(packagePath))!
 
   const query = `
-    mutation PackageFork(
-      $fromOrgSlug: String
-      $fromPackageSlug: String
-      $fromPackageVersionSemver: String
-      $toPackageSlug: String
-    ) {
-      packageFork(
-        fromOrgSlug: $fromOrgSlug
-        fromPackageSlug: $fromPackageSlug
-        fromPackageVersionSemver: $fromPackageVersionSemver
-        toPackageSlug: $toPackageSlug
-      ) {
-        id
-        latestPackageVersionId
+    mutation PackageFork($input: PackageForkInput!) {
+      packageFork(input: $input) {
+        package { id, latestPackageVersionId }
       }
     }`
   const variables = {
-    fromOrgSlug: orgSlug,
-    fromPackageSlug: packageSlug,
-    fromPackageVersionSemver: packageVersionSemver,
-    toPackageSlug
+    input: {
+      fromOrgSlug: orgSlug,
+      fromPackageSlug: packageSlug,
+      fromPackageVersionSemver: packageVersionSemver,
+      toPackageSlug
+    }
   }
 
   const response = await request({ query, variables })
-  return response.data.packageFork
-}
-
-interface PackageInstallOptions {
-  installPackagePath: string;
-  toPackageVersionId: string;
-}
-
-export async function packageInstall ({
-  installPackagePath,
-  toPackageVersionId
-}: PackageInstallOptions) {
-  const query = `
-    mutation PackageInstall(
-      $installPackagePack: String
-      $toPackageVersionId: String
-    ) {
-      packageInstall(
-        installPackagePack: $installPackagePack
-        toPackageVersionId: $toPackageVersionId
-      ) { id }
-    }`
-  const variables = {
-    installPackagePath,
-    toPackageVersionId
-  }
-
-  const response = await request({ query, variables })
-  return response.data.packageInstall
+  return response.data.packageFork.package
 }
 
 interface PackageGetOptions {
@@ -77,14 +40,14 @@ export async function packageGet ({ shouldUseGlobal = false }: PackageGetOptions
   const { packageSlug } = (getPackageParts(name))!
 
   const query = `
-    query PackageGet($slug: String) {
-      package(slug: $slug) {
+    query PackageGet($input: PackageInput) {
+      package(input: $input) {
         id
         latestPackageVersionId
       }
     }
   `
-  const variables = { slug: packageSlug }
+  const variables = { input: { slug: packageSlug } }
 
   const response = await request({ query, variables, shouldUseGlobal })
   return response.data.package as { id: string, latestPackageVersionId: string }
@@ -94,23 +57,22 @@ export async function packageList () {
   const query = `
   query PackageConnection ($first: Int, $after: String, $last: Int, $before: String) {
     packageConnection(first: $first, after: $after, last: $last, before: $before) {
-        totalCount
-        pageInfo {
-            endCursor
-            hasNextPage
+      totalCount
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+      nodes {
+        id
+        slug
+        packageVersionConnection {
+          nodes {
+            semver
+          }
         }
-        nodes {
-            id
-            slug
-            packageVersionConnection (filter: DESC) {
-                nodes {
-                  semver
-                }
-            }
-        }
+      }
     }
-}
-  `
+  }`
 
   const response = await request({
     query,

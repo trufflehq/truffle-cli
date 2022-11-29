@@ -83,6 +83,13 @@ export async function deploy ({ shouldUpdateDomain }: { shouldUpdateDomain?: boo
       installedPackageVersionPath: latestPackageVersionPath,
       isForceInstall: true
     })
+
+    console.log('Publishing package version')
+    await packageVersionUpdate({
+      packageId: pkg.id,
+      semver: version,
+      status: 'published'
+    })
   })
 }
 
