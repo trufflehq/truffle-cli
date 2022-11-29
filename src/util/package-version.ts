@@ -86,8 +86,8 @@ export async function packageVersionGet (options?: PackageVersionGetOptions) {
   }
 
   const query = `
-  query PackageVersionGet($id: ID, $packageSlug: String, $semver: String) {
-    packageVersion(id: $id, packageSlug: $packageSlug, semver: $semver) {
+  query PackageVersionGet($input: PackageVersionInput) {
+    packageVersion(input: $input) {
       ${BASE_PACKAGE_VERSION_FIELDS}
       ${includeModules ? BASE_MODULE_CONNECTION_FIELDS : ''}
       ${includePackage ? BASE_PACKAGE_FIELDS : ''}
@@ -97,7 +97,7 @@ export async function packageVersionGet (options?: PackageVersionGetOptions) {
   }
   `
 
-  const variables = { id, packageSlug, semver: packageVersionSemver }
+  const variables = { input: { id, packageSlug, semver: packageVersionSemver } }
 
   const response = await request({ query, variables })
   return response.data.packageVersion

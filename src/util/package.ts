@@ -40,14 +40,14 @@ export async function packageGet ({ shouldUseGlobal = false }: PackageGetOptions
   const { packageSlug } = (getPackageParts(name))!
 
   const query = `
-    query PackageGet($slug: String) {
-      package(slug: $slug) {
+    query PackageGet($input: PackageInput) {
+      package(input: $input) {
         id
         latestPackageVersionId
       }
     }
   `
-  const variables = { slug: packageSlug }
+  const variables = { input: { slug: packageSlug } }
 
   const response = await request({ query, variables, shouldUseGlobal })
   return response.data.package as { id: string, latestPackageVersionId: string }

@@ -2,8 +2,8 @@ import { request } from './request.js'
 
 export async function domainGetConnection ({ packageVersionId }: { packageVersionId: string }) {
   const query = `
-    query DomainGetConnection($packageVersionId: ID) {
-      domainConnection(packageVersionId: $packageVersionId) {
+    query DomainGetConnection($input: DomainConnectionInput) {
+      domainConnection(input: $input) {
         nodes {
           id
           domainName
@@ -12,7 +12,7 @@ export async function domainGetConnection ({ packageVersionId }: { packageVersio
       }
     }
   `
-  const variables = { packageVersionId }
+  const variables = { input: { packageVersionId } }
 
   const response = await request({ query, variables })
   return response.data.domainConnection as { nodes: { id: string, domainName: string, packageVersionId: string }[] }
