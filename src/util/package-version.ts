@@ -103,13 +103,9 @@ export async function packageVersionGet (options?: PackageVersionGetOptions) {
   return response.data.packageVersion
 }
 
-export async function packageVersionPathGetLatest () {
-  const packageVersion = await packageVersionGet()
-
-  const orgSlug = packageVersion.package?.org?.slug
-  const packageSlug = packageVersion.package?.slug
-
-  return `@${orgSlug}/${packageSlug}@latest`
+export async function packageVersionPathGetLatestPath () {
+  const config = await getPackageConfig()
+  return `${config.name}@latest`
 }
 
 interface PackageVersionCreateOptions {

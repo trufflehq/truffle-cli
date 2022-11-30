@@ -9,7 +9,7 @@ import { domainGetConnection, domainMigrate } from '../util/domain.js'
 import { moduleUpsert } from '../util/module.js'
 import { packageGet } from '../util/package.js'
 import { saveRoute } from '../util/route.js'
-import { packageVersionGet, packageVersionCreate, packageVersionUpdate, packageVersionPathGetLatest } from '../util/package-version.js'
+import { packageVersionGet, packageVersionCreate, packageVersionUpdate, packageVersionPathGetLatestPath } from '../util/package-version.js'
 import { getPackageConfig } from '../util/config.js'
 import { applyTransforms } from '../util/transform.js'
 import _ from 'lodash'
@@ -78,7 +78,7 @@ export async function deploy ({ shouldUpdateDomain }: { shouldUpdateDomain?: boo
     const domainsStr = domainConnection.nodes
       .map(({ domainName }) => `https://${domainName}`).join(', ') || 'no domain'
     console.log(`Deployed to ${domainsStr}`)
-    const latestPackageVersionPath = await packageVersionPathGetLatest()
+    const latestPackageVersionPath = await packageVersionPathGetLatestPath()
     await install({
       installedPackageVersionPath: latestPackageVersionPath,
       isForceInstall: true

@@ -1,5 +1,7 @@
-#!/usr/bin/env node --experimental-modules --experimental-import-meta-resolve --experimental-network-imports --no-warnings
-// NOTE: `#!/usr/bin/env -S node` will break Windows (the -S). It screws w/ how npm generates ps1/cmd files
+#!/usr/bin/env -S node --experimental-modules --experimental-import-meta-resolve --experimental-network-imports --no-warnings
+// NOTE: `#!/usr/bin/env -S node` will break Windows (the -S). It screws w/ how npm generates ps1/cmd files (it looks at first word after /usr/bin/env)
+// Unfortunately the -S is necessary for linux to parse the additional flags
+// TODO: figure out a solution that can work for both
 import 'reflect-metadata'
 
 import { Argument, Command as BaseCommand, program } from 'commander'
