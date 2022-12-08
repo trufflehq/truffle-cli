@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import os from 'os'
 import chalk from 'chalk';
+import { container } from 'tsyringe';
 
 export const kProfile = Symbol.for('profile')
 
@@ -69,7 +70,10 @@ function configIsOldFormat (config: GlobalConfig): config is GlobalConfigData {
 }
 let warned = false
 
-export function getGlobalConfig (profile = 'default'): GlobalConfigData {
+export function getGlobalConfig (profile?: string): GlobalConfigData {
+  const container_profile = container.resolve<string>(kProfile);
+  profile = profile || container_profile || 'default';
+
   const parsed: GlobalConfig = JSON.parse(fs.readFileSync(getConfigFilename(), { encoding: 'utf-8' }))
 
   // throw a deprecation warning if the config is in the old format
