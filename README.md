@@ -4,7 +4,6 @@
 ## Installing
 Ensure you have Node 18 installed. We recommend [Volta](https://volta.sh/).  
 
-**NPM or Yarn**
 ```sh
 $ volta install @trufflehq/cli # volta! (what we recommend)
 $ yarn global add @trufflehq/cli # yarn!
