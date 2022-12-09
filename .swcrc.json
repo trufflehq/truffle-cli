@@ -1,0 +1,25 @@
+{
+	"jsc": {
+		"parser": {
+			"syntax": "typescript",
+			"tsx": false,
+			"decorators": true
+		},
+		"transform": {
+			"useDefineForClassFields": true
+		},
+		"target": "es2022",
+		"keepClassNames": true,
+		"preserveAllComments": false,
+		"externalHelpers": true
+	},
+	"module": {
+		"type": "nodenext"
+	},
+	"sourceMaps": true,
+	"isModule": true,
+	"exclude": [
+		"dist/**/*",
+		"node_modules/**/*"
+	]
+}
