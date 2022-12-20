@@ -144,16 +144,6 @@ program.addCommand(
 )
 
 program.addCommand(
-  new Command('watch')
-    .description('Watch for changes.')
-    .action(async () => {
-      const { watch } = await
-      import('./commands/deploy.js')
-      await watch()
-    })
-)
-
-program.addCommand(
   new Command('ls')
     .description('List existing packages.')
     .action(async () => {

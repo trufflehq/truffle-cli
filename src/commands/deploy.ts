@@ -1,4 +1,3 @@
-import watchGlob from 'watch-glob'
 import glob from 'glob'
 import fs from 'fs'
 import chalk from 'chalk'
@@ -91,16 +90,6 @@ export async function deploy ({ shouldUpdateDomain }: { shouldUpdateDomain?: boo
       status: 'published'
     })
   })
-}
-
-export async function watch () {
-  const packageVersion = await packageVersionGet()
-  const packageVersionId = packageVersion?.id
-  watchGlob([GLOB], { ignore: getIgnore(), nodir: true, callbackArg: 'relative' }, (filename) => {
-    console.log('File changed:', filename)
-    handleFilename(filename, { packageVersionId })
-  })
-  console.log('Listening for changes...')
 }
 
 async function handleFilename (filename, { packageVersionId }) {

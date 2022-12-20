@@ -861,7 +861,6 @@ __metadata:
     tsyringe: ^4.7.0
     typescript: ^4.7.4
     undici: ^5.8.0
-    watch-glob: ^0.1.3
   bin:
     truffle-cli: ./dist/cli.js
   languageName: unknown
@@ -1797,13 +1796,6 @@ __metadata:
     kind-of: ^6.0.2
     shallow-clone: ^3.0.0
   checksum: 770f912fe4e6f21873c8e8fbb1e99134db3b93da32df271d00589ea4a29dbe83a9808a322c93f3bcaf8584b8b4fa6fc269fc8032efbaa6728e0c9886c74467d2
-  languageName: node
-  linkType: hard
-
-"clone-stats@npm:~0.0.1":
-  version: 0.0.1
-  resolution: "clone-stats@npm:0.0.1"
-  checksum: 24a47ba6a4619fdb2bc7ef1728ca06934c7ff986a93820b81da7018698de54eade10cd078b75a409563270aac17397691214b020057c7e7a9f515da13fd61e50
   languageName: node
   linkType: hard
 
@@ -3175,15 +3167,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gaze@npm:~0.5.0":
-  version: 0.5.2
-  resolution: "gaze@npm:0.5.2"
-  dependencies:
-    globule: ~0.1.0
-  checksum: f00b302cf12bc5e612b43da37395619428db0c3fb096977ec72962a1926d2711938786083e5a4c44819f05ba0a9e4ec287c7e733188dc3ce3abbfd29b48bd3bc
-  languageName: node
-  linkType: hard
-
 "gensync@npm:^1.0.0-beta.2":
   version: 1.0.0-beta.2
   resolution: "gensync@npm:1.0.0-beta.2"
@@ -3276,27 +3259,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:~3.1.21":
-  version: 3.1.21
-  resolution: "glob@npm:3.1.21"
-  dependencies:
-    graceful-fs: ~1.2.0
-    inherits: 1
-    minimatch: ~0.2.11
-  checksum: b7ae26c6b05cb87d77529849dba309481fbea69ed7fe15407bc436a2aff8eb833e779018cabb722a300094e59a7c1010ddecd472f90b950b6dd56502ccef017b
-  languageName: node
-  linkType: hard
-
-"glob@npm:~3.2.7":
-  version: 3.2.11
-  resolution: "glob@npm:3.2.11"
-  dependencies:
-    inherits: 2
-    minimatch: 0.3
-  checksum: 25cb00311743ab877e04367e8115ffeb5a329d5f5764335279acbf776f83ff84f41d6e49d129aece6018f4ce472e0a7d94060b2496555d4a41d7efe753833d98
-  languageName: node
-  linkType: hard
-
 "globals@npm:^11.1.0":
   version: 11.12.0
   resolution: "globals@npm:11.12.0"
@@ -3327,39 +3289,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"globule@npm:~0.1.0":
-  version: 0.1.0
-  resolution: "globule@npm:0.1.0"
-  dependencies:
-    glob: ~3.1.21
-    lodash: ~1.0.1
-    minimatch: ~0.2.11
-  checksum: 3023cd13483423e8d715a8488692b833c46c690e477adc9b81aa344c4487929c4378d15bf7931dd2f31db4e44a0a9366a586f415379e7dfa0a3805c6416a661f
-  languageName: node
-  linkType: hard
-
-"globule@npm:~0.2.0":
-  version: 0.2.0
-  resolution: "globule@npm:0.2.0"
-  dependencies:
-    glob: ~3.2.7
-    lodash: ~2.4.1
-    minimatch: ~0.2.11
-  checksum: 494a4fbe8ce24ebb4230e9bf1162de20e978461f73e6dbb1ee7f5c209d9a3853a07f2a1c4ae19cc2c46409b9e08870ec1d837c56031fcadf318bd79722e21333
-  languageName: node
-  linkType: hard
-
 "graceful-fs@npm:^4.1.11, graceful-fs@npm:^4.1.6, graceful-fs@npm:^4.2.0, graceful-fs@npm:^4.2.4, graceful-fs@npm:^4.2.6":
   version: 4.2.10
   resolution: "graceful-fs@npm:4.2.10"
   checksum: 3f109d70ae123951905d85032ebeae3c2a5a7a997430df00ea30df0e3a6c60cf6689b109654d6fdacd28810a053348c4d14642da1d075049e6be1ba5216218da
-  languageName: node
-  linkType: hard
-
-"graceful-fs@npm:~1.2.0":
-  version: 1.2.3
-  resolution: "graceful-fs@npm:1.2.3"
-  checksum: e40637fe703134214b9eb0c77d6eed336842d47259cb9c6b3fe8e9f864363d8cc7a062309899be4a0ba12e75d1a264adad3c43376c42d251a8dc0c4442ec8232
   languageName: node
   linkType: hard
 
@@ -3589,13 +3522,6 @@ __metadata:
     once: ^1.3.0
     wrappy: 1
   checksum: f4f76aa072ce19fae87ce1ef7d221e709afb59d445e05d47fba710e85470923a75de35bfae47da6de1b18afc3ce83d70facf44cfb0aff89f0a3f45c0a0244dfd
-  languageName: node
-  linkType: hard
-
-"inherits@npm:1":
-  version: 1.0.2
-  resolution: "inherits@npm:1.0.2"
-  checksum: e2f5c1d2868f3bc49a6875478dfaad7c09c7c70d00368cfe0eca834d13589f2704b5aa8964caf1c6d26828022a0d21d2b8397d75a435fe952c1af949496bc00a
   languageName: node
   linkType: hard
 
@@ -4154,31 +4080,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:~1.0.1":
-  version: 1.0.2
-  resolution: "lodash@npm:1.0.2"
-  checksum: 11f6e2f0cd559d999ba81a8f04dedcd8c922a3f09796e0b24d4a06cd9a0e34556e448e7c54643110369f7eaf0c5973423d0690238d070cdd785ad6e3bae1ce5b
-  languageName: node
-  linkType: hard
-
 "lodash@npm:~1.3.1":
   version: 1.3.1
   resolution: "lodash@npm:1.3.1"
   checksum: 09d0a019f392a72e232f45a8f6325243f9be708a3a7545d50a5bfa5ea1de85a4bde95481c5749300fa7f65cbdda5540eddb735fdfed2415faf3986fa70692a68
-  languageName: node
-  linkType: hard
-
-"lodash@npm:~2.4.1":
-  version: 2.4.2
-  resolution: "lodash@npm:2.4.2"
-  checksum: b18a5e5858091e2a0e6498e9f0efde559f64a2cc7adfa240c7da92930b7c734a9e52519101522e9fbd7acfcfb0ef682ce9b9cb668b5fea4809cb340435c1764d
-  languageName: node
-  linkType: hard
-
-"lru-cache@npm:2":
-  version: 2.7.3
-  resolution: "lru-cache@npm:2.7.3"
-  checksum: f3bff3990f2936826da865d1b56f591185df9163e9ebc5e1234a9c5fd4574f8bbb67373fe6f8b914a2a88a3988591fc6b80b5e77705d5ca6ce2c9ef2ea08b572
   languageName: node
   linkType: hard
 
@@ -4348,16 +4253,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimatch@npm:0.3":
-  version: 0.3.0
-  resolution: "minimatch@npm:0.3.0"
-  dependencies:
-    lru-cache: 2
-    sigmund: ~1.0.0
-  checksum: 5fd8a557d0ce1d054b554e86024cf792603fa4eb91437ebc209b022ea88e096638b71b2f0e646789dd737c9c524da65218d652937cd65acdb56518dc1cd73c9e
-  languageName: node
-  linkType: hard
-
 "minimatch@npm:^3.0.2, minimatch@npm:^3.0.4, minimatch@npm:^3.1.1":
   version: 3.1.2
   resolution: "minimatch@npm:3.1.2"
@@ -4373,16 +4268,6 @@ __metadata:
   dependencies:
     brace-expansion: ^2.0.1
   checksum: 15ce53d31a06361e8b7a629501b5c75491bc2b59712d53e802b1987121d91b433d73fcc5be92974fde66b2b51d8fb28d75a9ae900d249feb792bb1ba2a4f0a90
-  languageName: node
-  linkType: hard
-
-"minimatch@npm:~0.2.11":
-  version: 0.2.14
-  resolution: "minimatch@npm:0.2.14"
-  dependencies:
-    lru-cache: 2
-    sigmund: ~1.0.0
-  checksum: c2c5209302f9621aedd6c685477a8e1e4fc1a6caa8b42da8dcd8b44060941dcbcc3b4664d727a50f45028b91e6ac22987ee14ffc8a68d56a7ef4ee84ff582fde
   languageName: node
   linkType: hard
 
@@ -5595,13 +5480,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sigmund@npm:~1.0.0":
-  version: 1.0.1
-  resolution: "sigmund@npm:1.0.1"
-  checksum: 793f81f8083ad75ff3903ffd93cf35be8d797e872822cf880aea27ce6db522b508d93ea52ae292bccf357ce34dd5c7faa544cc51c2216e70bbf5fcf09b62707c
-  languageName: node
-  linkType: hard
-
 "signal-exit@npm:^3.0.0, signal-exit@npm:^3.0.2, signal-exit@npm:^3.0.7":
   version: 3.0.7
   resolution: "signal-exit@npm:3.0.7"
@@ -6333,15 +6211,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vinyl@npm:~0.2.3":
-  version: 0.2.3
-  resolution: "vinyl@npm:0.2.3"
-  dependencies:
-    clone-stats: ~0.0.1
-  checksum: c7c828561aeaee5543cd44400fb0af7861c2e1b26168fd57b05a554bf558760fb60647caf03158ce534baf722b4e39307641d9e07e1fb7d8f420da0d9babb7dd
-  languageName: node
-  linkType: hard
-
 "vite@github:trufflehq/vite-url-imports-package":
   version: 3.0.0
   resolution: "vite@https://github.com/trufflehq/vite-url-imports-package.git#commit=b28125632c42dd70e381bc6b30bad166a17fc7b3"
@@ -6384,18 +6253,6 @@ __metadata:
     "@vue/server-renderer": 3.2.45
     "@vue/shared": 3.2.45
   checksum: df60ca80cb9fdce408eccd0c7a4d44720df9855c62e340448650d8048b1edd25da6f3bd99ed7efc19efbe1f3fdcec4ae8067ab10ae50be5bb363d996ad29251a
-  languageName: node
-  linkType: hard
-
-"watch-glob@npm:^0.1.3":
-  version: 0.1.3
-  resolution: "watch-glob@npm:0.1.3"
-  dependencies:
-    gaze: ~0.5.0
-    globule: ~0.2.0
-    lodash: ~2.4.1
-    vinyl: ~0.2.3
-  checksum: 3d6b963984318dad9a71554abaa8bcb54d78d0626987549b8084aa8f3b1d5ecd2e22f0e0884c19d22009021828ccb607bb3d7cf9bbf2a12727bc8fb313e4cca5
   languageName: node
   linkType: hard
 
