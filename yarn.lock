@@ -833,11 +833,13 @@ __metadata:
     "@deno/eszip": ^0.22.0
     "@swc/cli": ^0.1.57
     "@swc/core": ^1.3.22
+    "@types/adm-zip": ^0
     "@types/common-tags": ^1
     "@types/lodash": ^4.14.182
     "@types/node": ^18.6.2
     "@typescript-eslint/eslint-plugin": ^5.31.0
     "@typescript-eslint/parser": ^5.31.0
+    adm-zip: ^0.5.9
     arraybuffer-to-buffer: ^0.0.7
     chalk: ^5.0.1
     commander: ^9.3.0
@@ -866,6 +868,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@types/adm-zip@npm:^0":
+  version: 0.5.0
+  resolution: "@types/adm-zip@npm:0.5.0"
+  dependencies:
+    "@types/node": "*"
+  checksum: 11dd013584e47d431bdf7c115b73cd3162c1a1eca0fbb911f691c9734e904cfe4a01ac1d2d3cbf76d0a952e01fcce8a01fd6fb1c150675a29d740a7fb15325b2
+  languageName: node
+  linkType: hard
+
 "@types/common-tags@npm:^1":
   version: 1.8.1
   resolution: "@types/common-tags@npm:1.8.1"
@@ -891,6 +902,13 @@ __metadata:
   version: 4.14.186
   resolution: "@types/lodash@npm:4.14.186"
   checksum: ee0c1368a8100bb6efb88335107473a41928fc307ff1ef4ff1278868ccddba9c04c68c36d1ffe3a0392ef4a956e1955f7de3203ec09df4f1655dd1b88485c549
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:*":
+  version: 18.11.17
+  resolution: "@types/node@npm:18.11.17"
+  checksum: 1933afd068d5c75c068c6c4df6d10edb3b0b2bb6503d544e2f0496ac007c90596e6a5e284a8ef032451bc16f871b7e46719d7d2bea60e9b25d13a77d52161cac
   languageName: node
   linkType: hard
 
@@ -1181,6 +1199,13 @@ __metadata:
   bin:
     acorn: bin/acorn
   checksum: 1860f23c2107c910c6177b7b7be71be350db9e1080d814493fae143ae37605189504152d1ba8743ba3178d0b37269ce1ffc42b101547fdc1827078f82671e407
+  languageName: node
+  linkType: hard
+
+"adm-zip@npm:^0.5.9":
+  version: 0.5.9
+  resolution: "adm-zip@npm:0.5.9"
+  checksum: 4909bc04119fdd5e8f8ba43826e50623e5c427cf0a939c809d4f9456a6a03c6aa0544e82088739de9ba16b7649f71b99ccbbddc7b2c38bd6143f9c4726cc7ed9
   languageName: node
   linkType: hard
 

@@ -41,7 +41,7 @@ export async function request ({ query, variables, shouldUseGlobal = false, maxA
   if (data?.errors?.length) {
     throw new Error(`Request error: ${
       JSON.stringify(
-        data.errors[0].extensions.info ?? data.errors[0].message
+        data.errors[0].extensions?.info ?? data.errors[0].message
       )
     }`)
   }
@@ -81,7 +81,7 @@ export async function upload ({ query, variables, bundle, shouldUseGlobal = fals
   if (data?.errors?.length) {
     throw new Error(`Request error: ${
       JSON.stringify(
-        data.errors[0].extensions.info ?? data.errors[0].message
+        data.errors[0].extensions?.info ?? data.errors[0].message
       )
     }`)
   }
