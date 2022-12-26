@@ -1,6 +1,6 @@
 {
   "name": "@trufflehq/cli",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "The Truffle Developer Platform CLI",
   "main": "dist/cli.js",
   "bin": {
