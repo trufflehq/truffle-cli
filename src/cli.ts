@@ -7,7 +7,7 @@ import 'reflect-metadata'
 import { Argument, Command as BaseCommand, program } from 'commander'
 import truffleCli from '../package.json' assert { type: 'json' }
 import { container } from 'tsyringe'
-import { kProfile } from './util/config.js'
+import { kProfile } from './di/tokens.js'
 
 class Command extends BaseCommand {
   public action (fn: (...args: any[]) => void | Promise<void>): this {

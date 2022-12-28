@@ -1,10 +1,11 @@
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
-import chalk from 'chalk';
-import { container } from 'tsyringe';
-
-export const kProfile = Symbol.for('profile')
+import chalk from 'chalk'
+import { container } from 'tsyringe'
+import { CliConfig, OrgProfileConfig } from '../types/config.js'
+import { kProfile } from '../di/tokens.js'
+import { defaultCliConfig } from '../assets/default-config.js'
 
 export interface PrivateConfig {
   secretKey: string;
@@ -49,49 +50,61 @@ export interface PublicConfig {
   }[]
 }
 
-interface GlobalConfigData {
-  apiUrl: string
-  secretKey: string
+function upgradeConfig (config: Record<string, OrgProfileConfig>): CliConfig {
+  return {
+    ...defaultCliConfig,
+    orgProfiles: config
+  }
 }
 
-type GlobalConfig = Record<string, GlobalConfigData> | GlobalConfigData // compat
-
-export function getConfigFilename () {
+export function getCliConfigFilename () {
   return path.resolve(os.homedir(), path.normalize('.truffle/config.json'))
 }
 
-const warning = `[config] DeprecationWarning: Housing one truffle-cli config in ~/.truffle/config.json has been deprecated.
-Scope your profiles in an object: "{ "default": { "apiURL": "...", "secretKey": "..." } }".
-See: https://github.com/trufflehq/truffle-cli/pull/10
-`
+export function getOrgProfileConfig (profile?: string): OrgProfileConfig {
+  const containerProfile = container.resolve<string>(kProfile)
+  profile = profile || containerProfile || 'default'
 
-function configIsOldFormat (config: GlobalConfig): config is GlobalConfigData {
-  return 'apiUrl' in config
-}
-let warned = false
+  const cliConfig = readCliConfig()
 
-export function getGlobalConfig (profile?: string): GlobalConfigData {
-  const container_profile = container.resolve<string>(kProfile);
-  profile = profile || container_profile || 'default';
-
-  const parsed: GlobalConfig = JSON.parse(fs.readFileSync(getConfigFilename(), { encoding: 'utf-8' }))
-
-  // throw a deprecation warning if the config is in the old format
-  if (configIsOldFormat(parsed)) {
-    if (!warned) {
-      warned = true
-      console.warn(warning)
-    }
-    return parsed as GlobalConfigData
-  }
-
-  const config = parsed[profile]
+  const config = cliConfig.orgProfiles[profile]
   if (!config) {
     console.log(chalk.red(`No config found for profile "${profile}"`))
     process.exit(1)
   }
 
   return config
+}
+
+export function readCliConfig (): CliConfig {
+  try {
+    const parsed = JSON.parse(fs.readFileSync(getCliConfigFilename(), { encoding: 'utf-8' }))
+
+    // If the config is in the old format, upgrade it
+    if (!parsed.orgProfiles) {
+      return upgradeConfig(parsed)
+    }
+
+    return parsed as CliConfig
+  } catch (e) {
+    // If the file doesn't exist, return an empty config
+    if (e.syscall === 'open' && e.code === 'ENOENT') {
+      return defaultCliConfig
+    } else {
+      console.log(chalk.red(`Error reading config: ${e.code}`))
+      process.exit(1)
+    }
+  }
+}
+
+/**
+ * Writes a new config to the ~/.truffle/config.json file
+ * @param config
+ */
+export function writeCliConfig (config: CliConfig) {
+  const filename = getCliConfigFilename()
+  fs.mkdirSync(path.dirname(filename), { recursive: true })
+  fs.writeFileSync(filename, JSON.stringify(config, null, 2))
 }
 
 export async function getPublicPackageConfig () {

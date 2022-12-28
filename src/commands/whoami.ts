@@ -1,12 +1,13 @@
 import { request } from '../util/request.js'
-import { getGlobalConfig, kProfile } from '../util/config.js'
+import { getOrgProfileConfig } from '../util/config.js'
 import { stripIndents } from 'common-tags'
 import chalk from 'chalk'
 import { container } from 'tsyringe'
+import { kProfile } from '../di/tokens.js'
 
 export default async function whoami () {
   const profile = container.resolve<string>(kProfile)
-  const globalConfig = getGlobalConfig(profile)
+  const globalConfig = getOrgProfileConfig(profile)
 
   const res = await request({
     shouldUseGlobal: true,
