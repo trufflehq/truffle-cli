@@ -4,36 +4,31 @@
 // TODO: figure out a solution that can work for both
 import 'reflect-metadata'
 
-import { Argument, Command as BaseCommand, program } from 'commander'
+import { Argument, program } from 'commander'
+import { Command } from './util/command.js'
 import truffleCli from '../package.json' assert { type: 'json' }
-import { container } from 'tsyringe'
-import { kProfile } from './di/tokens.js'
 import { readCliConfig, registerCliConfig } from './util/config.js'
-
-class Command extends BaseCommand {
-  public action (fn: (...args: any[]) => void | Promise<void>): this {
-    // wrap around the function to extract the last element from the args array
-    // which is the global flags object
-
-    return super.action((...args: any[]) => {
-      const profile = (args[args.length - 1] as Command).parent!.opts().profile ?? 'default'
-      container.register(kProfile, { useValue: profile })
-
-      return fn(...args)
-    })
-  }
-}
+import { loginAction } from './commands/login/login.js'
+import { defaultCliConfig } from './assets/default-config.js'
 
 program
   .name(truffleCli.name)
   .description(truffleCli.description)
   .version(truffleCli.version, '-v, --version')
   .option('-p, --profile <name>', 'The profile from your Truffle config file to use, default: "default"', 'default')
+  .option('--apiUrl <url>', `The Mycelium API URL to use, default: "${defaultCliConfig.apiUrl}"`)
+
+program.addCommand(
+  new Command('login')
+    .description('Login in to truffle.')
+    .argument('[email]', 'Email to login with')
+    .argument('[password]', 'Password to login with')
+    .action(loginAction)
+)
 
 program.addCommand(
   new Command('auth')
     .description('Set your API Key.')
-    .alias('login')
     .argument('<secret-key>', 'Your API Key.')
     .action(async (secretKey: string) => {
       const { default: auth } = await
