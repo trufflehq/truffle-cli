@@ -14,8 +14,8 @@ export class Command extends BaseCommand {
       const cliConfig = getCliConfig()
 
       // set the profile in the container
-      const profile = globalOptions.profile ?? 'default'
-      container.register(kProfile, { useValue: profile })
+      const profile = globalOptions.profile
+      container.register(kProfile, { useValue: profile ?? false })
 
       // set the apiUrl in the container
       const apiUrl = globalOptions.apiUrl ?? cliConfig.apiUrl ?? defaultCliConfig.apiUrl

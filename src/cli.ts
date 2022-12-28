@@ -15,7 +15,7 @@ program
   .name(truffleCli.name)
   .description(truffleCli.description)
   .version(truffleCli.version, '-v, --version')
-  .option('-p, --profile <name>', 'The profile from your Truffle config file to use, default: "default"', 'default')
+  .option('-p, --profile <name>', 'The profile from your Truffle config file to use.')
   .option('--apiUrl <url>', `The Mycelium API URL to use, default: "${defaultCliConfig.apiUrl}"`)
 
 program.addCommand(

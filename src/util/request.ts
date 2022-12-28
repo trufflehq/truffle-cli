@@ -1,4 +1,4 @@
-import { getPackageConfig, getOrgProfileConfig } from './config.js'
+import { getPackageConfig, getOrgProfileConfig, getApiUrl, getCliConfig } from './config.js'
 import FormData from 'form-data'
 import fetch from 'node-fetch'
 import { container } from 'tsyringe'
@@ -16,10 +16,67 @@ interface BaseGraphQLResponse {
   data: Record<string, unknown>
 }
 
-export async function request ({ query, variables, shouldUseGlobal = false, maxAttempts = 1 }: RequestOptions): Promise<any> {
-  const profile = container.resolve<string>(kProfile)
+interface GraphQLCredentials {
+  apiUrl: string;
+  headerProps: {
+    'x-access-token'?: string;
+    'x-org-id'?: string;
+    Authorization?: string;
+  };
+}
 
-  const { apiUrl, secretKey } = shouldUseGlobal ? getOrgProfileConfig(profile) : await getPackageConfig() || getOrgProfileConfig(profile)
+async function getCredentials (shouldUseGlobal: boolean): Promise<GraphQLCredentials> {
+  
+  const getGlobalCredentials: () => GraphQLCredentials = () => {
+    const profile = container.resolve<string>(kProfile)
+
+    // if the user specified an org profile, use that
+    if (profile) {
+      const { apiUrl, secretKey } = getOrgProfileConfig(profile)
+      return {
+        apiUrl,
+        headerProps: {
+          Authorization: `Bearer ${secretKey}`
+        }
+      }
+      // otherwise use their user access token
+    } else {
+      const apiUrl = getApiUrl()
+      const cliConfig = getCliConfig()
+      const userAccessToken = cliConfig.userAccessTokens[apiUrl]
+      return {
+        apiUrl,
+        headerProps: {
+          'x-access-token': userAccessToken,
+          // TODO: retrieve org id from cli config
+          'x-org-id': 'acd9d230-b9dd-11ec-bc90-7b62339255c4'
+        }
+      }
+    }
+  }
+
+  const getPackageCredentials: () => Promise<GraphQLCredentials | null> = async () => {
+    const res = await getPackageConfig()
+    if (!res) return null
+
+    return {
+      apiUrl: res.apiUrl,
+      headerProps: {
+        Authorization: `Bearer ${res.secretKey}`
+      }
+    }
+  }
+
+  return shouldUseGlobal
+    ? getGlobalCredentials()
+    : await getPackageCredentials() || getGlobalCredentials()
+}
+
+export async function request ({ query, variables, shouldUseGlobal = false, maxAttempts = 1 }: RequestOptions): Promise<any> {
+
+  const { apiUrl, headerProps } = await getCredentials(shouldUseGlobal)
+  console.log({ apiUrl, headerProps})
+
   let response
   let attemptsLeft = maxAttempts
   while ((!response || response.status !== 200) && attemptsLeft > 0) {
@@ -31,7 +88,7 @@ export async function request ({ query, variables, shouldUseGlobal = false, maxA
       method: 'POST',
       body: JSON.stringify({ query, variables }),
       headers: {
-        Authorization: `Bearer ${secretKey}`,
+        ...headerProps,
         'Content-Type': 'application/json'
       }
     })
@@ -39,6 +96,7 @@ export async function request ({ query, variables, shouldUseGlobal = false, maxA
 
   // console.log(chalk.gray(`[request] POST ${new URL(apiUrl).pathname} ${response.status} ${response.statusText}`))
   const data = await response.json() as BaseGraphQLResponse
+  console.log(data)
   if (data?.errors?.length) {
     throw new Error(`Request error: ${
       JSON.stringify(
@@ -57,9 +115,9 @@ export interface UploadOptions {
 }
 
 export async function upload ({ query, variables, bundle, shouldUseGlobal = false }: UploadOptions): Promise<any> {
-  const profile = container.resolve<string>(kProfile)
 
-  const { apiUrl, secretKey } = shouldUseGlobal ? getOrgProfileConfig(profile) : await getPackageConfig() || getOrgProfileConfig(profile)
+  const { apiUrl, headerProps } = await getCredentials(shouldUseGlobal)
+
   const url = new URL(apiUrl)
   url.pathname = '/upload'
   url.searchParams.set('graphqlQuery', query)
@@ -71,7 +129,7 @@ export async function upload ({ query, variables, bundle, shouldUseGlobal = fals
   const response = await fetch(url.toString(), {
     method: 'POST',
     headers: {
-      authorization: `Bearer ${secretKey}`,
+      ...headerProps,
       ...form.getHeaders()
     },
     body: form.getBuffer()
