@@ -8,8 +8,8 @@ import { Argument, program } from 'commander'
 import { Command } from './util/command.js'
 import truffleCli from '../package.json' assert { type: 'json' }
 import { readCliConfig, registerCliConfig } from './util/config.js'
-import { loginAction } from './commands/login/login.js'
 import { defaultCliConfig } from './assets/default-config.js'
+import { actionLoader } from './util/action-loader.js'
 
 program
   .name(truffleCli.name)
@@ -23,7 +23,7 @@ program.addCommand(
     .description('Login in to truffle.')
     .argument('[email]', 'Email to login with')
     .argument('[password]', 'Password to login with')
-    .action(loginAction)
+    .action(actionLoader('commands/login/login.js'))
 )
 
 program.addCommand(
@@ -42,11 +42,7 @@ program.addCommand(
   new Command('whoami')
     .description('Check your authentication status')
     .alias('me')
-    .action(async () => {
-      const { default: whoami } = await
-      import('./commands/whoami.js')
-      await whoami()
-    })
+    .action(actionLoader('commands/whoami.js'))
 )
 
 program.addCommand(
@@ -75,11 +71,7 @@ program.addCommand(
 program.addCommand(
   new Command('dev')
     .description('Starts the dev server.')
-    .action(async () => {
-      const { default: dev } = await
-      import('./commands/dev.js')
-      await dev()
-    })
+    .action(actionLoader('commands/dev.js'))
 )
 
 program.addCommand(
@@ -107,11 +99,7 @@ program.addCommand(
 program.addCommand(
   new Command('regenerate-api-key')
     .description('Request a new API Key.')
-    .action(async () => {
-      const { default: regeneratePackageApiKey } = await
-      import('./commands/regenerate.js')
-      await regeneratePackageApiKey()
-    })
+    .action(actionLoader('commands/regenerate.js'))
 )
 
 program.addCommand(
@@ -132,21 +120,13 @@ program.addCommand(
 program.addCommand(
   new Command('pull')
     .description('Fetch the upstream package.')
-    .action(async () => {
-      const { default: pull } = await
-      import('./commands/pull.js')
-      await pull()
-    })
+    .action(actionLoader('commands/pull.js'))
 )
 
 program.addCommand(
   new Command('ls')
     .description('List existing packages.')
-    .action(async () => {
-      const { default: list } = await
-      import('./commands/list.js')
-      await list()
-    })
+    .action(actionLoader('commands/list.js'))
 )
 
 program.addCommand(
