@@ -4,7 +4,7 @@ import os from 'os'
 import chalk from 'chalk'
 import { container } from 'tsyringe'
 import { CliConfig, OrgProfileConfig, PrivateConfig, PublicConfig } from '../types/config.js'
-import { kApiUrl, kCliConfig, kProfile } from '../di/tokens.js'
+import { kApiUrl, kCliConfig, kCurrentOrg, kProfile } from '../di/tokens.js'
 import { defaultCliConfig } from '../assets/default-config.js'
 
 function upgradeConfig (config: Record<string, OrgProfileConfig>): CliConfig {
@@ -74,6 +74,10 @@ export function registerCliConfig (config: CliConfig) {
 
 export function getApiUrl () {
   return container.resolve<string>(kApiUrl)
+}
+
+export function getCurrentOrgId () {
+  return container.resolve<string>(kCurrentOrg)
 }
 
 export async function getPublicPackageConfig () {

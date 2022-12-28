@@ -1,4 +1,4 @@
-import { getPackageConfig, getOrgProfileConfig, getApiUrl, getCliConfig } from './config.js'
+import { getPackageConfig, getOrgProfileConfig, getApiUrl, getCliConfig, getCurrentOrgId } from './config.js'
 import FormData from 'form-data'
 import fetch from 'node-fetch'
 import { container } from 'tsyringe'
@@ -44,12 +44,23 @@ async function getCredentials (shouldUseGlobal: boolean): Promise<GraphQLCredent
       const apiUrl = getApiUrl()
       const cliConfig = getCliConfig()
       const userAccessToken = cliConfig.userAccessTokens[apiUrl]
+      const orgId = getCurrentOrgId()
+
+      if (!userAccessToken) {
+        console.error('No user access token found. Please login with `truffle-cli login`.')
+        process.exit(1)
+      }
+
+      if (!orgId) {
+        console.error('No org id found. Please select an org with `truffle-cli org use`.')
+        process.exit(1)
+      }
+
       return {
         apiUrl,
         headerProps: {
           'x-access-token': userAccessToken,
-          // TODO: retrieve org id from cli config
-          'x-org-id': 'acd9d230-b9dd-11ec-bc90-7b62339255c4'
+          'x-org-id': orgId
         }
       }
     }
@@ -75,7 +86,6 @@ async function getCredentials (shouldUseGlobal: boolean): Promise<GraphQLCredent
 export async function request ({ query, variables, shouldUseGlobal = false, maxAttempts = 1 }: RequestOptions): Promise<any> {
 
   const { apiUrl, headerProps } = await getCredentials(shouldUseGlobal)
-  console.log({ apiUrl, headerProps})
 
   let response
   let attemptsLeft = maxAttempts
@@ -96,7 +106,6 @@ export async function request ({ query, variables, shouldUseGlobal = false, maxA
 
   // console.log(chalk.gray(`[request] POST ${new URL(apiUrl).pathname} ${response.status} ${response.statusText}`))
   const data = await response.json() as BaseGraphQLResponse
-  console.log(data)
   if (data?.errors?.length) {
     throw new Error(`Request error: ${
       JSON.stringify(

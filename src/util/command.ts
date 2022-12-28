@@ -1,5 +1,5 @@
 import { Command as BaseCommand } from 'commander'
-import { kApiUrl, kProfile } from "../di/tokens.js"
+import { kApiUrl, kCurrentOrg, kProfile } from "../di/tokens.js"
 import { container } from "tsyringe"
 import { getCliConfig } from './config.js';
 import { defaultCliConfig } from '../assets/default-config.js';
@@ -20,6 +20,12 @@ export class Command extends BaseCommand {
       // set the apiUrl in the container
       const apiUrl = globalOptions.apiUrl ?? cliConfig.apiUrl ?? defaultCliConfig.apiUrl
       container.register(kApiUrl, { useValue: apiUrl })
+
+      // set the current org in the container
+      const currentOrg = globalOptions.org
+        ?? cliConfig.currentOrgs[apiUrl]
+        ?? false
+      container.register(kCurrentOrg, { useValue: currentOrg })
 
       return fn(...args)
     })

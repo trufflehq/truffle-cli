@@ -17,6 +17,7 @@ program
   .version(truffleCli.version, '-v, --version')
   .option('-p, --profile <name>', 'The profile from your Truffle config file to use.')
   .option('--apiUrl <url>', `The Mycelium API URL to use, default: "${defaultCliConfig.apiUrl}"`)
+  .option('--org <org-id>', 'The org to use for this command.')
 
 program.addCommand(
   new Command('login')
@@ -35,6 +36,17 @@ program.addCommand(
       import('./commands/auth.js')
       await auth({ secretKey })
     }
+    )
+)
+
+program.addCommand(
+  new Command('org')
+    .description('Manage orgs')
+    .addCommand(
+      new Command('use')
+        .description('Set the current org to use.')
+        .argument('<slug-or-id>', 'The slug or the id of the org to use.')
+        .action(actionLoader('commands/org/use.js'))
     )
 )
 
