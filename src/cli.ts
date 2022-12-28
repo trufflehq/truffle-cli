@@ -8,6 +8,7 @@ import { Argument, Command as BaseCommand, program } from 'commander'
 import truffleCli from '../package.json' assert { type: 'json' }
 import { container } from 'tsyringe'
 import { kProfile } from './di/tokens.js'
+import { readCliConfig, registerCliConfig } from './util/config.js'
 
 class Command extends BaseCommand {
   public action (fn: (...args: any[]) => void | Promise<void>): this {
@@ -217,5 +218,9 @@ if (2 in process.argv === false) {
 }
 
 (async () => {
+  // load the cli config into memory
+  const cliConfig = readCliConfig()
+  registerCliConfig(cliConfig)
+
   await program.parseAsync(process.argv)
 })()

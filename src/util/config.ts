@@ -4,7 +4,7 @@ import os from 'os'
 import chalk from 'chalk'
 import { container } from 'tsyringe'
 import { CliConfig, OrgProfileConfig } from '../types/config.js'
-import { kProfile } from '../di/tokens.js'
+import { kCliConfig, kProfile } from '../di/tokens.js'
 import { defaultCliConfig } from '../assets/default-config.js'
 
 export interface PrivateConfig {
@@ -105,6 +105,14 @@ export function writeCliConfig (config: CliConfig) {
   const filename = getCliConfigFilename()
   fs.mkdirSync(path.dirname(filename), { recursive: true })
   fs.writeFileSync(filename, JSON.stringify(config, null, 2))
+}
+
+export function getCliConfig (): CliConfig {
+  return container.resolve<CliConfig>(kCliConfig)
+}
+
+export function registerCliConfig (config: CliConfig) {
+  container.register(kCliConfig, { useValue: config })
 }
 
 export async function getPublicPackageConfig () {
