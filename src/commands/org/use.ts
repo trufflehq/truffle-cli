@@ -11,6 +11,10 @@ export default async function (slugOrId: string) {
     orgId = slugOrId
   } else {
     const org = await getOrg({ slug: slugOrId })
+    if (!org) {
+      console.error(`No org found with slug "${slugOrId}"`)
+      process.exit(1)
+    }
     orgId = org.id
   }
 
