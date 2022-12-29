@@ -6,7 +6,7 @@ import { container } from 'tsyringe'
 import { kProfile } from '../di/tokens.js'
 
 export default async function whoami () {
-  const profile = container.resolve<string>(kProfile)
+  const profile = container.resolve<string>(kProfile) || 'default'
   const globalConfig = getOrgProfileConfig(profile)
 
   const res = await request({
