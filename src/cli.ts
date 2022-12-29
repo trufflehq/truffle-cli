@@ -48,6 +48,12 @@ program.addCommand(
         .argument('<slug-or-id>', 'The slug or the id of the org to use.')
         .action(actionLoader('commands/org/use.js'))
     )
+    .addCommand(
+      new Command('create')
+        .description('Creates a new org')
+        .argument('<org-name>', 'Name of the org to create')
+        .action(actionLoader('commands/org/create.js'))
+    )
 )
 
 program.addCommand(

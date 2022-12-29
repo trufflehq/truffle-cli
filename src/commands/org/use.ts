@@ -5,10 +5,12 @@ export default async function (slugOrId: string) {
   // check if they passed in a slug or uuid
   const isUuid = slugOrId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)
 
-  // if they passed in a slug, get the org
   let orgId: string
+  // if they passed in a uuid, use that
   if (isUuid) {
     orgId = slugOrId
+
+    // if they passed in a slug, get the org
   } else {
     const org = await getOrg({ slug: slugOrId })
     if (!org) {
