@@ -62,6 +62,18 @@ program.addCommand(
 )
 
 program.addCommand(
+  new Command('user')
+    .description('Manage users')
+    .addCommand(
+      new Command('create')
+        .description('Creates a new user')
+        .argument('[email]', 'Email of the user to create')
+        .argument('[password]', 'Password of the user to create')
+        .action(actionLoader('commands/user/create.js'))
+    )
+)
+
+program.addCommand(
   new Command('whoami')
     .description('Check your authentication status')
     .alias('me')

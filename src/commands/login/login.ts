@@ -10,7 +10,7 @@ const LOGIN_MUTATION = gql`
   }
 `;
 
-export default async function (email: string, password: string) {
+export default async function (email?: string, password?: string) {
   // check if username was provided
   if (!email) {
     // prompt for email

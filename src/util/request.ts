@@ -111,11 +111,10 @@ export async function request (
   // console.log(chalk.gray(`[request] POST ${new URL(apiUrl).pathname} ${response.status} ${response.statusText}`))
   const data = await response.json() as BaseGraphQLResponse
   if (data?.errors?.length) {
+    const error = data.errors[0].extensions?.info ?? data.errors[0].message
     throw new Error(`Request error: ${
-      JSON.stringify(
-        data.errors[0].extensions?.info ?? data.errors[0].message
-      )
-    }`)
+      JSON.stringify(error)
+    }`, { cause: error })
   }
   return data
 }
@@ -129,7 +128,7 @@ export interface UploadOptions {
 
 export async function upload ({ query, variables, bundle, shouldUseGlobal = false }: UploadOptions): Promise<any> {
 
-  const { apiUrl, headerProps } = await getCredentials(shouldUseGlobal)
+  const { apiUrl, headerProps } = await getCredentials(shouldUseGlobal, true)
 
   const url = new URL(apiUrl)
   url.pathname = '/upload'
