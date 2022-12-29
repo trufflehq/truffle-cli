@@ -8,6 +8,7 @@ export interface RequestOptions {
   query: string;
   variables?: Record<string, unknown>;
   shouldUseGlobal?: boolean;
+  isOrgRequired?: boolean;
   maxAttempts?: number;
 }
 
@@ -25,7 +26,7 @@ interface GraphQLCredentials {
   };
 }
 
-async function getCredentials (shouldUseGlobal: boolean): Promise<GraphQLCredentials> {
+async function getCredentials (shouldUseGlobal: boolean, isOrgRequired: boolean): Promise<GraphQLCredentials> {
   
   const getGlobalCredentials: () => GraphQLCredentials = () => {
     const profile = container.resolve<string>(kProfile)
@@ -46,22 +47,23 @@ async function getCredentials (shouldUseGlobal: boolean): Promise<GraphQLCredent
       const userAccessToken = cliConfig.userAccessTokens[apiUrl]
       const orgId = getCurrentOrgId()
 
+      const headerProps = { 'x-access-token': userAccessToken }
+
       if (!userAccessToken) {
         console.error('No user access token found. Please login with `truffle-cli login`.')
         process.exit(1)
       }
 
-      if (!orgId) {
+      if (!orgId && isOrgRequired) {
         console.error('No org id found. Please select an org with `truffle-cli org use`.')
         process.exit(1)
+      } else if (orgId) {
+        headerProps['x-org-id'] = orgId
       }
 
       return {
         apiUrl,
-        headerProps: {
-          'x-access-token': userAccessToken,
-          'x-org-id': orgId
-        }
+        headerProps
       }
     }
   }
@@ -83,9 +85,11 @@ async function getCredentials (shouldUseGlobal: boolean): Promise<GraphQLCredent
     : await getPackageCredentials() || getGlobalCredentials()
 }
 
-export async function request ({ query, variables, shouldUseGlobal = false, maxAttempts = 1 }: RequestOptions): Promise<any> {
+export async function request (
+  { query, variables, shouldUseGlobal = false, isOrgRequired = true, maxAttempts = 1 }: RequestOptions
+  ): Promise<any> {
 
-  const { apiUrl, headerProps } = await getCredentials(shouldUseGlobal)
+  const { apiUrl, headerProps } = await getCredentials(shouldUseGlobal, isOrgRequired)
 
   let response
   let attemptsLeft = maxAttempts

@@ -31,7 +31,11 @@ interface OrgInput {
 }
 
 export async function getOrg(input: OrgInput) {
-  const response = await request({ query: ORG_QUERY, variables: { input } })
+  const response = await request({
+    query: ORG_QUERY,
+    variables: { input },
+    isOrgRequired: false
+  })
   return response.data.org as Org
 }
 

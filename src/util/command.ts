@@ -10,7 +10,17 @@ export class Command extends BaseCommand {
     // which is the global flags object
 
     return super.action((...args: any[]) => {
-      const globalOptions = (args[args.length - 1] as Command).parent!.opts();
+
+      // get the top level cli command
+      const getRootCommand = () => {
+        let parent = (args[args.length - 1] as Command).parent!
+        while (parent?.parent) {
+          parent = parent.parent
+        }
+        return parent
+      }
+
+      const globalOptions = getRootCommand().opts();
       const cliConfig = getCliConfig()
 
       // set the profile in the container

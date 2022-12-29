@@ -17,7 +17,7 @@ program
   .version(truffleCli.version, '-v, --version')
   .option('-p, --profile <name>', 'The profile from your Truffle config file to use.')
   .option('--apiUrl <url>', `The Mycelium API URL to use, default: "${defaultCliConfig.apiUrl}"`)
-  .option('--org <org-id>', 'The org to use for this command.')
+  .option('--org <org-id>', 'The id of the org to use for this command.')
 
 program.addCommand(
   new Command('login')
@@ -53,6 +53,11 @@ program.addCommand(
         .description('Creates a new org')
         .argument('<org-name>', 'Name of the org to create')
         .action(actionLoader('commands/org/create.js'))
+    )
+    .addCommand(
+      new Command('join')
+        .description('Join an existing org')
+        .action(actionLoader('commands/org/join.js'))
     )
 )
 
