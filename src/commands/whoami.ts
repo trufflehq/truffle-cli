@@ -94,6 +94,6 @@ export default async function whoami (_options, command: Command) {
       - with a uuid of ${chalk.gray(data.id)}
     `)
   } else {
-    console.log('No org is configured. Either run `truffle-cli org use <ORG_SLUG_OR_ID>` or configure an org api key in ~/.truffle/config.json')
+    console.log('You are not authenticated. Either login with `truffle-cli login` or configure an org api key in ~/.truffle/config.json')
   }
 }
