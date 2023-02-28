@@ -5,12 +5,12 @@ import clone from '../util/clone.js'
 export default async function fork ({
     packagePath,
     toPackageSlug,
-    shouldCreateSporocarpFiles
+    shouldCreateFrontendFiles
   }:
   {
     packagePath: string,
     toPackageSlug: string,
-    shouldCreateSporocarpFiles?: boolean
+    shouldCreateFrontendFiles?: boolean
   }) {
   const pkg = await packageFork({ packagePath, toPackageSlug })
   const packageVersionId = pkg.latestPackageVersionId
@@ -21,7 +21,7 @@ export default async function fork ({
     packageVersionId,
     toPackageSlug,
     shouldCreateConfigFile: true,
-    shouldCreateSporocarpFiles,
+    shouldCreateFrontendFiles,
     secretKey: apiKeyPayload.apiKey.key
   })
 }

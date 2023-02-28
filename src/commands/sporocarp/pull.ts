@@ -7,7 +7,7 @@ export default async function() {
   await clone({
     toPath: './',
     packageVersionId: packageVersion.id,
-    shouldCreateSporocarpFiles: true,
+    shouldCreateFrontendFiles: true,
     shouldCreateConfigFile: false,
     shouldCreateDir: false
   })

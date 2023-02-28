@@ -11,7 +11,7 @@ export default async function clone (options: {
     toPackageSlug?: string
     toPath?: string
     shouldCreateConfigFile?: boolean
-    shouldCreateSporocarpFiles?: boolean
+    shouldCreateFrontendFiles?: boolean
     shouldCreateDir?: boolean
     secretKey?: string
     packagePath?: string
@@ -22,7 +22,7 @@ export default async function clone (options: {
     packagePath,
     toPackageSlug,
     shouldCreateConfigFile,
-    shouldCreateSporocarpFiles = true,
+    shouldCreateFrontendFiles = true,
     shouldCreateDir = true,
     secretKey
   } = options
@@ -41,7 +41,7 @@ export default async function clone (options: {
     }
   }
 
-  if (shouldCreateSporocarpFiles) {
+  if (shouldCreateFrontendFiles) {
     packageVersion.moduleConnection.nodes.forEach((module) => {
       const filename = `${toPath}${module.filename}`
       fs.mkdirSync(path.dirname(filename), { recursive: true })

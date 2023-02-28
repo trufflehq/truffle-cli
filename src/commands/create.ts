@@ -3,15 +3,15 @@ import fork from './fork.js'
 export default async function create (
   {
     toPackageSlug,
-    shouldCreateSporocarpFiles
+    shouldCreateFrontendFiles
   }:
   {
     toPackageSlug: string,
-    shouldCreateSporocarpFiles?: boolean
+    shouldCreateFrontendFiles?: boolean
   }) {
   await fork({
     packagePath: '@truffle/create-react-project',
     toPackageSlug,
-    shouldCreateSporocarpFiles
+    shouldCreateFrontendFiles
   })
 }

@@ -85,7 +85,7 @@ program.addCommand(
     .description('Clone an existing package.')
     .argument('<package-path>', 'The name of the package to clone.')
     .argument('<package-name>', 'The name of the new package.')
-    .option('--sporocarp', 'Clone the sporocarp project.', false)
+    .option('--frontend', 'Clone the frontend project.', false)
     .action(async (packagePath, packageName, options) => {
       const { default: clone } = await
       import('./util/clone.js')
@@ -94,7 +94,7 @@ program.addCommand(
         packagePath,
         toPackageSlug: packageName,
         shouldCreateConfigFile: true,
-        shouldCreateSporocarpFiles: options.sporocarp
+        shouldCreateFrontendFiles: options.frontend
       })
     })
 )
@@ -103,30 +103,30 @@ program.addCommand(
   new Command('create')
     .description('Create a new package.')
     .argument('<package-name>', 'The name of the package to create.')
-    .option('--sporocarp', 'Create a sporocarp project.', false)
+    .option('--frontend', 'Create a frontend project.', false)
     .action(async (packageName, options) => {
       const { default: create } = await
       import('./commands/create.js')
 
       await create({
         toPackageSlug: packageName,
-        shouldCreateSporocarpFiles: options.sporocarp
+        shouldCreateFrontendFiles: options.frontend
       })
     })
 )
 
 program.addCommand(
-  new Command('sporocarp')
-    .description('Work with a sporocarp project.')
+  new Command('frontend')
+    .description('Work with a frontend project.')
     .addCommand(
       new Command('pull')
-        .description('Pull the sporocarp project associated with this package.')
-        .action(actionLoader('./commands/sporocarp/pull.js'))
+        .description('Pull the frontend project associated with this package.')
+        .action(actionLoader('./commands/frontend/pull.js'))
     )
     .addCommand(
       new Command('dev')
-      .description('Starts the sporocarp dev server in the current directory.')
-      .action(actionLoader('./commands/sporocarp/dev.js'))
+      .description('Starts the frontend dev server in the current directory.')
+      .action(actionLoader('./commands/frontend/dev.js'))
     )
 )
 
@@ -145,7 +145,7 @@ program.addCommand(
     .description('Fork an existing package.')
     .argument('<package-path>', 'The name of the package to fork.')
     .argument('<package-name>', 'The name of the new package.')
-    .option('--sporocarp', 'Clone the sporocarp project.', false)
+    .option('--frontend', 'Clone the frontend project.', false)
     .action(async (packagePath, packageName, options) => {
       const { default: fork } = await
       import('./commands/fork.js')
@@ -153,7 +153,7 @@ program.addCommand(
       await fork({
         packagePath,
         toPackageSlug: packageName,
-        shouldCreateSporocarpFiles: options.sporocarp
+        shouldCreateFrontendFiles: options.frontend
       })
     })
 )
