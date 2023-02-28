@@ -24,7 +24,7 @@ export default async function whoami (_options, command: Command) {
 
   // get the org profile that the user is currently using
   const profile = container.resolve<string>(kProfile) || 'default'
-  const orgProfileConfig = getOrgProfileConfig(profile)
+  const orgProfileConfig = getOrgProfileConfig({ profile, exitOnError: false })
 
   // by default, we should print the info of the currently signed in user and
   // the info for the org that the user set with `truffle-cli org use`,
@@ -47,7 +47,8 @@ export default async function whoami (_options, command: Command) {
     }
 
     // if the user specified an org profile, use that
-  } else if (profile) {
+  } else if (orgProfileConfig) {
+    
     const res = await request({
       shouldUseGlobal: true,
       query: `

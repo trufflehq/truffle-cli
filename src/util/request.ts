@@ -33,7 +33,7 @@ async function getCredentials (shouldUseGlobal: boolean, isOrgRequired: boolean)
 
     // if the user specified an org profile, use that
     if (profile) {
-      const { apiUrl, secretKey } = getOrgProfileConfig(profile)
+      const { apiUrl, secretKey } = getOrgProfileConfig({ profile })
       return {
         apiUrl,
         headerProps: {
