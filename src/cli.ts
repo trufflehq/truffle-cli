@@ -85,10 +85,17 @@ program.addCommand(
     .description('Clone an existing package.')
     .argument('<package-path>', 'The name of the package to clone.')
     .argument('<package-name>', 'The name of the new package.')
-    .action(async (packagePath, packageName) => {
+    .option('--sporocarp', 'Clone the sporocarp project.', false)
+    .action(async (packagePath, packageName, options) => {
       const { default: clone } = await
-      import('./commands/clone.js')
-      await clone({ packagePath, toPackageSlug: packageName })
+      import('./util/clone.js')
+
+      await clone({
+        packagePath,
+        toPackageSlug: packageName,
+        shouldCreateConfigFile: true,
+        shouldCreateSporocarpFiles: options.sporocarp
+      })
     })
 )
 
@@ -96,17 +103,31 @@ program.addCommand(
   new Command('create')
     .description('Create a new package.')
     .argument('<package-name>', 'The name of the package to create.')
-    .action(async (packageName) => {
+    .option('--sporocarp', 'Create a sporocarp project.', false)
+    .action(async (packageName, options) => {
       const { default: create } = await
       import('./commands/create.js')
-      await create({ toPackageSlug: packageName })
+
+      await create({
+        toPackageSlug: packageName,
+        shouldCreateSporocarpFiles: options.sporocarp
+      })
     })
 )
 
 program.addCommand(
-  new Command('dev')
-    .description('Starts the dev server.')
-    .action(actionLoader('commands/dev.js'))
+  new Command('sporocarp')
+    .description('Work with a sporocarp project.')
+    .addCommand(
+      new Command('pull')
+        .description('Pull the sporocarp project associated with this package.')
+        .action(actionLoader('./commands/sporocarp/pull.js'))
+    )
+    .addCommand(
+      new Command('dev')
+      .description('Starts the sporocarp dev server in the current directory.')
+      .action(actionLoader('./commands/sporocarp/dev.js'))
+    )
 )
 
 program.addCommand(
@@ -124,10 +145,16 @@ program.addCommand(
     .description('Fork an existing package.')
     .argument('<package-path>', 'The name of the package to fork.')
     .argument('<package-name>', 'The name of the new package.')
-    .action(async (packagePath, packageName) => {
+    .option('--sporocarp', 'Clone the sporocarp project.', false)
+    .action(async (packagePath, packageName, options) => {
       const { default: fork } = await
       import('./commands/fork.js')
-      await fork({ packagePath, toPackageSlug: packageName })
+
+      await fork({
+        packagePath,
+        toPackageSlug: packageName,
+        shouldCreateSporocarpFiles: options.sporocarp
+      })
     })
 )
 

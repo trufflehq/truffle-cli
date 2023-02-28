@@ -2,34 +2,52 @@ import fs from 'fs'
 import path from 'path'
 import prettier from 'prettier'
 
-import { getPackageConfig, getOrgProfileConfig } from '../util/config.js'
-import { packageVersionGet } from '../util/package-version.js'
-import { deepOmit } from '../util/deep-omit.js'
+import { getPackageConfig, getOrgProfileConfig } from './config.js'
+import { packageVersionGet } from './package-version.js'
+import { deepOmit } from './deep-omit.js'
 
 export default async function clone (options: {
     packageVersionId?: string
     toPackageSlug?: string
+    toPath?: string
     shouldCreateConfigFile?: boolean
+    shouldCreateSporocarpFiles?: boolean
+    shouldCreateDir?: boolean
     secretKey?: string
     packagePath?: string
   }) {
   const { apiUrl } = await getPackageConfig() || getOrgProfileConfig()
-  const { packageVersionId, packagePath, toPackageSlug, shouldCreateConfigFile, secretKey } = options
+  const {
+    packageVersionId,
+    packagePath,
+    toPackageSlug,
+    shouldCreateConfigFile,
+    shouldCreateSporocarpFiles = true,
+    shouldCreateDir = true,
+    secretKey
+  } = options
+  let { toPath } = options
   const packageVersion = await packageVersionGet({ id: packageVersionId, packagePath })
 
-  let toPath = path.resolve('./', toPackageSlug || packageVersion.package.slug)
-  try {
-    fs.mkdirSync(toPath)
-  } catch (err) {
-    console.log('Directory exists')
-    toPath = `${toPath}-${Date.now()}`
+  // the directory will either be toPath, toPackageSlug, or the package slug
+  toPath ??= path.resolve('./', toPackageSlug || packageVersion.package.slug)
+
+  if (shouldCreateDir) {
+    try {
+      fs.mkdirSync(toPath)
+    } catch (err) {
+      console.log('Directory exists')
+      toPath = `${toPath}-${Date.now()}`
+    }
   }
 
-  packageVersion.moduleConnection.nodes.forEach((module) => {
-    const filename = `${toPath}${module.filename}`
-    fs.mkdirSync(path.dirname(filename), { recursive: true })
-    fs.writeFileSync(path.resolve(filename), module.code)
-  })
+  if (shouldCreateSporocarpFiles) {
+    packageVersion.moduleConnection.nodes.forEach((module) => {
+      const filename = `${toPath}${module.filename}`
+      fs.mkdirSync(path.dirname(filename), { recursive: true })
+      fs.writeFileSync(path.resolve(filename), module.code)
+    })
+  }
 
   if (shouldCreateConfigFile) {
     const configFilename = `${toPath}/truffle.config.mjs`
@@ -48,6 +66,5 @@ export default async function clone (options: {
     fs.writeFileSync(gitignoreFilename, 'truffle.secret.*')
   }
 
-  console.log(`Created, now you can cd into ${toPath}`)
-  console.log(`You can also access this package at: https://package-version-${packageVersion.id}.sporocarp.dev`)
+  console.log(`Wrote files to ${toPath}`)
 }
