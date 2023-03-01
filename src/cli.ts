@@ -128,15 +128,26 @@ program.addCommand(
       .description('Starts the frontend dev server in the current directory.')
       .action(actionLoader('./commands/frontend/dev.js'))
     )
+    .addCommand(
+      new Command('deploy')
+      .description('Deploys the frontend project associated with this package.')
+      .action(actionLoader('./commands/frontend/deploy.js'))
+    )
 )
 
 program.addCommand(
   new Command('deploy')
     .description('Deploy your package to production.')
-    .action(async () => {
+    .option('--frontend', 'Deploy the frontend project.', false)
+    .action(async (options) => {
       const { deploy } = await
       import('./commands/deploy.js')
-      await deploy({ shouldUpdateDomain: true })
+      
+      await deploy({
+        // only update the domain if they're deploying the frontend
+        shouldUpdateDomain: options.frontend,
+        shouldOnlyUploadConfig: !options.frontend
+      })
     })
 )
 

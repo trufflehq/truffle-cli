@@ -71,7 +71,7 @@ export async function packageVersionGet (options?: PackageVersionGetOptions) {
   const {
     id, packagePath, includeModules = true, includePackage = true,
     includeEventSubscriptions = false, includeEventTopics = false,
-    usePackageCredentials = false
+    usePackageCredentials = true
   } = options || {}
   let packageSlug: string | undefined
   let packageVersionSemver: string | undefined
