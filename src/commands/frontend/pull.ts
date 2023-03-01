@@ -2,7 +2,7 @@ import clone from "../../util/clone.js"
 import { packageVersionGet } from "../../util/package-version.js"
 
 export default async function() {
-  const packageVersion = await packageVersionGet()
+  const packageVersion = await packageVersionGet({ usePackageCredentials: true })
 
   await clone({
     toPath: './',
