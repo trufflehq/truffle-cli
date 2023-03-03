@@ -36,7 +36,8 @@ export async function deploy (
   let fromPackageVersionId = packageVersion?.id
   // `installActionRel` and `requestedPermissions` need to default to a truthy value
   // so that they are set in the db when a dev removes them from their config.
-  const { version, installActionRel = {}, requestedPermissions = [] } = (await getPackageConfig())!
+  const packageConfig = (await getPackageConfig())!
+  const { version, installActionRel = {}, requestedPermissions = [] } = packageConfig
   const pkg = await packageGet()
 
   console.log('Bundling...');
@@ -66,7 +67,8 @@ export async function deploy (
     packageId: pkg.id,
     semver: version,
     installActionRel,
-    requestedPermissions
+    requestedPermissions,
+    config: packageConfig
   }, zip.toBuffer())
   const packageVersionId = upsertedPackageVersion.id
 

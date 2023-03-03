@@ -115,9 +115,10 @@ interface PackageVersionCreateOptions {
   semver: string
   installActionRel: Record<string, unknown>
   requestedPermissions: Record<string, unknown>[]
+  config: Record<string, unknown>
 }
 
-export async function packageVersionCreate ({ packageId, semver, installActionRel, requestedPermissions }: PackageVersionCreateOptions, bundle: ArrayBufferLike) {
+export async function packageVersionCreate ({ packageId, semver, installActionRel, requestedPermissions, config }: PackageVersionCreateOptions, bundle: ArrayBufferLike) {
   const query = `
     mutation PackageVersionCreate($input: PackageVersionCreateInput!) {
       packageVersionCreate(input: $input) {
@@ -125,7 +126,7 @@ export async function packageVersionCreate ({ packageId, semver, installActionRe
       }
     }
   `
-  const variables = { input: { packageId, semver, installActionRel, requestedPermissions } }
+  const variables = { input: { packageId, semver, installActionRel, requestedPermissions, config } }
 
   const response = await upload({ query, variables, bundle })
   return response.data.packageVersionCreate.packageVersion as { id: string }
