@@ -34,7 +34,8 @@ export async function getOrg(input: OrgInput) {
   const response = await request({
     query: ORG_QUERY,
     variables: { input },
-    isOrgRequired: false
+    isOrgRequired: false,
+    shouldUseGlobal: true
   })
   return response.data.org as Org
 }

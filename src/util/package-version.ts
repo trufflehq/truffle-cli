@@ -59,6 +59,7 @@ export interface PackageVersionGetOptions {
   includePackage?: boolean
   includeEventSubscriptions?: boolean
   includeEventTopics?: boolean
+  usePackageCredentials?: boolean
 }
 
 /**
@@ -69,7 +70,8 @@ export interface PackageVersionGetOptions {
 export async function packageVersionGet (options?: PackageVersionGetOptions) {
   const {
     id, packagePath, includeModules = true, includePackage = true,
-    includeEventSubscriptions = false, includeEventTopics = false
+    includeEventSubscriptions = false, includeEventTopics = false,
+    usePackageCredentials = true
   } = options || {}
   let packageSlug: string | undefined
   let packageVersionSemver: string | undefined
@@ -99,7 +101,7 @@ export async function packageVersionGet (options?: PackageVersionGetOptions) {
 
   const variables = { input: { id, packageSlug, semver: packageVersionSemver } }
 
-  const response = await request({ query, variables })
+  const response = await request({ query, variables, shouldUseGlobal: !usePackageCredentials })
   return response.data.packageVersion
 }
 

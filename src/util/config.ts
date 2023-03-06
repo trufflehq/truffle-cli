@@ -18,14 +18,15 @@ export function getCliConfigFilename () {
   return path.resolve(os.homedir(), path.normalize('.truffle/config.json'))
 }
 
-export function getOrgProfileConfig (profile?: string): OrgProfileConfig {
+export function getOrgProfileConfig (options?: { profile?: string; exitOnError?: boolean }): OrgProfileConfig {
   const containerProfile = container.resolve<string>(kProfile)
+  let { profile, exitOnError = true } = options || {}
   profile = profile || containerProfile || 'default'
 
   const cliConfig = readCliConfig()
 
   const config = cliConfig.orgProfiles[profile]
-  if (!config) {
+  if (!config && exitOnError) {
     console.log(chalk.red(`No config found for profile "${profile}"`))
     process.exit(1)
   }

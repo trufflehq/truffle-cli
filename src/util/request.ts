@@ -33,7 +33,7 @@ async function getCredentials (shouldUseGlobal: boolean, isOrgRequired: boolean)
 
     // if the user specified an org profile, use that
     if (profile) {
-      const { apiUrl, secretKey } = getOrgProfileConfig(profile)
+      const { apiUrl, secretKey } = getOrgProfileConfig({ profile })
       return {
         apiUrl,
         headerProps: {
@@ -110,6 +110,9 @@ export async function request (
 
   // console.log(chalk.gray(`[request] POST ${new URL(apiUrl).pathname} ${response.status} ${response.statusText}`))
   const data = await response.json() as BaseGraphQLResponse
+  
+  // console.log({ apiUrl, headerProps, query, variables, data: data.data, errors: data.errors })
+
   if (data?.errors?.length) {
     const error = data.errors[0].extensions?.info ?? data.errors[0].message
     throw new Error(`Request error: ${

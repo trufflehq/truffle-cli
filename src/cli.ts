@@ -85,10 +85,17 @@ program.addCommand(
     .description('Clone an existing package.')
     .argument('<package-path>', 'The name of the package to clone.')
     .argument('<package-name>', 'The name of the new package.')
-    .action(async (packagePath, packageName) => {
+    .option('--frontend', 'Clone the frontend project.', false)
+    .action(async (packagePath, packageName, options) => {
       const { default: clone } = await
-      import('./commands/clone.js')
-      await clone({ packagePath, toPackageSlug: packageName })
+      import('./util/clone.js')
+
+      await clone({
+        packagePath,
+        toPackageSlug: packageName,
+        shouldCreateConfigFile: true,
+        shouldCreateFrontendFiles: options.frontend
+      })
     })
 )
 
@@ -96,26 +103,51 @@ program.addCommand(
   new Command('create')
     .description('Create a new package.')
     .argument('<package-name>', 'The name of the package to create.')
-    .action(async (packageName) => {
+    .option('--frontend', 'Create a frontend project.', false)
+    .action(async (packageName, options) => {
       const { default: create } = await
       import('./commands/create.js')
-      await create({ toPackageSlug: packageName })
+
+      await create({
+        toPackageSlug: packageName,
+        shouldCreateFrontendFiles: options.frontend
+      })
     })
 )
 
 program.addCommand(
-  new Command('dev')
-    .description('Starts the dev server.')
-    .action(actionLoader('commands/dev.js'))
+  new Command('frontend')
+    .description('Work with a frontend project.')
+    .addCommand(
+      new Command('pull')
+        .description('Pull the frontend project associated with this package.')
+        .action(actionLoader('./commands/frontend/pull.js'))
+    )
+    .addCommand(
+      new Command('dev')
+      .description('Starts the frontend dev server in the current directory.')
+      .action(actionLoader('./commands/frontend/dev.js'))
+    )
+    .addCommand(
+      new Command('deploy')
+      .description('Deploys the frontend project associated with this package.')
+      .action(actionLoader('./commands/frontend/deploy.js'))
+    )
 )
 
 program.addCommand(
   new Command('deploy')
     .description('Deploy your package to production.')
-    .action(async () => {
+    .option('--frontend', 'Deploy the frontend project.', false)
+    .action(async (options) => {
       const { deploy } = await
       import('./commands/deploy.js')
-      await deploy({ shouldUpdateDomain: true })
+      
+      await deploy({
+        // only update the domain if they're deploying the frontend
+        shouldUpdateDomain: options.frontend,
+        shouldOnlyUploadConfig: !options.frontend
+      })
     })
 )
 
@@ -124,10 +156,16 @@ program.addCommand(
     .description('Fork an existing package.')
     .argument('<package-path>', 'The name of the package to fork.')
     .argument('<package-name>', 'The name of the new package.')
-    .action(async (packagePath, packageName) => {
+    .option('--frontend', 'Clone the frontend project.', false)
+    .action(async (packagePath, packageName, options) => {
       const { default: fork } = await
       import('./commands/fork.js')
-      await fork({ packagePath, toPackageSlug: packageName })
+
+      await fork({
+        packagePath,
+        toPackageSlug: packageName,
+        shouldCreateFrontendFiles: options.frontend
+      })
     })
 )
 
