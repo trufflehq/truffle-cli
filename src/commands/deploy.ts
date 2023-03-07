@@ -22,7 +22,16 @@ function getIgnore () {
     .map((ignore) => ignore.replace('!', ''))
 }
 
-export async function deploy ({ shouldUpdateDomain }: { shouldUpdateDomain?: boolean }) {
+export async function deploy (
+  {
+    shouldUpdateDomain,
+    shouldOnlyUploadConfig = true
+  }:
+  {
+    shouldUpdateDomain?: boolean;
+    shouldOnlyUploadConfig?: boolean;
+  }
+) {
   const packageVersion = await packageVersionGet()
   let fromPackageVersionId = packageVersion?.id
   // `installActionRel` and `requestedPermissions` need to default to a truthy value
@@ -33,10 +42,15 @@ export async function deploy ({ shouldUpdateDomain }: { shouldUpdateDomain?: boo
   console.log('Bundling...');
 
   const zip = new AdmZip()
-  const filenames = await new Promise((resolve, reject) =>
+  let filenames = await new Promise((resolve, reject) =>
     glob(GLOB, { ignore: getIgnore(), nodir: true }, async (err, filenames) => {
       err ? reject(err) : resolve(filenames)
-    }))
+    })) as string[]
+
+  if (shouldOnlyUploadConfig) {
+    filenames = filenames.filter((filename) => filename === 'truffle.config.js' || filename === 'truffle.config.mjs')
+  }
+
   filenames.forEach((filename) => {
     const code = applyTransforms(filename, fs.readFileSync(filename).toString())
     zip.addFile(filename, Buffer.from(code))
@@ -61,10 +75,15 @@ export async function deploy ({ shouldUpdateDomain }: { shouldUpdateDomain?: boo
     const domains = await domainMigrate({ packageId: pkg.id, toPackageVersionId: packageVersionId })
     console.log('Domains updated', domains)
   }
-  const domainConnection = await domainGetConnection({ packageVersionId })
-  const domainsStr = domainConnection.nodes
-    .map(({ domainName }) => `https://${domainName}`).join(', ') || 'no domain'
-  console.log(`Deployed to ${domainsStr}`)
+
+  // only print deployed to if we're not just uploading config
+  if (!shouldOnlyUploadConfig) {
+    const domainConnection = await domainGetConnection({ packageVersionId })
+    const domainsStr = domainConnection.nodes
+      .map(({ domainName }) => `https://${domainName}`).join(', ') || 'no domain'
+    console.log(`Deployed to ${domainsStr}`)
+  }
+
   const latestPackageVersionPath = await packageVersionPathGetLatestPath()
   await install({
     installedPackageVersionPath: latestPackageVersionPath,

@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json.schemastore.org/eslintrc",
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "rules": {},
+  "env": {
+    "node": true
+  },
+  "ignorePatterns": ["node_modules/", "dist/"]
+}

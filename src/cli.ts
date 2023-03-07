@@ -4,35 +4,32 @@
 // TODO: figure out a solution that can work for both
 import 'reflect-metadata'
 
-import { Argument, Command as BaseCommand, program } from 'commander'
+import { Argument, program } from 'commander'
+import { Command } from './util/command.js'
 import truffleCli from '../package.json' assert { type: 'json' }
-import { container } from 'tsyringe'
-import { kProfile } from './util/config.js'
-
-class Command extends BaseCommand {
-  public action (fn: (...args: any[]) => void | Promise<void>): this {
-    // wrap around the function to extract the last element from the args array
-    // which is the global flags object
-
-    return super.action((...args: any[]) => {
-      const profile = (args[args.length - 1] as Command).parent!.opts().profile ?? 'default'
-      container.register(kProfile, { useValue: profile })
-
-      return fn(...args)
-    })
-  }
-}
+import { readCliConfig, registerCliConfig } from './util/config.js'
+import { defaultCliConfig } from './assets/default-config.js'
+import { actionLoader } from './util/action-loader.js'
 
 program
   .name(truffleCli.name)
   .description(truffleCli.description)
   .version(truffleCli.version, '-v, --version')
-  .option('-p, --profile <name>', 'The profile from your Truffle config file to use, default: "default"', 'default')
+  .option('-p, --profile <name>', 'The profile from your Truffle config file to use.')
+  .option('--apiUrl <url>', `The Mycelium API URL to use, default: "${defaultCliConfig.apiUrl}"`)
+  .option('--org <org-id>', 'The id of the org to use for this command.')
+
+program.addCommand(
+  new Command('login')
+    .description('Login in to truffle.')
+    .argument('[email]', 'Email to login with')
+    .argument('[password]', 'Password to login with')
+    .action(actionLoader('commands/login/login.js'))
+)
 
 program.addCommand(
   new Command('auth')
     .description('Set your API Key.')
-    .alias('login')
     .argument('<secret-key>', 'Your API Key.')
     .action(async (secretKey: string) => {
       const { default: auth } = await
@@ -43,14 +40,44 @@ program.addCommand(
 )
 
 program.addCommand(
+  new Command('org')
+    .description('Manage orgs')
+    .addCommand(
+      new Command('use')
+        .description('Set the current org to use.')
+        .argument('<slug-or-id>', 'The slug or the id of the org to use.')
+        .action(actionLoader('commands/org/use.js'))
+    )
+    .addCommand(
+      new Command('create')
+        .description('Creates a new org')
+        .argument('<org-name>', 'Name of the org to create')
+        .action(actionLoader('commands/org/create.js'))
+    )
+    .addCommand(
+      new Command('join')
+        .description('Join an existing org')
+        .action(actionLoader('commands/org/join.js'))
+    )
+)
+
+program.addCommand(
+  new Command('user')
+    .description('Manage users')
+    .addCommand(
+      new Command('create')
+        .description('Creates a new user')
+        .argument('[email]', 'Email of the user to create')
+        .argument('[password]', 'Password of the user to create')
+        .action(actionLoader('commands/user/create.js'))
+    )
+)
+
+program.addCommand(
   new Command('whoami')
     .description('Check your authentication status')
     .alias('me')
-    .action(async () => {
-      const { default: whoami } = await
-      import('./commands/whoami.js')
-      await whoami()
-    })
+    .action(actionLoader('commands/whoami.js'))
 )
 
 program.addCommand(
@@ -58,10 +85,17 @@ program.addCommand(
     .description('Clone an existing package.')
     .argument('<package-path>', 'The name of the package to clone.')
     .argument('<package-name>', 'The name of the new package.')
-    .action(async (packagePath, packageName) => {
+    .option('--frontend', 'Clone the frontend project.', false)
+    .action(async (packagePath, packageName, options) => {
       const { default: clone } = await
-      import('./commands/clone.js')
-      await clone({ packagePath, toPackageSlug: packageName })
+      import('./util/clone.js')
+
+      await clone({
+        packagePath,
+        toPackageSlug: packageName,
+        shouldCreateConfigFile: true,
+        shouldCreateFrontendFiles: options.frontend
+      })
     })
 )
 
@@ -69,30 +103,51 @@ program.addCommand(
   new Command('create')
     .description('Create a new package.')
     .argument('<package-name>', 'The name of the package to create.')
-    .action(async (packageName) => {
+    .option('--frontend', 'Create a frontend project.', false)
+    .action(async (packageName, options) => {
       const { default: create } = await
       import('./commands/create.js')
-      await create({ toPackageSlug: packageName })
+
+      await create({
+        toPackageSlug: packageName,
+        shouldCreateFrontendFiles: options.frontend
+      })
     })
 )
 
 program.addCommand(
-  new Command('dev')
-    .description('Starts the dev server.')
-    .action(async () => {
-      const { default: dev } = await
-      import('./commands/dev.js')
-      await dev()
-    })
+  new Command('frontend')
+    .description('Work with a frontend project.')
+    .addCommand(
+      new Command('pull')
+        .description('Pull the frontend project associated with this package.')
+        .action(actionLoader('./commands/frontend/pull.js'))
+    )
+    .addCommand(
+      new Command('dev')
+      .description('Starts the frontend dev server in the current directory.')
+      .action(actionLoader('./commands/frontend/dev.js'))
+    )
+    .addCommand(
+      new Command('deploy')
+      .description('Deploys the frontend project associated with this package.')
+      .action(actionLoader('./commands/frontend/deploy.js'))
+    )
 )
 
 program.addCommand(
   new Command('deploy')
     .description('Deploy your package to production.')
-    .action(async () => {
+    .option('--frontend', 'Deploy the frontend project.', false)
+    .action(async (options) => {
       const { deploy } = await
       import('./commands/deploy.js')
-      await deploy({ shouldUpdateDomain: true })
+      
+      await deploy({
+        // only update the domain if they're deploying the frontend
+        shouldUpdateDomain: options.frontend,
+        shouldOnlyUploadConfig: !options.frontend
+      })
     })
 )
 
@@ -101,21 +156,23 @@ program.addCommand(
     .description('Fork an existing package.')
     .argument('<package-path>', 'The name of the package to fork.')
     .argument('<package-name>', 'The name of the new package.')
-    .action(async (packagePath, packageName) => {
+    .option('--frontend', 'Clone the frontend project.', false)
+    .action(async (packagePath, packageName, options) => {
       const { default: fork } = await
       import('./commands/fork.js')
-      await fork({ packagePath, toPackageSlug: packageName })
+
+      await fork({
+        packagePath,
+        toPackageSlug: packageName,
+        shouldCreateFrontendFiles: options.frontend
+      })
     })
 )
 
 program.addCommand(
   new Command('regenerate-api-key')
     .description('Request a new API Key.')
-    .action(async () => {
-      const { default: regeneratePackageApiKey } = await
-      import('./commands/regenerate.js')
-      await regeneratePackageApiKey()
-    })
+    .action(actionLoader('commands/regenerate.js'))
 )
 
 program.addCommand(
@@ -136,21 +193,13 @@ program.addCommand(
 program.addCommand(
   new Command('pull')
     .description('Fetch the upstream package.')
-    .action(async () => {
-      const { default: pull } = await
-      import('./commands/pull.js')
-      await pull()
-    })
+    .action(actionLoader('commands/pull.js'))
 )
 
 program.addCommand(
   new Command('ls')
     .description('List existing packages.')
-    .action(async () => {
-      const { default: list } = await
-      import('./commands/list.js')
-      await list()
-    })
+    .action(actionLoader('commands/list.js'))
 )
 
 program.addCommand(
@@ -217,5 +266,9 @@ if (2 in process.argv === false) {
 }
 
 (async () => {
+  // load the cli config into memory
+  const cliConfig = readCliConfig()
+  registerCliConfig(cliConfig)
+
   await program.parseAsync(process.argv)
 })()
