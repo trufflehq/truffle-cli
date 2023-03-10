@@ -170,6 +170,12 @@ program.addCommand(
 )
 
 program.addCommand(
+  new Command('get-package-token')
+    .description('Get a package-install scoped user access token for testing.')
+    .action(actionLoader('commands/package-token.js'))
+)
+
+program.addCommand(
   new Command('regenerate-api-key')
     .description('Request a new API Key.')
     .action(actionLoader('commands/regenerate.js'))
