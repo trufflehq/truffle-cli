@@ -43,7 +43,8 @@ export async function getOrg(input: OrgInput) {
 export async function createOrg ({ name }: { name: string }) {
   const response = await request({
     query: ORG_CREATE_MUTATION,
-    variables: { name }
+    variables: { name },
+    isOrgRequired: false,
   })
   return response.data.orgCreate.org as Org
 }
