@@ -86,5 +86,5 @@ export async function packageInstallTokenGet(packageInstallId: string) {
     isOrgRequired: false,
     shouldUseGlobal: true
   });
-  return res.data?.packageInstallToken as string;
+  return res.data?.packageInstallUserAccessToken as string;
 }
