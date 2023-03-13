@@ -76,7 +76,7 @@ export async function packageInstallGet (options?: { packagePath: string }) {
 export async function packageInstallTokenGet(packageInstallId: string) {
   const query = `
     query PackageInstallTokenGet($packageInstallId: ID!) {
-      packageInstallToken(input: { packageInstallId: $packageInstallId })
+      packageInstallUserAccessToken(input: { packageInstallId: $packageInstallId })
     }
   `;
 

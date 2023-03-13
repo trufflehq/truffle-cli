@@ -170,8 +170,9 @@ program.addCommand(
 )
 
 program.addCommand(
-  new Command('get-package-token')
+  new Command('get-package-user-access-token')
     .description('Get a package-install scoped user access token for testing.')
+    .alias('pt')
     .action(actionLoader('commands/package-token.js'))
 )
 
