@@ -60,7 +60,8 @@ export default async function (email?: string, password?: string) {
     variables: {
       email,
       password,
-    }
+    },
+    isOrgRequired: false,
   })
   .catch(error => {
     console.error('There was an error creating the user.')
