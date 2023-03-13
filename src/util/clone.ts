@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import prettier from 'prettier'
 
-import { getPackageConfig, getOrgProfileConfig } from './config.js'
+import { getPackageConfig, getOrgProfileConfig, getApiUrl } from './config.js'
 import { packageVersionGet } from './package-version.js'
 import { deepOmit } from './deep-omit.js'
 
@@ -16,7 +16,7 @@ export default async function clone (options: {
     secretKey?: string
     packagePath?: string
   }) {
-  const { apiUrl } = await getPackageConfig() || getOrgProfileConfig()
+  const apiUrl = (await getPackageConfig())?.apiUrl || getApiUrl() || (getOrgProfileConfig())?.apiUrl
   const {
     packageVersionId,
     packagePath,
