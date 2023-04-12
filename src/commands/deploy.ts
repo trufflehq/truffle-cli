@@ -4,7 +4,7 @@ import { gitIgnoreToGlob } from '../util/ignoreToGlob.js'
 import install from './install.js'
 import { domainGetConnection, domainMigrate } from '../util/domain.js'
 import { packageGet } from '../util/package.js'
-import { packageVersionGet, packageVersionCreate, packageVersionPathGetLatestPath } from '../util/package-version.js'
+import { packageVersionGet, packageVersionUpsert, packageVersionPathGetLatestPath } from '../util/package-version.js'
 import { getPackageConfig } from '../util/config.js'
 import { applyTransforms } from '../util/transform.js'
 import AdmZip from 'adm-zip'
@@ -36,7 +36,8 @@ export async function deploy (
   let fromPackageVersionId = packageVersion?.id
   // `installActionRel` and `requestedPermissions` need to default to a truthy value
   // so that they are set in the db when a dev removes them from their config.
-  const { version, installActionRel = {}, requestedPermissions = [] } = (await getPackageConfig())!
+  const packageConfig = (await getPackageConfig())!
+  const { version, installActionRel = {}, requestedPermissions = [] } = packageConfig
   const pkg = await packageGet()
 
   console.log('Bundling...');
@@ -57,7 +58,6 @@ export async function deploy (
   })
 
   // const packageVersionUpsert = packageVersionId ? packageVersionUpdate : packageVersionCreate
-  const packageVersionUpsert = packageVersionCreate // FIXME
   fromPackageVersionId = pkg.latestPackageVersionId
 
   console.log('Uploading...');
@@ -66,7 +66,8 @@ export async function deploy (
     packageId: pkg.id,
     semver: version,
     installActionRel,
-    requestedPermissions
+    requestedPermissions,
+    config: packageConfig
   }, zip.toBuffer())
   const packageVersionId = upsertedPackageVersion.id
 
