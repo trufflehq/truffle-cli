@@ -3,8 +3,8 @@ import { request, gql } from 'graphql-request';
 import { getApiUrl, getCliConfig, writeCliConfig } from '../../util/config.js';
 
 const LOGIN_MUTATION = gql`
-  mutation EmailLogin($email: String!, $password: String!) {
-    userLoginEmailPhone(input: { email: $email, password: $password }) {
+  mutation CliEmailLogin($email: String!, $password: String!) {
+    userLoginEmail(input: { email: $email, password: $password }) {
       accessToken
     }
   }
@@ -26,7 +26,7 @@ export default async function (email?: string, password?: string) {
   const config = getCliConfig()
   const apiUrl = getApiUrl()
 
-  const { userLoginEmailPhone } = await request(
+  const { userLoginEmail } = await request(
     apiUrl,
     LOGIN_MUTATION,
     {
@@ -41,12 +41,12 @@ export default async function (email?: string, password?: string) {
   });
 
   // check if there were errors
-  if (!userLoginEmailPhone) {
+  if (!userLoginEmail) {
     console.error('There was an error logging in.');
     process.exit(1);
   }
 
-  config.userAccessTokens[apiUrl] = userLoginEmailPhone.accessToken;
+  config.userAccessTokens[apiUrl] = userLoginEmail.accessToken;
   writeCliConfig(config);
 
   console.log(`Logged in to "${apiUrl}" as ${email}.`);

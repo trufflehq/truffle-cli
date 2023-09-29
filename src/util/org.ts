@@ -3,7 +3,7 @@ import { Org } from "src/types/org.js";
 import { request } from "./request.js";
 
 const ORG_QUERY = gql`
-  query($input: OrgInput!) {
+  query CliOrgQuery($input: OrgInput!) {
     org (input: $input) {
       id
       slug
@@ -13,8 +13,8 @@ const ORG_QUERY = gql`
 `
 
 const ORG_CREATE_MUTATION = gql`
-  mutation OrgCreate($name: String!) {
-    orgCreate(input: { name: $name }) {
+  mutation CliOrgCreateMutation($name: String!) {
+    orgUpsert(input: { name: $name }) {
       org {
         id
         name
@@ -37,6 +37,12 @@ export async function getOrg(input: OrgInput) {
     isOrgRequired: false,
     shouldUseGlobal: true
   })
+
+  if (!response?.data?.org) {
+    console.error('Failed to get org', response);
+    throw new Error('Failed to get org');
+  }
+
   return response.data.org as Org
 }
 
@@ -45,6 +51,12 @@ export async function createOrg ({ name }: { name: string }) {
     query: ORG_CREATE_MUTATION,
     variables: { name },
     isOrgRequired: false,
-  })
-  return response.data.orgCreate.org as Org
+  });
+
+  if (!response?.data?.orgUpsert?.org) {
+    console.error('Failed to create org', response);
+    throw new Error('Failed to create org');
+  }
+
+  return response.data.orgUpsert.org as Org
 }
