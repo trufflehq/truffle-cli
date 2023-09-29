@@ -5,7 +5,6 @@ export interface OrgProfileConfig {
 
 export interface CliConfig {
   apiUrl: string;
-  orgProfiles: Record<string, OrgProfileConfig>;
   userAccessTokens: Record<string, string>;
   currentOrgs: Record<string, string>;
 }
