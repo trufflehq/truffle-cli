@@ -90,6 +90,11 @@ program.addCommand(
         .argument('<app-path|app-slug>', 'The path or the slug of the app to clone')
         .action(actionLoader('commands/app/clone.js'))
     )
+    .addCommand(
+      new Command('list')
+        .description('List all Truffle Apps in this org')
+        .action(actionLoader('commands/app/list.js'))
+    )
 );
 
 // maybe we'll add this back later

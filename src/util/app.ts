@@ -18,6 +18,7 @@ export interface App {
   slug: string;
   name: string;
   orgId: string;
+  path: string;
   description: string;
   currentVersion: number;
   configJson: string;
@@ -61,6 +62,22 @@ const APP_UPSERT_MUTATION = gql`
   }
 `;
 
+interface AppConnectionInput {
+  orgId: string;
+};
+
+const APP_CONNECTION_QUERY = gql`
+  query CliAppQuery($input: AppConnectionInput) {
+    appConnection(input: $input) {
+      nodes {
+        id
+        name
+        path
+      }
+    }
+  }
+`;
+
 export async function fetchApp(
   input: AppInput,
   { throwError } = { throwError: false }
@@ -81,7 +98,9 @@ export async function fetchApp(
 
 export async function readAppConfig() {
   return await import(
-    new URL(`file://${path.join(process.cwd(), `/${DEFAULT_APP_CONFIG_FILE_NAME}`)}`).href
+    new URL(
+      `file://${path.join(process.cwd(), `/${DEFAULT_APP_CONFIG_FILE_NAME}`)}`
+    ).href
   );
 }
 
@@ -105,4 +124,14 @@ export async function upsertApp(
   });
 
   return resp?.data?.appUpsert?.app;
+}
+
+export async function fetchAppConnection(input: AppConnectionInput): Promise<App[]> {
+  const resp = await request({
+    query: APP_CONNECTION_QUERY,
+    variables: { input },
+    isOrgRequired: true,
+  });
+
+  return resp?.data?.appConnection?.nodes;
 }
