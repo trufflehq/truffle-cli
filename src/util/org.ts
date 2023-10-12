@@ -35,7 +35,6 @@ export async function getOrg(input: OrgInput) {
     query: ORG_QUERY,
     variables: { input },
     isOrgRequired: false,
-    shouldUseGlobal: true
   })
 
   if (!response?.data?.org) {

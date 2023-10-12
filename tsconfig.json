@@ -20,7 +20,10 @@
 		"emitDecoratorMetadata": true,
 		"resolveJsonModule": true,
 		"newLine": "lf",
-		"allowSyntheticDefaultImports": true
+		"allowSyntheticDefaultImports": true,
+		"paths": {
+			"src/*": ["src/*"],
+		}
 	},
 	"exclude": [
 		"node_modules"

@@ -2,22 +2,28 @@
 // NOTE: `#!/usr/bin/env -S node` will break Windows (the -S). It screws w/ how npm generates ps1/cmd files (it looks at first word after /usr/bin/env)
 // Unfortunately the -S is necessary for linux to parse the additional flags
 // TODO: figure out a solution that can work for both
-import 'reflect-metadata'
+import 'reflect-metadata';
 
-import {  program } from 'commander'
-import { Command } from './util/command.js'
-import truffleCli from '../package.json' assert { type: 'json' }
-import { readCliConfig, registerCliConfig } from './util/config.js'
-import { defaultCliConfig } from './assets/default-config.js'
-import { actionLoader } from './util/action-loader.js'
+import { program } from 'commander';
+import { Command } from './util/command.js';
+import truffleCli from '../package.json' assert { type: 'json' };
+import { readCliConfig, registerCliConfig } from './util/config.js';
+import { defaultCliConfig } from './assets/default-config.js';
+import { actionLoader } from './util/action-loader.js';
 
 program
   .name(truffleCli.name)
   .description(truffleCli.description)
   .version(truffleCli.version, '-v, --version')
-  .option('-p, --profile <name>', 'The profile from your Truffle config file to use.')
-  .option('--apiUrl <url>', `The Mycelium API URL to use, default: "${defaultCliConfig.apiUrl}"`)
-  .option('--org <org-id>', 'The id of the org to use for this command.')
+  .option(
+    '-p, --profile <name>',
+    'The profile from your Truffle config file to use.'
+  )
+  .option(
+    '--apiUrl <url>',
+    `The Mycelium API URL to use, default: "${defaultCliConfig.apiUrl}"`
+  )
+  .option('--org <org-id>', 'The id of the org to use for this command.');
 
 program.addCommand(
   new Command('login')
@@ -25,7 +31,7 @@ program.addCommand(
     .argument('[email]', 'Email to login with')
     .argument('[password]', 'Password to login with')
     .action(actionLoader('commands/login/login.js'))
-)
+);
 
 program.addCommand(
   new Command('org')
@@ -47,7 +53,7 @@ program.addCommand(
         .description('Join an existing org')
         .action(actionLoader('commands/org/join.js'))
     )
-)
+);
 
 program.addCommand(
   new Command('user')
@@ -59,14 +65,25 @@ program.addCommand(
         .argument('[password]', 'Password of the user to create')
         .action(actionLoader('commands/user/create.js'))
     )
-)
+);
 
 program.addCommand(
   new Command('whoami')
     .description('Check your authentication status')
     .alias('me')
     .action(actionLoader('commands/whoami.js'))
-)
+);
+
+program.addCommand(
+  new Command('app')
+    .description('Operations on your Truffle Apps')
+    .addCommand(
+      new Command('create')
+        .description('Create a new Truffle App')
+        .argument('<app-slug>', 'Slug of the app to create')
+        .action(actionLoader('commands/app/create.js'))
+    )
+);
 
 // maybe we'll add this back later
 // program.addCommand(
@@ -111,13 +128,13 @@ program.addCommand(
 // )
 
 if (2 in process.argv === false) {
-  program.help()
+  program.help();
 }
 
 (async () => {
   // load the cli config into memory
-  const cliConfig = readCliConfig()
-  registerCliConfig(cliConfig)
+  const cliConfig = readCliConfig();
+  registerCliConfig(cliConfig);
 
-  await program.parseAsync(process.argv)
-})()
+  await program.parseAsync(process.argv);
+})();

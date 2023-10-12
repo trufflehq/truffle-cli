@@ -3,7 +3,6 @@ import fetch from 'node-fetch';
 export interface RequestOptions {
   query: string;
   variables?: Record<string, unknown>;
-  shouldUseGlobal?: boolean;
   isOrgRequired?: boolean;
   maxAttempts?: number;
 }
