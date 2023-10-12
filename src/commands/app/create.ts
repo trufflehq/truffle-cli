@@ -1,16 +1,13 @@
-import { fetchApp, readAppConfig, upsertApp } from '../../util/app.js';
+import { DEFAULT_APP_CONFIG_FILE_NAME, fetchApp, isInAppDir, upsertApp } from '../../util/app.js';
 import { getCurrentOrgId } from '../../util/config.js';
 import { writeFile } from 'fs/promises';
 
-export default async function createApp(appSlug?: string) {
+export default async function appCreate(appSlug: string) {
   // check if app config already exists
-  try {
-    const existingConfig = await readAppConfig();
-    if (existingConfig) {
-      console.error('App config already exists in this directory');
-      process.exit(1);
-    }
-  } catch {} // ignore error
+  if (await isInAppDir()) {
+    console.error(`Cannot create app here; ${DEFAULT_APP_CONFIG_FILE_NAME} already exists`);
+    process.exit(1);
+  }
 
   const orgId = getCurrentOrgId();
 
@@ -43,6 +40,6 @@ export default async function createApp(appSlug?: string) {
   console.log(`Created app "${appSlug}" with id ${newApp.id} in org ${orgId}`);
 
   // write the raw config to a file
-  await writeFile('truffle.config.js', newApp.configRaw);
-  console.log('Wrote truffle.config.js');
+  await writeFile(DEFAULT_APP_CONFIG_FILE_NAME, newApp.configRaw);
+  console.log(`Wrote ${DEFAULT_APP_CONFIG_FILE_NAME}`);
 }

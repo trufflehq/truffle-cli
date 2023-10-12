@@ -10,6 +10,7 @@ import truffleCli from '../package.json' assert { type: 'json' };
 import { readCliConfig, registerCliConfig } from './util/config.js';
 import { defaultCliConfig } from './assets/default-config.js';
 import { actionLoader } from './util/action-loader.js';
+import { DEFAULT_APP_CONFIG_FILE_NAME } from './util/app.js';
 
 program
   .name(truffleCli.name)
@@ -82,6 +83,12 @@ program.addCommand(
         .description('Create a new Truffle App')
         .argument('<app-slug>', 'Slug of the app to create')
         .action(actionLoader('commands/app/create.js'))
+    )
+    .addCommand(
+      new Command('clone')
+        .description(`Retrieve the config for an existing Truffle App and write it to ${DEFAULT_APP_CONFIG_FILE_NAME}`)
+        .argument('<app-path|app-slug>', 'The path or the slug of the app to clone')
+        .action(actionLoader('commands/app/clone.js'))
     )
 );
 

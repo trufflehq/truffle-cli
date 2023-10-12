@@ -2,6 +2,8 @@ import { gql } from 'graphql-request';
 import { request } from './request.js';
 import path from 'path';
 
+export const DEFAULT_APP_CONFIG_FILE_NAME = 'truffle.config.js';
+
 interface AppInput {
   id?: string;
   path?: string;
@@ -59,20 +61,38 @@ const APP_UPSERT_MUTATION = gql`
   }
 `;
 
-export async function fetchApp(input: AppInput): Promise<App | undefined> {
+export async function fetchApp(
+  input: AppInput,
+  { throwError } = { throwError: false }
+): Promise<App> {
   const resp = await request({
     query: APP_QUERY,
     variables: { input },
     isOrgRequired: input.slug || input.orgId ? true : false, // if querying by slug, orgId is required,
   });
 
+  if (!resp?.data?.app && throwError) {
+    console.error(`Error fetching app: ${input.slug || input.id}`, resp);
+    throw new Error(`Error fetching app: ${input.slug || input.id}`);
+  }
+
   return resp?.data?.app;
 }
 
 export async function readAppConfig() {
   return await import(
-    new URL(`file://${path.join(process.cwd(), `/truffle.config.js`)}`).href
+    new URL(`file://${path.join(process.cwd(), `/${DEFAULT_APP_CONFIG_FILE_NAME}`)}`).href
   );
+}
+
+export async function isInAppDir() {
+  // check if app config already exists
+  try {
+    await readAppConfig();
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 export async function upsertApp(
