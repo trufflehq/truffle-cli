@@ -26,6 +26,12 @@ export interface App {
   configRaw: string;
 }
 
+export interface AppInstall {
+  id: string;
+  orgId: string;
+  installedVersion: number;
+}
+
 const APP_QUERY = gql`
   query CliAppQuery($input: AppInput) {
     app(input: $input) {
@@ -53,7 +59,7 @@ interface AppUpsertInput {
 }
 
 const APP_UPSERT_MUTATION = gql`
-  mutation ($input: AppUpsertInput!) {
+  mutation CliAppUpsertMutation($input: AppUpsertInput!) {
     appUpsert(input: $input) {
       app {
         id
@@ -75,6 +81,23 @@ const APP_CONNECTION_QUERY = gql`
         id
         name
         path
+      }
+    }
+  }
+`;
+
+interface AppInstallUpsertInput {
+  path: string;
+  orgId: string;
+}
+
+const APP_INSTALL_UPSERT_MUTATION = gql`
+  mutation CliAppUpsertMutation($input: AppInstallUpsertInput!) {
+    appInstallUpsert(input: $input) {
+      appInstall {
+        id
+        orgId
+        installedVersion
       }
     }
   }
@@ -107,11 +130,7 @@ export async function readRawAppConfig() {
 }
 
 export async function readAppConfig() {
-  return await import(
-    new URL(
-      `file://${getAppConfigPath()}`
-    ).href
-  );
+  return await import(new URL(`file://${getAppConfigPath()}`).href);
 }
 
 export async function isInAppDir() {
@@ -124,7 +143,7 @@ export async function isInAppDir() {
   }
 }
 
-export async function upsertApp(
+export async function appUpsert(
   input: AppUpsertInput,
   { throwError } = { throwError: false }
 ): Promise<App | undefined> {
@@ -157,4 +176,19 @@ export async function fetchAppConnection(
   }
 
   return resp?.data?.appConnection?.nodes;
+}
+
+export async function appInstallUpsert(input: AppInstallUpsertInput): Promise<AppInstall> {
+  const resp = await request({
+    query: APP_INSTALL_UPSERT_MUTATION,
+    variables: { input },
+    isOrgRequired: true,
+  });
+
+  if (!resp?.data?.appInstallUpsert?.appInstall) {
+    console.error(`Error upserting app install`, resp);
+    throw new Error(`Error upserting app install`);
+  }
+
+  return resp?.data?.appInstallUpsert?.appInstall;
 }

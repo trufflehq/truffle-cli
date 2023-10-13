@@ -100,6 +100,12 @@ program.addCommand(
         .description(`Deploy a new version of ${DEFAULT_APP_CONFIG_FILE_NAME}`)
         .action(actionLoader('commands/app/deploy.js'))
     )
+    .addCommand(
+      new Command('install')
+        .description('Install a Truffle App to the current org')
+        .argument('<app-path>', 'Path of the app to install')
+        .action(actionLoader('commands/app/install.js'))
+    )
 );
 
 // maybe we'll add this back later

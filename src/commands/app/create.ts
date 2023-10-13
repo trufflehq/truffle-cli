@@ -1,4 +1,4 @@
-import { DEFAULT_APP_CONFIG_FILE_NAME, fetchApp, isInAppDir, upsertApp } from '../../util/app.js';
+import { DEFAULT_APP_CONFIG_FILE_NAME, fetchApp, isInAppDir, appUpsert } from '../../util/app.js';
 import { getCurrentOrgId } from '../../util/config.js';
 import { writeFile } from 'fs/promises';
 
@@ -27,7 +27,7 @@ export default async function appCreate(appSlug: string) {
     process.exit(1);
   }
 
-  const newApp = await upsertApp({
+  const newApp = await appUpsert({
     slug: appSlug,
     orgId,
   });

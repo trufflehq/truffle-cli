@@ -2,7 +2,7 @@ import {
   DEFAULT_APP_CONFIG_FILE_NAME,
   readAppConfig,
   readRawAppConfig,
-  upsertApp,
+  appUpsert,
 } from '../../util/app.js';
 
 export default async function appDeploy() {
@@ -26,7 +26,7 @@ export default async function appDeploy() {
     process.exit(1);
   }
 
-  const upsertedApp = await upsertApp({
+  const upsertedApp = await appUpsert({
     path: config.path,
     configJson: config,
     configRaw: await readRawAppConfig(),
