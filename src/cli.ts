@@ -95,6 +95,11 @@ program.addCommand(
         .description('List all Truffle Apps in this org')
         .action(actionLoader('commands/app/list.js'))
     )
+    .addCommand(
+      new Command('deploy')
+        .description(`Deploy a new version of ${DEFAULT_APP_CONFIG_FILE_NAME}`)
+        .action(actionLoader('commands/app/deploy.js'))
+    )
 );
 
 // maybe we'll add this back later

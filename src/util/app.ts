@@ -1,8 +1,9 @@
 import { gql } from 'graphql-request';
 import { request } from './request.js';
 import path from 'path';
+import { readFile } from 'fs/promises';
 
-export const DEFAULT_APP_CONFIG_FILE_NAME = 'truffle.config.js';
+export const DEFAULT_APP_CONFIG_FILE_NAME = 'truffle.config.mjs';
 
 interface AppInput {
   id?: string;
@@ -57,6 +58,7 @@ const APP_UPSERT_MUTATION = gql`
       app {
         id
         configRaw
+        currentVersion
       }
     }
   }
@@ -64,7 +66,7 @@ const APP_UPSERT_MUTATION = gql`
 
 interface AppConnectionInput {
   orgId: string;
-};
+}
 
 const APP_CONNECTION_QUERY = gql`
   query CliAppQuery($input: AppConnectionInput) {
@@ -96,10 +98,18 @@ export async function fetchApp(
   return resp?.data?.app;
 }
 
+export function getAppConfigPath() {
+  return path.join(process.cwd(), `/${DEFAULT_APP_CONFIG_FILE_NAME}`);
+}
+
+export async function readRawAppConfig() {
+  return await readFile(getAppConfigPath(), 'utf8');
+}
+
 export async function readAppConfig() {
   return await import(
     new URL(
-      `file://${path.join(process.cwd(), `/${DEFAULT_APP_CONFIG_FILE_NAME}`)}`
+      `file://${getAppConfigPath()}`
     ).href
   );
 }
@@ -115,7 +125,8 @@ export async function isInAppDir() {
 }
 
 export async function upsertApp(
-  input: AppUpsertInput
+  input: AppUpsertInput,
+  { throwError } = { throwError: false }
 ): Promise<App | undefined> {
   const resp = await request({
     query: APP_UPSERT_MUTATION,
@@ -123,15 +134,27 @@ export async function upsertApp(
     isOrgRequired: input.slug || input.orgId ? true : false, // if querying by slug, orgId is required,
   });
 
+  if (!resp?.data?.appUpsert?.app && throwError) {
+    console.error(`Error upserting app: ${input.slug || input.id}`, resp);
+    throw new Error(`Error upserting app: ${input.slug || input.id}`);
+  }
+
   return resp?.data?.appUpsert?.app;
 }
 
-export async function fetchAppConnection(input: AppConnectionInput): Promise<App[]> {
+export async function fetchAppConnection(
+  input: AppConnectionInput
+): Promise<App[]> {
   const resp = await request({
     query: APP_CONNECTION_QUERY,
     variables: { input },
     isOrgRequired: true,
   });
+
+  if (!resp?.data?.appConnection?.nodes) {
+    console.error(`Error fetching app connection`, resp);
+    throw new Error(`Error fetching app connection`);
+  }
 
   return resp?.data?.appConnection?.nodes;
 }
