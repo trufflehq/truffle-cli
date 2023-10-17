@@ -86,8 +86,13 @@ program.addCommand(
     )
     .addCommand(
       new Command('clone')
-        .description(`Retrieve the config for an existing Truffle App and write it to ${DEFAULT_APP_CONFIG_FILE_NAME}`)
-        .argument('<app-path|app-slug>', 'The path or the slug of the app to clone')
+        .description(
+          `Retrieve the config for an existing Truffle App and write it to ${DEFAULT_APP_CONFIG_FILE_NAME}`
+        )
+        .argument(
+          '<app-path|app-slug>',
+          'The path or the slug of the app to clone'
+        )
         .action(actionLoader('commands/app/clone.js'))
     )
     .addCommand(
@@ -107,48 +112,6 @@ program.addCommand(
         .action(actionLoader('commands/app/install.js'))
     )
 );
-
-// maybe we'll add this back later
-// program.addCommand(
-//   new Command('functions')
-//     .description('Manage Truffle Functions')
-//     .addCommand(
-//       new Command('deploy')
-//         .description('Deploy functions.')
-//         .option('-a, --all', 'Deploy all functions.', false)
-//         .argument('[function-name]', 'The name of the function to deploy.')
-//         .action(async (functionName, { all }) => {
-//           const { default: deploy } = await import('./commands/functions/deploy.js')
-//           await deploy({
-//             all,
-//             functionName
-//           })
-//         }).on('--help', () => {
-//           console.log('  Examples:')
-//           console.log()
-//           console.log('    $ truffle functions deploy')
-//           console.log('    $ truffle functions deploy --all')
-//           console.log('    $ truffle functions deploy myFunction')
-//         }))
-//     .addCommand(
-//       new Command('logs')
-//         .description('View logs for deployed Truffle Functions.')
-//         .option('-a, --all', 'View logs for all functions.', false)
-//         .argument('[function-name]', 'The name of the function to view logs for.')
-//         .action(async (functionName, { all }) => {
-//           const { default: logs } = await import('./commands/functions/logs.js')
-//           await logs({
-//             all,
-//             functionName
-//           })
-//         }).on('--help', () => {
-//           console.log('  Examples:')
-//           console.log()
-//           console.log('    $ truffle functions logs')
-//           console.log('    $ truffle functions logs --all')
-//           console.log('    $ truffle functions logs myFunction')
-//         }))
-// )
 
 if (2 in process.argv === false) {
   program.help();
