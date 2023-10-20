@@ -3,45 +3,34 @@ import path from 'path';
 import os from 'os';
 import chalk from 'chalk';
 import { container } from 'tsyringe';
-import { CliConfig, OrgProfileConfig } from '../types/config.js';
+import { CliConfig,  } from '../types/config.js';
 import { kApiUrl, kCliConfig, kCurrentOrg } from '../di/tokens.js';
 import { defaultCliConfig } from '../assets/default-config.js';
 
-function upgradeConfig(config: Record<string, OrgProfileConfig>): CliConfig {
-  let upgradedConfig: CliConfig = config as unknown as CliConfig;
-
-  // if the config is in the old format, upgrade it
-  if (!config.orgProfiles) {
-    upgradedConfig = {
-      ...defaultCliConfig,
-    };
-  }
-
+function upgradeConfig(config: CliConfig): CliConfig {
   // if the config is using mycelium, switch it over to mothertree
 
   // change config.apiUrl from mycelium to mothertree
-  upgradedConfig.apiUrl = upgradedConfig.apiUrl.replace('mycelium', 'mothertree');
+  config.apiUrl = config.apiUrl.replace('mycelium', 'mothertree');
 
   // go through all of the keys in config.userAccessTokens and replace mycelium with mothertree
-  const newAccessTokens: Record<string, string> = {};
-  for (const key in upgradedConfig.userAccessTokens) {
+  config.userAccessTokens = Object.entries(config?.userAccessTokens ?? {}).reduce((newAccessTokens, [key, value]) => {
     const newKey = key.replace('mycelium', 'mothertree');
-    newAccessTokens[newKey] = upgradedConfig.userAccessTokens[key];
-  }
-  upgradedConfig.userAccessTokens = newAccessTokens;
+    newAccessTokens[newKey] = value;
+    return newAccessTokens;
+  }, {});
 
   // go through all of the keys in config.currentOrgs and replace mycelium with mothertree
-  const newCurrentOrgs: Record<string, string> = {};
-  for (const key in upgradedConfig.currentOrgs) {
+  config.currentOrgs = Object.entries(config?.currentOrgs ?? {}).reduce((newCurrentOrgs, [key, value]) => {
     const newKey = key.replace('mycelium', 'mothertree');
-    newCurrentOrgs[newKey] = upgradedConfig.currentOrgs[key];
-  }
-  upgradedConfig.currentOrgs = newCurrentOrgs;
+    newCurrentOrgs[newKey] = value;
+    return newCurrentOrgs;
+  }, {});
 
   // write upgraded config to fs
-  writeCliConfig(upgradedConfig);
+  writeCliConfig(config);
 
-  return upgradedConfig;
+  return config;
 }
 
 export function getCliConfigFilename() {
