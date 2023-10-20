@@ -111,6 +111,12 @@ program.addCommand(
         .argument('<app-path>', 'Path of the app to install')
         .action(actionLoader('commands/app/install.js'))
     )
+    .addCommand(
+      new Command('get-token')
+        .description('Get a token for an app install')
+        .argument('<app-path>', 'Path of the app to get a token for')
+        .action(actionLoader('commands/app/get-token.js'))
+    )
 );
 
 if (2 in process.argv === false) {

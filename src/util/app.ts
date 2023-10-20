@@ -103,6 +103,40 @@ const APP_INSTALL_UPSERT_MUTATION = gql`
   }
 `;
 
+const APP_INSTALL_CONNECTION_QUERY = gql`
+  query CliAppInstallConnectionQuery($input: AppInstallConnectionInput!) {
+    appInstallConnection(input: $input) {
+      nodes {
+        id
+        app {
+          id
+          path
+        }
+      }
+    }
+  }
+`;
+
+interface AppInstallAccessTokenInput {
+  appInstallId: string;
+}
+
+const APP_INSTALL_ACCESS_TOKEN_MUTATION = gql`
+  query CliAppInstallAccessTokenQuery($input: AppInstallAccessTokenInput!) {
+    appInstallAccessToken(input: $input) {
+      accessToken
+    }
+  }
+`;
+
+export interface AppInstall {
+  id: string;
+  appId: string;
+  orgId: string;
+  installedVersion: number;
+  app: App;
+}
+
 export async function fetchApp(
   input: AppInput,
   { throwError } = { throwError: false }
@@ -178,7 +212,9 @@ export async function fetchAppConnection(
   return resp?.data?.appConnection?.nodes;
 }
 
-export async function appInstallUpsert(input: AppInstallUpsertInput): Promise<AppInstall> {
+export async function appInstallUpsert(
+  input: AppInstallUpsertInput
+): Promise<AppInstall> {
   const resp = await request({
     query: APP_INSTALL_UPSERT_MUTATION,
     variables: { input },
@@ -191,4 +227,38 @@ export async function appInstallUpsert(input: AppInstallUpsertInput): Promise<Ap
   }
 
   return resp?.data?.appInstallUpsert?.appInstall;
+}
+
+export async function fetchAppInstallConnection(
+  orgId: string
+): Promise<AppInstall[]> {
+  const resp = await request({
+    query: APP_INSTALL_CONNECTION_QUERY,
+    variables: { input: { orgId } },
+    isOrgRequired: true,
+  });
+
+  if (!resp?.data?.appInstallConnection?.nodes) {
+    console.error(`Error fetching app install connection`, resp);
+    throw new Error(`Error fetching app install connection`);
+  }
+
+  return resp?.data?.appInstallConnection?.nodes;
+}
+
+export async function fetchAppInstallAccessToken(
+  appInstallId: string
+): Promise<string> {
+  const resp = await request({
+    query: APP_INSTALL_ACCESS_TOKEN_MUTATION,
+    variables: { input: { appInstallId } },
+    isOrgRequired: true,
+  });
+
+  if (!resp?.data?.appInstallAccessToken?.accessToken) {
+    console.error(`Error fetching app install access token`, resp);
+    throw new Error(`Error fetching app install access token`);
+  }
+
+  return resp?.data?.appInstallAccessToken?.accessToken;
 }
