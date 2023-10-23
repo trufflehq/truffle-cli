@@ -10,7 +10,7 @@ export async function getMe() {
   return (await request({
     shouldUseGlobal: true,
     query: `
-      query {
+      query CliMeQuery {
         me {
           id
           name
