@@ -10,7 +10,7 @@ export default async function appGetToken(appPath: string) {
 
   // find the app install for this app
   const appInstall = appInstalls.find(
-    (appInstall) => appInstall.app.path === appPath
+    (appInstall) => appInstall.app?.path === appPath
   );
 
   if (!appInstall) {
