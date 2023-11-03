@@ -1,7 +1,7 @@
 import { CliConfig } from "../types/config.js"
 
 export const defaultCliConfig: CliConfig = {
-  apiUrl: 'https://mothertree.staging.bio/graphql',
+  apiUrl: 'https://mothertree.truffle.vip/graphql',
   userAccessTokens: {},
   currentOrgs: {}
 }
