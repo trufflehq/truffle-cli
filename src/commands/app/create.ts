@@ -20,7 +20,7 @@ export default async function appCreate(appSlug: string) {
 
   console.log(`Creating app "${appSlug}" in org ${orgId}...`);
 
-  const existingApp = await fetchApp({ slug: appSlug, orgId });
+  const existingApp = await fetchApp({ orgIdAndSlug: { slug: appSlug, orgId } });
 
   if (existingApp) {
     console.error(`App "${appSlug}" already exists in org ${orgId}`);

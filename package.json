@@ -1,6 +1,6 @@
 {
   "name": "@trufflehq/cli",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "The Truffle Developer Platform CLI",
   "main": "dist/cli.js",
   "bin": {
@@ -11,7 +11,8 @@
   ],
   "type": "module",
   "scripts": {
-    "build": "swc ./src --out-dir ./dist -C jsc.experimental.keepImportAssertions=true",
+    "clean": "rimraf ./dist",
+    "build": "npm run clean && swc ./src --out-dir ./dist -C jsc.experimental.keepImportAssertions=true",
     "watch": "swc ./src --out-dir ./dist -C jsc.experimental.keepImportAssertions=true --watch",
     "format": "eslint --fix --ext .ts,.js src",
     "package:linux": "pkg /tmp/tfl --targets node18-linux-x64 --output bin/linux/truffle-cli",
@@ -66,6 +67,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.2.0",
     "pkg": "^5.8.0",
+    "rimraf": "^5.0.5",
     "typescript": "^4.7.4"
   },
   "resolutions": {

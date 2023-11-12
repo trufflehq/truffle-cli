@@ -11,7 +11,7 @@ export default async function appInstall(appPath: string) {
 
   console.log(`Installing ${appPath} to org ${orgId}`);
   const upsertedAppInstall = await appInstallUpsert({
-    path: appPath,
+    appLocator: { path: appPath },
     orgId,
   });
 

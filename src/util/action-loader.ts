@@ -1,5 +1,6 @@
 import path from "path"
-import { rootPath } from "./package-path.js"
+
+const rootPath = path.normalize(path.join(import.meta.url, '..', '..'))
 
 /**
  * Dynamically load an action from a path

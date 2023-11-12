@@ -16,7 +16,7 @@ export default async function appClone(appSlug: string) {
   const app = isPath
     ? await fetchApp({ path: appSlug }, { throwError: true })
     : await fetchApp(
-        { slug: appSlug, orgId: getCurrentOrgId() },
+        { orgIdAndSlug: { slug: appSlug, orgId: getCurrentOrgId() } },
         { throwError: true }
       );
 

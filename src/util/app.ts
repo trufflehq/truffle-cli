@@ -8,10 +8,10 @@ export const DEFAULT_APP_CONFIG_FILE_NAME = 'truffle.config.mjs';
 interface AppInput {
   id?: string;
   path?: string;
-
-  // must also pass org id if querying by slug
-  slug?: string;
-  orgId?: string;
+  orgIdAndSlug?: {
+    slug: string;
+    orgId: string;
+  }
 }
 
 export interface App {
@@ -87,7 +87,9 @@ const APP_CONNECTION_QUERY = gql`
 `;
 
 interface AppInstallUpsertInput {
-  path: string;
+  appLocator: {
+    path: string;
+  };
   orgId: string;
 }
 
@@ -144,12 +146,12 @@ export async function fetchApp(
   const resp = await request({
     query: APP_QUERY,
     variables: { input },
-    isOrgRequired: input.slug || input.orgId ? true : false, // if querying by slug, orgId is required,
+    isOrgRequired: input.orgIdAndSlug ? true : false, // if querying by slug, orgId is required,
   });
 
   if (!resp?.data?.app && throwError) {
-    console.error(`Error fetching app: ${input.slug || input.id}`, resp);
-    throw new Error(`Error fetching app: ${input.slug || input.id}`);
+    console.error(`Error fetching app: ${input.orgIdAndSlug || input.id}`, resp);
+    throw new Error(`Error fetching app: ${input.orgIdAndSlug || input.id}`);
   }
 
   return resp?.data?.app;
