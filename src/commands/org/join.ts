@@ -2,10 +2,10 @@ import { gql } from 'graphql-request';
 import { request } from '../../util/request.js';
 import { getCurrentOrgId } from '../../util/config.js';
 
-const ORG_USER_CREATE_MUTATION = gql`
-  mutation CliOrgUserCreate($orgId: ID!) {
-    orgUserCreate(input: { orgId: $orgId }) {
-      orgUser {
+const ORG_MEMBER_CREATE_MUTATION = gql`
+  mutation CliOrgMemberCreate($orgId: ID!) {
+    orgMemberCreate(input: { orgId: $orgId }) {
+      orgMember {
         id
         userId
         org {
@@ -20,15 +20,15 @@ const ORG_USER_CREATE_MUTATION = gql`
 
 export default async function () {
   const res = await request({
-    query: ORG_USER_CREATE_MUTATION,
+    query: ORG_MEMBER_CREATE_MUTATION,
     variables: { orgId: getCurrentOrgId() },
     isOrgRequired: true,
   });
 
-  if (!res?.data?.orgUserCreate?.orgUser) {
+  if (!res?.data?.orgMemberCreate?.orgMember) {
     console.error('Failed to join org', res);
     throw new Error('Failed to join org');
   }
 
-  console.log('Org user:', res.data.orgUserCreate.orgUser);
+  console.log('Org member:', res.data.orgMemberCreate.orgMember);
 }
