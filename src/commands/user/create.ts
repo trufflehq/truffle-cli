@@ -1,26 +1,24 @@
 import { gql, request } from 'graphql-request';
 import readline from 'readline-sync';
 import { getApiUrl, getCliConfig, writeCliConfig } from '../../util/config.js';
-import { request as authenticatedRequest } from '../../util/request.js'
 
-const USER_LOGIN_ANON_MUTATION = gql`
-  mutation UserLoginAnon {
-    userLoginAnon {
+const USER_CREATE_MUTATION = gql`
+  mutation UserCreate($email: String!, $password: String!) {
+    userCreate(input: { 
+      emailAndPassword: {
+        email: $email, password: $password
+      }
+     }) {
       accessToken
     }
   }
 `
 
-const USER_UPSERT_MUTATION = gql`
-  mutation UserUpsert($email: String!, $password: String!) {
-    userUpsert(input: { email: $email, password: $password }) {
-      user {
-        id
-        email
-      }
-    }
+interface UserCreateResponse {
+  userCreate: {
+    accessToken: string
   }
-`
+};
 
 export default async function (email?: string, password?: string) {
   // check if username was provided
@@ -35,42 +33,28 @@ export default async function (email?: string, password?: string) {
     password = readline.question('Password: ', { hideEchoBack: true });
   }
 
-  const apiUrl = getApiUrl()
+  const apiUrl = getApiUrl() 
 
-  // create an anonymous user
-  const { userLoginAnon } = await request(
+  // set the email/password for the user
+  const { userCreate } = await request(
     apiUrl,
-    USER_LOGIN_ANON_MUTATION
-  )
-
-  // set the access token in the cli config
-  const accessToken = userLoginAnon?.accessToken
-  if (!accessToken) {
-    console.error('There was an error creating the anonymous user.')
+    USER_CREATE_MUTATION,
+    {
+      email,
+      password,
+    })
+  .catch(error => {
+    console.error('There was an error creating the user.')
+    console.error(error?.response?.errors || error);
     process.exit(1)
-  }
+  }) as UserCreateResponse
 
   // set the access token in the cli config
   const cliConfig = getCliConfig()
-  cliConfig.userAccessTokens[apiUrl] = accessToken
-
-  // set the email/password for the user
-  const { data: userUpsertData } = await authenticatedRequest({
-    query: USER_UPSERT_MUTATION,
-    variables: {
-      email,
-      password,
-    },
-    isOrgRequired: false,
-  })
-  .catch(error => {
-    console.error('There was an error creating the user.')
-    console.error('cause:', error.cause)
-    process.exit(1)
-  })
-
-  console.log('New user created: ', userUpsertData?.userUpsert?.user)
+  cliConfig.userAccessTokens[apiUrl] = userCreate.accessToken
 
   // only write the config if the user was created
   writeCliConfig(cliConfig)
+
+  console.log('New user created. Now logged in as', email)
 }
