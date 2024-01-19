@@ -4,11 +4,17 @@ import { getApiUrl, getCliConfig, writeCliConfig } from '../../util/config.js';
 
 const LOGIN_MUTATION = gql`
   mutation CliEmailLogin($email: String!, $password: String!) {
-    userLoginEmail(input: { email: $email, password: $password }) {
+    userLogin(input: { emailAndPassword: {email: $email, password: $password } }) {
       accessToken
     }
   }
 `;
+
+interface LoginResponse {
+  userLogin: {
+    accessToken: string;
+  };
+}
 
 export default async function (email?: string, password?: string) {
   // check if username was provided
@@ -26,7 +32,7 @@ export default async function (email?: string, password?: string) {
   const config = getCliConfig()
   const apiUrl = getApiUrl()
 
-  const { userLoginEmail } = await request(
+  const { userLogin } = await request(
     apiUrl,
     LOGIN_MUTATION,
     {
@@ -38,15 +44,15 @@ export default async function (email?: string, password?: string) {
       'There was an error logging in... your email or password may be incorrect.'
     );
     process.exit(1);
-  });
+  }) as LoginResponse;
 
   // check if there were errors
-  if (!userLoginEmail) {
+  if (!userLogin) {
     console.error('There was an error logging in.');
     process.exit(1);
   }
 
-  config.userAccessTokens[apiUrl] = userLoginEmail.accessToken;
+  config.userAccessTokens[apiUrl] = userLogin.accessToken;
   writeCliConfig(config);
 
   console.log(`Logged in to "${apiUrl}" as ${email}.`);
