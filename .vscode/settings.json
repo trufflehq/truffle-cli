@@ -4,6 +4,6 @@
   "editor.insertSpaces": true,
   "editor.tabSize": 2,
   "eslint.codeActionsOnSave.mode": "all",
-  "editor.formatOnSave": false,
+  "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode"
 }

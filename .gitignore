@@ -8,3 +8,5 @@ bin/
 !.yarn/plugins
 .pnp.*
 .env
+
+types/app-config.ts
