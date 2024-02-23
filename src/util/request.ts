@@ -38,14 +38,14 @@ async function getCredentials({
 
     if (!userAccessToken && isAuthRequired) {
       console.error(
-        'No user access token found. Please login with `truffle-cli login`.'
+        'No user access token found. Please login with `truffle-cli login`.',
       );
       process.exit(1);
     }
 
     if (!orgId && isOrgRequired) {
       console.error(
-        'No org id found. Please select an org with `truffle-cli org use`.'
+        'No org id found. Please select an org with `truffle-cli org use`.',
       );
       process.exit(1);
     }

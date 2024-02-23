@@ -2,16 +2,16 @@
   "name": "@trufflehq/cli",
   "version": "0.6.0-alpha.1",
   "description": "The Truffle Developer Platform CLI",
-  "main": "dist/cli.js",
+  "main": "dist/cli.mjs",
   "bin": {
-    "truffle-cli": "./dist/cli.js"
+    "truffle-cli": "./dist/cli.mjs"
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "clean": "rimraf ./dist &&  rm ./src/types/app-config.ts",
-    "build": "npm run clean && npm run generate:types && swc ./src --out-dir ./dist -C jsc.experimental.keepImportAssertions=true",
+    "clean": "rimraf ./dist && rimraf ./src/types/app-config.ts",
+    "build": "npm run clean && npm run generate:types && tsup",
     "watch": "swc ./src --out-dir ./dist -C jsc.experimental.keepImportAssertions=true --watch",
     "format": "eslint --fix --ext .ts,.js src",
     "package:linux": "pkg /tmp/tfl --targets node18-linux-x64 --output bin/linux/truffle-cli",
@@ -42,8 +42,6 @@
     "tsyringe": "^4.7.0"
   },
   "devDependencies": {
-    "@swc/cli": "^0.1.57",
-    "@swc/core": "^1.3.22",
     "@types/lodash": "^4.14.182",
     "@types/node": "^18.6.2",
     "@types/readline-sync": "^1",
@@ -59,6 +57,7 @@
     "prettier": "^3.2.5",
     "rimraf": "^5.0.5",
     "ts-node": "^10.9.2",
+    "tsup": "^8.0.2",
     "typescript": "^4.7.4",
     "vitest": "^1.3.1"
   },
