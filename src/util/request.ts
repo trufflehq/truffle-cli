@@ -5,6 +5,7 @@ export interface RequestOptions {
   variables?: Record<string, unknown>;
   isOrgRequired?: boolean;
   maxAttempts?: number;
+  shouldUseGlobal?: boolean;
 }
 
 interface BaseGraphQLResponse {

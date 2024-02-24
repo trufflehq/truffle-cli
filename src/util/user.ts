@@ -1,4 +1,4 @@
-import { request } from "./request.js";
+import { request } from './request';
 
 interface MeUser {
   id: string;
@@ -7,9 +7,10 @@ interface MeUser {
 }
 
 export async function getMe() {
-  return (await request({
-    shouldUseGlobal: true,
-    query: `
+  return (
+    await request({
+      shouldUseGlobal: true,
+      query: `
       query CliMeQuery {
         me {
           id
@@ -17,6 +18,7 @@ export async function getMe() {
           email
         }
       }
-    `
-  }))?.data?.me as MeUser;
+    `,
+    })
+  )?.data?.me as MeUser;
 }
