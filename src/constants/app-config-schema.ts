@@ -19,10 +19,18 @@ export const OPERATION_TYPES = [
   'webhook',
   'workflow',
   'exchange',
-  'conditional',
-  'apply-powerup',
+  // TODO: support these
+  // 'conditional',
+  // 'apply-powerup',
 ] as const;
 export type OperationType = (typeof OPERATION_TYPES)[number];
+
+const COUNTABLE_SCHEMA = Joi.object({
+  slug: Joi.string().required(),
+  name: Joi.string().optional(),
+  category: Joi.string().optional(),
+  decimalPlaces: Joi.number().optional(),
+});
 
 export const EMBED_SCHEMA = Joi.object({
   slug: Joi.string().required(),
@@ -104,5 +112,6 @@ export const APP_CONFIG_SCHEMA = Joi.object({
   cliVersion: Joi.string().required(),
   description: Joi.string().optional(),
   embeds: Joi.array().items(EMBED_SCHEMA).optional(),
+  countables: Joi.array().items(COUNTABLE_SCHEMA).optional(),
   products: Joi.array().items(PRODUCT_SCHEMA).optional(),
 });

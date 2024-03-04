@@ -1,9 +1,9 @@
+import { appUpsert } from '../../util/app';
 import {
   DEFAULT_APP_CONFIG_FILE_NAME,
   readAppConfig,
   readRawAppConfig,
-  appUpsert,
-} from '../../util/app.js';
+} from '../../util/app-config';
 
 export default async function appDeploy() {
   let configModule: { default: any } | undefined;

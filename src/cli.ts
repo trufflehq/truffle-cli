@@ -5,11 +5,11 @@
 import 'reflect-metadata';
 
 import { program } from 'commander';
-import { Command } from './util/command.js';
-import { packageJson } from './constants/package-json.js';
-import { readCliConfig, registerCliConfig } from './util/config.js';
-import { defaultCliConfig } from './assets/default-config.js';
-import { DEFAULT_APP_CONFIG_FILE_NAME } from './util/app.js';
+import { Command } from './util/command';
+import { packageJson } from './constants/package-json';
+import { readCliConfig, registerCliConfig } from './util/cli-config';
+import { defaultCliConfig } from './assets/default-config';
+import { DEFAULT_APP_CONFIG_FILE_NAME } from './util/app-config';
 
 // actions
 import LoginAction from './commands/login/login';
@@ -35,13 +35,13 @@ program
   )
   .option(
     '--apiUrl <url>',
-    `The Mycelium API URL to use, default: "${defaultCliConfig.apiUrl}"`,
+    `The Mothertree API URL to use, default: "${defaultCliConfig.apiUrl}"`,
   )
   .option('--org <org-id>', 'The id of the org to use for this command.');
 
 program.addCommand(
   new Command('login')
-    .description('Login in to truffle.')
+    .description('Login to truffle.')
     .argument('[email]', 'Email to login with')
     .argument('[password]', 'Password to login with')
     .action(LoginAction),

@@ -1,8 +1,8 @@
 import {
   fetchAppInstallAccessToken,
   fetchAppInstallConnection,
-} from '../../util/app.js';
-import { getCurrentOrgId } from '../../util/config.js';
+} from '../../util/app';
+import { getCurrentOrgId } from '../../util/cli-config';
 
 export default async function appGetToken(appPath: string) {
   // get all app installs for this org
@@ -10,7 +10,7 @@ export default async function appGetToken(appPath: string) {
 
   // find the app install for this app
   const appInstall = appInstalls.find(
-    (appInstall) => appInstall.app?.path === appPath
+    (appInstall) => appInstall.app?.path === appPath,
   );
 
   if (!appInstall) {

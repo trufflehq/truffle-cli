@@ -1,13 +1,12 @@
-import { defaultAppConfig } from 'src/constants/default-app-config.js';
+import { defaultAppConfig } from 'src/constants/default-app-config';
+import { fetchApp, appUpsert } from '../../util/app';
+import { getCurrentOrgId } from '../../util/cli-config';
+import { writeFile } from 'fs/promises';
+import { getOrg } from 'src/util/org';
 import {
   DEFAULT_APP_CONFIG_FILE_NAME,
-  fetchApp,
   isInAppDir,
-  appUpsert,
-} from '../../util/app.js';
-import { getCurrentOrgId } from '../../util/config.js';
-import { writeFile } from 'fs/promises';
-import { getOrg } from 'src/util/org.js';
+} from '../../util/app-config';
 
 export default async function appCreate(appSlug: string) {
   // check if app config already exists

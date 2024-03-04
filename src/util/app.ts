@@ -1,9 +1,5 @@
 import { gql } from 'graphql-request';
-import { request } from './request.js';
-import path from 'path';
-import { readFile } from 'fs/promises';
-
-export const DEFAULT_APP_CONFIG_FILE_NAME = 'truffle.config.mjs';
+import { request } from './request';
 
 interface AppInput {
   id?: string;
@@ -158,28 +154,6 @@ export async function fetchApp(
   }
 
   return resp?.data?.app;
-}
-
-export function getAppConfigPath() {
-  return path.join(process.cwd(), `/${DEFAULT_APP_CONFIG_FILE_NAME}`);
-}
-
-export async function readRawAppConfig() {
-  return await readFile(getAppConfigPath(), 'utf8');
-}
-
-export async function readAppConfig() {
-  return await import(new URL(`file://${getAppConfigPath()}`).href);
-}
-
-export async function isInAppDir() {
-  // check if app config already exists
-  try {
-    await readAppConfig();
-    return true;
-  } catch {
-    return false;
-  }
 }
 
 export async function appUpsert(

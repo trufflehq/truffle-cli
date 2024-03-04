@@ -1,10 +1,12 @@
 import readline from 'readline-sync';
 import { request, gql } from 'graphql-request';
-import { getApiUrl, getCliConfig, writeCliConfig } from '../../util/config.js';
+import { getApiUrl, getCliConfig, writeCliConfig } from '../../util/cli-config';
 
 const LOGIN_MUTATION = gql`
   mutation CliEmailLogin($email: String!, $password: String!) {
-    userLogin(input: { emailAndPassword: {email: $email, password: $password } }) {
+    userLogin(
+      input: { emailAndPassword: { email: $email, password: $password } }
+    ) {
       accessToken
     }
   }
@@ -29,22 +31,18 @@ export default async function (email?: string, password?: string) {
     password = readline.question('Password: ', { hideEchoBack: true });
   }
 
-  const config = getCliConfig()
-  const apiUrl = getApiUrl()
+  const config = getCliConfig();
+  const apiUrl = getApiUrl();
 
-  const { userLogin } = await request(
-    apiUrl,
-    LOGIN_MUTATION,
-    {
-      email,
-      password,
-    }
-  ).catch(() => {
+  const { userLogin } = (await request(apiUrl, LOGIN_MUTATION, {
+    email,
+    password,
+  }).catch(() => {
     console.error(
-      'There was an error logging in... your email or password may be incorrect.'
+      'There was an error logging in... your email or password may be incorrect.',
     );
     process.exit(1);
-  }) as LoginResponse;
+  })) as LoginResponse;
 
   // check if there were errors
   if (!userLogin) {

@@ -1,4 +1,4 @@
-import { getApiUrl, getCliConfig, getCurrentOrgId } from './config.js';
+import { getApiUrl, getCliConfig, getCurrentOrgId } from './cli-config';
 import fetch from 'node-fetch';
 export interface RequestOptions {
   query: string;

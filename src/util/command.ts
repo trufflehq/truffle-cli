@@ -1,8 +1,8 @@
 import { Command as BaseCommand } from 'commander';
-import { kApiUrl, kCurrentOrg } from '../di/tokens.js';
+import { kApiUrl, kCurrentOrg } from '../di/tokens';
 import { container } from 'tsyringe';
-import { getCliConfig } from './config.js';
-import { defaultCliConfig } from '../assets/default-config.js';
+import { getCliConfig } from './cli-config';
+import { defaultCliConfig } from '../assets/default-config';
 
 export class Command extends BaseCommand {
   public action(fn: (...args: any[]) => void | Promise<void>): this {
