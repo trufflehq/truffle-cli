@@ -6,7 +6,7 @@ import 'reflect-metadata';
 
 import { program } from 'commander';
 import { Command } from './util/command.js';
-// import truffleCli from '../package.json' assert { type: 'json' };
+import { packageJson } from './constants/package-json.js';
 import { readCliConfig, registerCliConfig } from './util/config.js';
 import { defaultCliConfig } from './assets/default-config.js';
 import { DEFAULT_APP_CONFIG_FILE_NAME } from './util/app.js';
@@ -26,9 +26,9 @@ import AppInstallAction from './commands/app/install';
 import AppGetTokenAction from './commands/app/get-token';
 
 program
-  // .name(truffleCli.name)
-  // .description(truffleCli.description)
-  // .version(truffleCli.version, '-v, --version')
+  .name(packageJson.name)
+  .description(packageJson.description)
+  .version(packageJson.version, '-v, --version')
   .option(
     '-p, --profile <name>',
     'The profile from your Truffle config file to use.',

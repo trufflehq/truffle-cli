@@ -11,13 +11,14 @@
   ],
   "scripts": {
     "clean": "rimraf ./dist && rimraf ./src/types/app-config.ts",
-    "build": "npm run clean && npm run generate:types && tsup",
+    "build": "npm run clean && npm run prebuild-scripts && tsup",
     "watch": "swc ./src --out-dir ./dist -C jsc.experimental.keepImportAssertions=true --watch",
     "format": "eslint --fix --ext .ts,.js src",
     "package:linux": "pkg /tmp/tfl --targets node18-linux-x64 --output bin/linux/truffle-cli",
     "package:macos": "pkg /tmp/tfl --targets node18-macos-x64 --output bin/macos/truffle-cli",
     "test": "vitest run",
-    "generate:types": "ts-node ./scripts/generate-types.ts"
+    "generate:types": "ts-node ./scripts/generate-types.ts",
+    "prebuild-scripts": "for file in ./scripts/*; do npx ts-node $file; done"
   },
   "repository": {
     "type": "git",

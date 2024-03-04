@@ -3,7 +3,7 @@ import path from 'path';
 import os from 'os';
 import chalk from 'chalk';
 import { container } from 'tsyringe';
-import { CliConfig } from '../types/config.js';
+import { CliConfig } from '../types/cli-config.js';
 import { kApiUrl, kCliConfig, kCurrentOrg } from '../di/tokens.js';
 import { defaultCliConfig } from '../assets/default-config.js';
 

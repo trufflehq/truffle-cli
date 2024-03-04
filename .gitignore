@@ -9,4 +9,5 @@ bin/
 .pnp.*
 .env
 
-types/app-config.ts
+src/types/generated.ts
+src/constants/package-json.ts
