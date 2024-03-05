@@ -5,12 +5,10 @@ import { AppConfig } from 'src/types/generated';
 import * as schemas from '../constants/app-config-schema';
 import _ from 'lodash';
 import {
-  MothertreeActionConfig,
   MothertreeAppConfig,
   MothertreeAssetParticipantTemplate,
-  MothertreeProductConfig,
-  MothertreeProductVariantConfig,
 } from 'src/types/mt-app-config';
+import { SPARKS_PATH } from 'src/constants/resource-paths';
 
 export const DEFAULT_APP_CONFIG_FILE_NAME = 'truffle.config.mjs';
 
@@ -166,7 +164,7 @@ export function convertProductConfigsToMothertreeProductAndVariantConfigs(
             assetTemplates: [
               {
                 // TODO: support other countable types
-                entityPath: '@truffle/tips/_Countable/sparks',
+                entityPath: SPARKS_PATH,
                 count: variant.price,
                 senders: [
                   {
