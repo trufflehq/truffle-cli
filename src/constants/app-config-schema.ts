@@ -85,7 +85,18 @@ export const ACTION_SCHEMA = Joi.object({
     is: 'workflow',
     then: Joi.array().items(Joi.link('#actionSchema')).required(),
   }),
+
+  strategy: Joi.when('operation', {
+    is: 'workflow',
+    then: Joi.string().valid('sequential', 'parallel').required(),
+  }),
 }).id('actionSchema');
+
+const ACTION_WITH_SLUG_SCHEMA = ACTION_SCHEMA.concat(
+  Joi.object({
+    slug: Joi.string().required(),
+  }),
+);
 
 export const PRODUCT_VARIANT_SCHEMA = Joi.object({
   slug: Joi.string().required(),
@@ -114,4 +125,5 @@ export const APP_CONFIG_SCHEMA = Joi.object({
   embeds: Joi.array().items(EMBED_SCHEMA).optional(),
   countables: Joi.array().items(COUNTABLE_SCHEMA).optional(),
   products: Joi.array().items(PRODUCT_SCHEMA).optional(),
+  actions: Joi.array().items(ACTION_WITH_SLUG_SCHEMA).optional(),
 });

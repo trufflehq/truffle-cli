@@ -1,5 +1,5 @@
 import { it, describe, expect } from 'vitest';
-import * as schemas from '../src/constants/app-config-schema';
+import * as schemas from '../../src/constants/app-config-schema';
 import Joi from 'joi';
 
 describe('app-config-schema', () => {
@@ -16,7 +16,7 @@ describe('app-config-schema', () => {
 
     it('should throw an error if the embed config is empty', () => {
       expect(() =>
-        Joi.assert({}, schemas.EMBED_SCHEMA)
+        Joi.assert({}, schemas.EMBED_SCHEMA),
       ).toThrowErrorMatchingSnapshot();
     });
 
@@ -28,7 +28,7 @@ describe('app-config-schema', () => {
       };
 
       expect(() =>
-        Joi.assert(embed, schemas.EMBED_SCHEMA)
+        Joi.assert(embed, schemas.EMBED_SCHEMA),
       ).toThrowErrorMatchingSnapshot();
     });
 
@@ -106,7 +106,7 @@ describe('app-config-schema', () => {
       };
 
       expect(() =>
-        Joi.assert(product, schemas.PRODUCT_SCHEMA)
+        Joi.assert(product, schemas.PRODUCT_SCHEMA),
       ).toThrowErrorMatchingSnapshot();
     });
 
@@ -135,6 +135,7 @@ describe('app-config-schema', () => {
     it('should validate sub-actions in a workflow', () => {
       const action = {
         operation: 'workflow',
+        strategy: 'sequential',
         actions: [
           {
             operation: 'webhook',
