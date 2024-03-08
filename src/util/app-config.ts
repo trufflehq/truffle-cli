@@ -84,12 +84,17 @@ export function convertActionConfigsToMothertreeActionConfigs(
         };
       } else {
         // if the action is not a workflow, we can just fill in url and assets
-        inputsTemplate = _.pick(actionConfig, ['url', 'assets']);
+        inputsTemplate = {
+          ...actionConfig.inputsTemplate,
+          ..._.pick(actionConfig, ['url', 'assets']),
+        };
       }
 
       return {
         slug: actionConfig.slug,
         operation: actionConfig.operation,
+        isDirectExecutionAllowed:
+          actionConfig.isDirectExecutionAllowed ?? false,
         inputsTemplate,
       };
     }),

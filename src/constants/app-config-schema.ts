@@ -90,6 +90,10 @@ export const ACTION_SCHEMA = Joi.object({
     is: 'workflow',
     then: Joi.string().valid('sequential', 'parallel').required(),
   }),
+
+  inputsTemplate: Joi.object().optional(),
+
+  isDirectExecutionAllowed: Joi.boolean().optional(),
 }).id('actionSchema');
 
 const ACTION_WITH_SLUG_SCHEMA = ACTION_SCHEMA.concat(
