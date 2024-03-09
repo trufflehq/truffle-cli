@@ -3,9 +3,9 @@ import path from 'path';
 import os from 'os';
 import chalk from 'chalk';
 import { container } from 'tsyringe';
-import { CliConfig,  } from '../types/config.js';
-import { kApiUrl, kCliConfig, kCurrentOrg } from '../di/tokens.js';
-import { defaultCliConfig } from '../assets/default-config.js';
+import { CliConfig } from '../types/cli-config';
+import { kApiUrl, kCliConfig, kCurrentOrg } from '../di/tokens';
+import { defaultCliConfig } from '../assets/default-config';
 
 function upgradeConfig(config: CliConfig): CliConfig {
   // if the config is using mycelium, switch it over to mothertree
@@ -14,18 +14,23 @@ function upgradeConfig(config: CliConfig): CliConfig {
   config.apiUrl = config.apiUrl.replace('mycelium', 'mothertree');
 
   // go through all of the keys in config.userAccessTokens and replace mycelium with mothertree
-  config.userAccessTokens = Object.entries(config?.userAccessTokens ?? {}).reduce((newAccessTokens, [key, value]) => {
+  config.userAccessTokens = Object.entries(
+    config?.userAccessTokens ?? {},
+  ).reduce((newAccessTokens, [key, value]) => {
     const newKey = key.replace('mycelium', 'mothertree');
     newAccessTokens[newKey] = value;
     return newAccessTokens;
   }, {});
 
   // go through all of the keys in config.currentOrgs and replace mycelium with mothertree
-  config.currentOrgs = Object.entries(config?.currentOrgs ?? {}).reduce((newCurrentOrgs, [key, value]) => {
-    const newKey = key.replace('mycelium', 'mothertree');
-    newCurrentOrgs[newKey] = value;
-    return newCurrentOrgs;
-  }, {});
+  config.currentOrgs = Object.entries(config?.currentOrgs ?? {}).reduce(
+    (newCurrentOrgs, [key, value]) => {
+      const newKey = key.replace('mycelium', 'mothertree');
+      newCurrentOrgs[newKey] = value;
+      return newCurrentOrgs;
+    },
+    {},
+  );
 
   // write upgraded config to fs
   writeCliConfig(config);
@@ -40,7 +45,7 @@ export function getCliConfigFilename() {
 export function readCliConfig(): CliConfig {
   try {
     const parsed = JSON.parse(
-      fs.readFileSync(getCliConfigFilename(), { encoding: 'utf-8' })
+      fs.readFileSync(getCliConfigFilename(), { encoding: 'utf-8' }),
     );
 
     // If the config is in any old formats, upgrade it

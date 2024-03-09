@@ -1,0 +1,39 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`app-config-schema > ACTION_SCHEMA > should throw an error if a sub-action is invalid 1`] = `[ValidationError: "actions[0].url" is required]`;
+
+exports[`app-config-schema > EMBED_SCHEMA > should throw an error if contentPageType is invalid 1`] = `
+[ValidationError: {
+  "slug": "test-embed",
+  "url": "https://example.com",
+  "contentPageType" [31m[1][0m: "invalidType"
+}
+[31m
+[1] "contentPageType" must be one of [appManagement, quickActions, youtube, youtubeVideo, youtubeLive, youtubeLiveUpcoming, youtubeLiveNow, youtubeLiveVod, youtubeChatFrame, twitch, twitchEmbed][0m]
+`;
+
+exports[`app-config-schema > EMBED_SCHEMA > should throw an error if the embed config is empty 1`] = `
+[ValidationError: {
+  [41m"slug"[0m[31m [1]: -- missing --[0m
+}
+[31m
+[1] "slug" is required[0m]
+`;
+
+exports[`app-config-schema > PRODUCT_SCHEMA > should throw an error if an action is defined without a url 1`] = `
+[ValidationError: {
+  "slug": "test-product",
+  "variants": [
+    {
+      "slug": "test-variant",
+      "price": 10,
+      "action": {
+        "operation": "webhook",
+        [41m"url"[0m[31m [1]: -- missing --[0m
+      }
+    }
+  ]
+}
+[31m
+[1] "variants[0].action.url" is required[0m]
+`;

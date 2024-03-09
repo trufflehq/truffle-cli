@@ -1,6 +1,6 @@
 import { gql } from 'graphql-request';
-import { request } from '../../util/request.js';
-import { getCurrentOrgId } from '../../util/config.js';
+import { request } from '../../util/request';
+import { getCurrentOrgId } from '../../util/cli-config';
 
 const ORG_MEMBER_CREATE_MUTATION = gql`
   mutation CliOrgMemberCreate($orgId: ID!) {

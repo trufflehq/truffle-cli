@@ -1,9 +1,5 @@
 import { gql } from 'graphql-request';
-import { request } from './request.js';
-import path from 'path';
-import { readFile } from 'fs/promises';
-
-export const DEFAULT_APP_CONFIG_FILE_NAME = 'truffle.config.mjs';
+import { request } from './request';
 
 interface AppInput {
   id?: string;
@@ -11,7 +7,7 @@ interface AppInput {
   orgIdAndSlug?: {
     slug: string;
     orgId: string;
-  }
+  };
 }
 
 export interface App {
@@ -54,7 +50,7 @@ interface AppUpsertInput {
   orgId?: string;
   name?: string;
   description?: string;
-  configJson?: string;
+  configJson?: object;
   configRaw?: string;
 }
 
@@ -141,7 +137,7 @@ export interface AppInstall {
 
 export async function fetchApp(
   input: AppInput,
-  { throwError } = { throwError: false }
+  { throwError } = { throwError: false },
 ): Promise<App> {
   const resp = await request({
     query: APP_QUERY,
@@ -150,38 +146,19 @@ export async function fetchApp(
   });
 
   if (!resp?.data?.app && throwError) {
-    console.error(`Error fetching app: ${input.orgIdAndSlug || input.id}`, resp);
+    console.error(
+      `Error fetching app: ${input.orgIdAndSlug || input.id}`,
+      resp,
+    );
     throw new Error(`Error fetching app: ${input.orgIdAndSlug || input.id}`);
   }
 
   return resp?.data?.app;
 }
 
-export function getAppConfigPath() {
-  return path.join(process.cwd(), `/${DEFAULT_APP_CONFIG_FILE_NAME}`);
-}
-
-export async function readRawAppConfig() {
-  return await readFile(getAppConfigPath(), 'utf8');
-}
-
-export async function readAppConfig() {
-  return await import(new URL(`file://${getAppConfigPath()}`).href);
-}
-
-export async function isInAppDir() {
-  // check if app config already exists
-  try {
-    await readAppConfig();
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 export async function appUpsert(
   input: AppUpsertInput,
-  { throwError } = { throwError: false }
+  { throwError } = { throwError: false },
 ): Promise<App | undefined> {
   const resp = await request({
     query: APP_UPSERT_MUTATION,
@@ -198,7 +175,7 @@ export async function appUpsert(
 }
 
 export async function fetchAppConnection(
-  input: AppConnectionInput
+  input: AppConnectionInput,
 ): Promise<App[]> {
   const resp = await request({
     query: APP_CONNECTION_QUERY,
@@ -215,7 +192,7 @@ export async function fetchAppConnection(
 }
 
 export async function appInstallUpsert(
-  input: AppInstallUpsertInput
+  input: AppInstallUpsertInput,
 ): Promise<AppInstall> {
   const resp = await request({
     query: APP_INSTALL_UPSERT_MUTATION,
@@ -232,7 +209,7 @@ export async function appInstallUpsert(
 }
 
 export async function fetchAppInstallConnection(
-  orgId: string
+  orgId: string,
 ): Promise<AppInstall[]> {
   const resp = await request({
     query: APP_INSTALL_CONNECTION_QUERY,
@@ -249,7 +226,7 @@ export async function fetchAppInstallConnection(
 }
 
 export async function fetchAppInstallAccessToken(
-  appInstallId: string
+  appInstallId: string,
 ): Promise<string> {
   const resp = await request({
     query: APP_INSTALL_ACCESS_TOKEN_MUTATION,

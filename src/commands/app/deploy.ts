@@ -1,9 +1,11 @@
+import { appUpsert } from '../../util/app';
 import {
   DEFAULT_APP_CONFIG_FILE_NAME,
+  convertAppConfigToMothertreeConfig,
   readAppConfig,
   readRawAppConfig,
-  appUpsert,
-} from '../../util/app.js';
+  validateAppConfig,
+} from '../../util/app-config';
 
 export default async function appDeploy() {
   let configModule: { default: any } | undefined;
@@ -26,9 +28,14 @@ export default async function appDeploy() {
     process.exit(1);
   }
 
+  // validate the app config
+  validateAppConfig(config);
+
+  const mtConfig = convertAppConfigToMothertreeConfig(config);
+
   const upsertedApp = await appUpsert({
     path: config.path,
-    configJson: config,
+    configJson: mtConfig,
     configRaw: await readRawAppConfig(),
   });
 

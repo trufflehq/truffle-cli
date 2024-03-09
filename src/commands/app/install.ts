@@ -1,8 +1,7 @@
-import { appInstallUpsert } from "../../util/app.js";
-import { getCurrentOrgId } from "../../util/config.js";
+import { appInstallUpsert } from '../../util/app';
+import { getCurrentOrgId } from '../../util/cli-config';
 
 export default async function appInstall(appPath: string) {
-
   const orgId = getCurrentOrgId();
   if (!orgId) {
     console.error(`Not using an org. Please run "truffle-cli org use" first.`);
@@ -15,5 +14,8 @@ export default async function appInstall(appPath: string) {
     orgId,
   });
 
-  console.log(`App installed successfully! Version`, upsertedAppInstall.installedVersion);
+  console.log(
+    `App installed successfully! Version`,
+    upsertedAppInstall.installedVersion,
+  );
 }

@@ -1,0 +1,281 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`app-config > convertActionConfigsToMothertreeActionConfigs > should convert a basic webhook action 1`] = `
+[
+  {
+    "inputsTemplate": {
+      "url": "https://example.com",
+    },
+    "operation": "test-operation",
+    "slug": "test-action",
+  },
+]
+`;
+
+exports[`app-config > convertActionConfigsToMothertreeActionConfigs > should convert a basic workflow action 1`] = `
+[
+  {
+    "inputsTemplate": {
+      "url": "https://example.com",
+    },
+    "operation": "test-operation",
+    "slug": "test-action-step-1",
+  },
+  {
+    "inputsTemplate": {
+      "actionPaths": [
+        "./_Action/action-1",
+        "./_Action/test-action-step-1",
+      ],
+      "strategy": "sequential",
+    },
+    "operation": "workflow",
+    "slug": "test-action",
+  },
+]
+`;
+
+exports[`app-config > convertAppConfigToMothertreeConfig > should convert a basic app config 1`] = `
+{
+  "actions": [
+    {
+      "inputsTemplate": {
+        "url": "https://example.com",
+      },
+      "operation": "webhook",
+      "slug": "test-action",
+    },
+    {
+      "inputsTemplate": {
+        "assets": "{{USE_SECURE_PROVIDED}}",
+      },
+      "operation": "exchange",
+      "slug": "default-exchange-action",
+    },
+  ],
+  "cliVersion": "0.0.0",
+  "countables": [
+    {
+      "category": "currency-virtual",
+      "decimalPlaces": 0,
+      "name": "Channel Points",
+      "slug": "channel-points",
+    },
+  ],
+  "embeds": [
+    {
+      "contentPageType": "youtubeVideo",
+      "slug": "test-embed",
+      "url": "https://example.com",
+    },
+  ],
+  "name": "test-app",
+  "path": "@truffle/test-app",
+  "productVariants": [
+    {
+      "actionPath": "./_Action/default-exchange-action",
+      "assetTemplates": [
+        {
+          "count": 100,
+          "entityPath": "@truffle/tips/_Countable/sparks",
+          "metadata": {},
+          "receivers": [
+            {
+              "entityId": "{{USE_ORG_ID}}",
+              "entityType": "org",
+              "share": 1,
+            },
+          ],
+          "senders": [
+            {
+              "entityId": "{{USE_USER_ID}}",
+              "entityType": "user",
+              "share": 1,
+            },
+          ],
+        },
+      ],
+      "description": undefined,
+      "name": undefined,
+      "productPath": "./_Product/test-product",
+      "slug": "test-variant",
+    },
+  ],
+  "products": [
+    {
+      "category": "test-category",
+      "name": "Test Product",
+      "rank": 0,
+      "slug": "test-product",
+    },
+  ],
+}
+`;
+
+exports[`app-config > convertProductConfigsToMothertreeProductAndVariantConfigs > should convert a basic product 1`] = `
+{
+  "actions": [
+    {
+      "inputsTemplate": {
+        "assets": "{{USE_SECURE_PROVIDED}}",
+      },
+      "operation": "exchange",
+      "slug": "default-exchange-action",
+    },
+  ],
+  "productVariants": [
+    {
+      "actionPath": "./_Action/default-exchange-action",
+      "assetTemplates": [
+        {
+          "count": 100,
+          "entityPath": "@truffle/tips/_Countable/sparks",
+          "metadata": {},
+          "receivers": [
+            {
+              "entityId": "{{USE_ORG_ID}}",
+              "entityType": "org",
+              "share": 1,
+            },
+          ],
+          "senders": [
+            {
+              "entityId": "{{USE_USER_ID}}",
+              "entityType": "user",
+              "share": 1,
+            },
+          ],
+        },
+      ],
+      "description": undefined,
+      "name": undefined,
+      "productPath": "./_Product/test-product",
+      "slug": "test-variant",
+    },
+  ],
+  "products": [
+    {
+      "category": "test-category",
+      "name": "Test Product",
+      "rank": 0,
+      "slug": "test-product",
+    },
+  ],
+}
+`;
+
+exports[`app-config > convertProductConfigsToMothertreeProductAndVariantConfigs > should convert a product with a variant with an action 1`] = `
+{
+  "actions": [
+    {
+      "inputsTemplate": {
+        "assets": "{{USE_SECURE_PROVIDED}}",
+      },
+      "operation": "exchange",
+      "slug": "default-exchange-action",
+    },
+    {
+      "inputsTemplate": {
+        "url": "https://example.com",
+      },
+      "operation": "webhook",
+      "slug": "test-product-test-variant-workflow-step-1",
+    },
+    {
+      "inputsTemplate": {
+        "actionPaths": [
+          "./_Action/default-exchange-action",
+          "./_Action/test-product-test-variant-workflow-step-1",
+        ],
+        "strategy": "sequential",
+      },
+      "operation": "workflow",
+      "slug": "test-product-test-variant-workflow",
+    },
+  ],
+  "productVariants": [
+    {
+      "actionPath": "./_Action/test-product-test-variant-workflow",
+      "assetTemplates": [
+        {
+          "count": 100,
+          "entityPath": "@truffle/tips/_Countable/sparks",
+          "metadata": {},
+          "receivers": [
+            {
+              "entityId": "{{USE_ORG_ID}}",
+              "entityType": "org",
+              "share": 1,
+            },
+          ],
+          "senders": [
+            {
+              "entityId": "{{USE_USER_ID}}",
+              "entityType": "user",
+              "share": 1,
+            },
+          ],
+        },
+      ],
+      "description": undefined,
+      "name": undefined,
+      "productPath": "./_Product/test-product",
+      "slug": "test-variant",
+    },
+  ],
+  "products": [
+    {
+      "category": "test-category",
+      "name": "Test Product",
+      "rank": 0,
+      "slug": "test-product",
+    },
+  ],
+}
+`;
+
+exports[`app-config > validateAppConfig > should allow a valid config 1`] = `
+{
+  "cliVersion": "0.0.0",
+  "countables": [
+    {
+      "category": "currency-virtual",
+      "decimalPlaces": 0,
+      "name": "Channel Points",
+      "slug": "channel-points",
+    },
+  ],
+  "embeds": [
+    {
+      "contentPageType": "youtubeVideo",
+      "slug": "test-embed",
+      "url": "https://example.com",
+    },
+  ],
+  "name": "test-app",
+  "path": "@truffle/test-app",
+  "products": [
+    {
+      "category": "test-category",
+      "name": "Test Product",
+      "slug": "test-product",
+      "variants": [
+        {
+          "price": 100,
+          "slug": "test-variant",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`app-config > validateAppConfig > should throw an error for an invalid config 1`] = `
+[ValidationError: {
+  "path": "@truffle/test-app",
+  "name": "test-app",
+  [41m"cliVersion"[0m[31m [1]: -- missing --[0m
+}
+[31m
+[1] "cliVersion" is required[0m]
+`;

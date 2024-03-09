@@ -8,3 +8,6 @@ bin/
 !.yarn/plugins
 .pnp.*
 .env
+
+src/types/generated.ts
+src/constants/package-json.ts
