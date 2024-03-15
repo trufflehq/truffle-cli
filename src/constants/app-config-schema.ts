@@ -35,6 +35,7 @@ const COUNTABLE_SCHEMA = Joi.object({
 export const EMBED_SCHEMA = Joi.object({
   slug: Joi.string().required(),
   url: Joi.string().required(),
+  iconUrl: Joi.string().optional(),
   contentPageType: Joi.string()
     .valid(...CONTENT_PAGE_TYPES)
     .required(),
