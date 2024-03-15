@@ -103,6 +103,13 @@ const ACTION_WITH_SLUG_SCHEMA = ACTION_SCHEMA.concat(
   }),
 );
 
+const POWERUP_SCHEMA = Joi.object({
+  slug: Joi.string().required(),
+  name: Joi.string().optional(),
+  data: Joi.object().optional(),
+  imageFileReference: Joi.object().optional(),
+});
+
 export const PRODUCT_VARIANT_SCHEMA = Joi.object({
   slug: Joi.string().required(),
   name: Joi.string().optional(),
@@ -131,4 +138,8 @@ export const APP_CONFIG_SCHEMA = Joi.object({
   countables: Joi.array().items(COUNTABLE_SCHEMA).optional(),
   products: Joi.array().items(PRODUCT_SCHEMA).optional(),
   actions: Joi.array().items(ACTION_WITH_SLUG_SCHEMA).optional(),
+  powerups: Joi.array().items(POWERUP_SCHEMA).optional(),
+  postInstallAction: Joi.alternatives()
+    .try(Joi.string(), ACTION_SCHEMA)
+    .optional(),
 });

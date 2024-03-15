@@ -5,6 +5,7 @@ import {
   convertProductConfigsToMothertreeProductAndVariantConfigs,
   validateAppConfig,
 } from '../../src/util/app-config';
+import { MothertreeAppConfig } from '../../src/types/mt-app-config';
 
 describe('app-config', () => {
   describe('validateAppConfig', () => {
@@ -205,6 +206,33 @@ describe('app-config', () => {
             ],
           },
         ],
+      };
+
+      expect(convertAppConfigToMothertreeConfig(appConfig)).toMatchSnapshot();
+    });
+
+    it('should define a postInstallActionPath for a postInstallAction that is defined as a path', () => {
+      const appConfig = {
+        path: '@truffle/test-app',
+        name: 'test-app',
+        cliVersion: '0.0.0',
+        postInstallAction: './_Action/post-install',
+      };
+
+      expect(
+        convertAppConfigToMothertreeConfig(appConfig).postInstallActionPath,
+      ).toBe(appConfig.postInstallAction);
+    });
+
+    it('should convert a postInstallAction that is defined as an action object', () => {
+      const appConfig = {
+        path: '@truffle/test-app',
+        name: 'test-app',
+        cliVersion: '0.0.0',
+        postInstallAction: {
+          operation: 'webhook',
+          url: 'https://example.com',
+        },
       };
 
       expect(convertAppConfigToMothertreeConfig(appConfig)).toMatchSnapshot();

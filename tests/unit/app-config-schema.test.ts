@@ -170,4 +170,46 @@ describe('app-config-schema', () => {
       expect(error).toMatchSnapshot();
     });
   });
+
+  describe('APP_CONFIG_SCHEMA', () => {
+    it('should allow a path to be defined for postInstallAction', () => {
+      const config = {
+        path: '@truffle/test-app',
+        name: 'test-app',
+        cliVersion: '1.0.0',
+        postInstallAction: '@truffle/app/_Action/test-action',
+      };
+
+      Joi.assert(config, schemas.APP_CONFIG_SCHEMA);
+    });
+
+    it('should allow an action to be defined for postInstallAction', () => {
+      const config = {
+        path: '@truffle/test-app',
+        name: 'test-app',
+        cliVersion: '1.0.0',
+        postInstallAction: {
+          operation: 'webhook',
+          url: 'https://example.com/webhook',
+        },
+      };
+
+      Joi.assert(config, schemas.APP_CONFIG_SCHEMA);
+    });
+
+    it('should throw an error if postInstallAction is invalid', () => {
+      const config = {
+        path: '@truffle/test-app',
+        name: 'test-app',
+        cliVersion: '1.0.0',
+        postInstallAction: {
+          operation: 'webhook',
+        },
+      };
+
+      expect(() =>
+        Joi.assert(config, schemas.APP_CONFIG_SCHEMA),
+      ).toThrowErrorMatchingSnapshot();
+    });
+  });
 });

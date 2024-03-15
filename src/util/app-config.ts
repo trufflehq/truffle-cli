@@ -226,6 +226,30 @@ export function convertAppConfigToMothertreeConfig(appConfig: AppConfig) {
     );
   }
 
+  if (typeof appConfig.postInstallAction === 'string') {
+    mtAppConfig.postInstallActionPath = appConfig.postInstallAction;
+  }
+  // if postInstallAction is an object, we need to convert it to a MothertreeActionConfig,
+  // and add it to the actions array, and set the postInstallActionPath
+  else if (appConfig.postInstallAction != null) {
+    // add a slug to the action config
+    const postInstallAction = {
+      ...appConfig.postInstallAction,
+      slug: 'post-install-action',
+    };
+
+    // add the action to the actions array
+    convertActionConfigsToMothertreeActionConfigs(
+      [postInstallAction],
+      mtAppConfig,
+    );
+
+    // set the postInstallActionPath
+    mtAppConfig.postInstallActionPath = makeLocalActionPath(
+      postInstallAction.slug,
+    );
+  }
+
   if (appConfig.products) {
     convertProductConfigsToMothertreeProductAndVariantConfigs(
       appConfig.products,

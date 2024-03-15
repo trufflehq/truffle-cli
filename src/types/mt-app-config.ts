@@ -9,6 +9,7 @@ export interface MothertreeAppConfig {
   countables: MothertreeCountableConfig[];
   products: MothertreeProductConfig[];
   productVariants: MothertreeProductVariantConfig[];
+  postInstallActionPath?: string;
 }
 
 export interface MothertreeEmbedConfig {
