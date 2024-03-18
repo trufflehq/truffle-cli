@@ -155,6 +155,7 @@ describe('app-config-schema', () => {
     it('should throw an error if a sub-action is invalid', () => {
       const action = {
         operation: 'workflow',
+        strategy: 'sequential',
         actions: [
           {
             operation: 'webhook',
@@ -168,6 +169,46 @@ describe('app-config-schema', () => {
 
       const { error } = schemas.ACTION_SCHEMA.validate(action);
       expect(error).toMatchSnapshot();
+    });
+
+    it('validate an apply-powerup action with a path', () => {
+      const action = {
+        operation: 'apply-powerup',
+        powerup: '@truffle/test-app/_Powerup/test-powerup',
+        targetType: 'chat',
+        targetId: 'chatId',
+        ttlSeconds: 60,
+      };
+
+      Joi.assert(action, schemas.ACTION_SCHEMA);
+    });
+
+    it('should validate an apply powerup action with a powerup object', () => {
+      const action = {
+        operation: 'apply-powerup',
+        powerup: {
+          slug: 'test-powerup',
+          name: 'Test Powerup',
+        },
+        targetType: 'chat',
+        targetId: 'chatId',
+        ttlSeconds: 60,
+      };
+
+      Joi.assert(action, schemas.ACTION_SCHEMA);
+    });
+
+    it('should throw an error if an apply-powerup action is invalid', () => {
+      const action = {
+        operation: 'apply-powerup',
+        targetType: 'chat',
+        targetId: 'chatId',
+        ttlSeconds: 60,
+      };
+
+      expect(() =>
+        Joi.assert(action, schemas.ACTION_SCHEMA),
+      ).toThrowErrorMatchingSnapshot();
     });
   });
 

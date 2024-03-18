@@ -63,7 +63,7 @@ describe('app-config', () => {
       const actionConfigs = [
         {
           slug: 'test-action',
-          operation: 'test-operation',
+          operation: 'webhook',
           url: 'https://example.com',
         },
       ];
@@ -86,7 +86,7 @@ describe('app-config', () => {
             './_Action/action-1',
             {
               slug: 'action-2',
-              operation: 'test-operation',
+              operation: 'webhook',
               url: 'https://example.com',
             },
           ],
@@ -99,6 +99,72 @@ describe('app-config', () => {
       convertActionConfigsToMothertreeActionConfigs(actionConfigs, mtAppConfig);
 
       expect(mtAppConfig.actions).toMatchSnapshot();
+    });
+
+    it('should convert a basic exchange action', () => {
+      const actionConfigs = [
+        {
+          slug: 'test-action',
+          operation: 'exchange',
+          assets: [
+            {
+              path: './_Asset/test-asset',
+              quantity: 1,
+            },
+          ],
+        },
+      ];
+      const mtAppConfig = {
+        actions: [],
+      };
+
+      convertActionConfigsToMothertreeActionConfigs(actionConfigs, mtAppConfig);
+
+      expect(mtAppConfig.actions).toMatchSnapshot();
+    });
+
+    it('should convert a basic apply-powerup action with a powerup path', () => {
+      const actionConfigs = [
+        {
+          slug: 'test-action',
+          operation: 'apply-powerup',
+          powerup: '@truffle/app/_Powerup/test-powerup',
+          targetType: 'test-target-type',
+          targetId: 'test-target-id',
+          ttlSeconds: 60,
+        },
+      ];
+      const mtAppConfig = {
+        actions: [],
+      };
+
+      convertActionConfigsToMothertreeActionConfigs(actionConfigs, mtAppConfig);
+
+      expect(mtAppConfig.actions).toMatchSnapshot();
+    });
+
+    it('should convert a basic apply-powerup action with a powerup object', () => {
+      const actionConfigs = [
+        {
+          slug: 'test-action',
+          operation: 'apply-powerup',
+          powerup: {
+            slug: 'test-powerup',
+            name: 'Test Powerup',
+          },
+          targetType: 'test-target-type',
+          targetId: 'test-target-id',
+          ttlSeconds: 60,
+        },
+      ];
+      const mtAppConfig = {
+        powerups: [],
+        actions: [],
+      };
+
+      convertActionConfigsToMothertreeActionConfigs(actionConfigs, mtAppConfig);
+
+      expect(mtAppConfig).toMatchSnapshot();
     });
   });
 

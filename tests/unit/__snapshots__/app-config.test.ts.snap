@@ -1,5 +1,63 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`app-config > convertActionConfigsToMothertreeActionConfigs > should convert a basic apply-powerup action with a powerup object 1`] = `
+{
+  "actions": [
+    {
+      "inputsTemplate": {
+        "powerupPath": "./_Powerup/test-powerup",
+        "targetId": "test-target-id",
+        "targetType": "test-target-type",
+        "ttlSeconds": 60,
+      },
+      "isDirectExecutionAllowed": false,
+      "operation": "apply-powerup",
+      "slug": "test-action",
+    },
+  ],
+  "powerups": [
+    {
+      "name": "Test Powerup",
+      "slug": "test-powerup",
+    },
+  ],
+}
+`;
+
+exports[`app-config > convertActionConfigsToMothertreeActionConfigs > should convert a basic apply-powerup action with a powerup path 1`] = `
+[
+  {
+    "inputsTemplate": {
+      "powerupPath": "@truffle/app/_Powerup/test-powerup",
+      "targetId": "test-target-id",
+      "targetType": "test-target-type",
+      "ttlSeconds": 60,
+    },
+    "isDirectExecutionAllowed": false,
+    "operation": "apply-powerup",
+    "slug": "test-action",
+  },
+]
+`;
+
+exports[`app-config > convertActionConfigsToMothertreeActionConfigs > should convert a basic exchange action 1`] = `
+[
+  {
+    "inputsTemplate": {
+      "assets": [
+        {
+          "path": "./_Asset/test-asset",
+          "quantity": 1,
+        },
+      ],
+    },
+    "isDirectExecutionAllowed": false,
+    "operation": "exchange",
+    "slug": "test-action",
+  },
+]
+`;
+
 exports[`app-config > convertActionConfigsToMothertreeActionConfigs > should convert a basic webhook action 1`] = `
 [
   {
@@ -7,7 +65,7 @@ exports[`app-config > convertActionConfigsToMothertreeActionConfigs > should con
       "url": "https://example.com",
     },
     "isDirectExecutionAllowed": false,
-    "operation": "test-operation",
+    "operation": "webhook",
     "slug": "test-action",
   },
 ]
@@ -20,7 +78,7 @@ exports[`app-config > convertActionConfigsToMothertreeActionConfigs > should con
       "url": "https://example.com",
     },
     "isDirectExecutionAllowed": false,
-    "operation": "test-operation",
+    "operation": "webhook",
     "slug": "test-action-step-1",
   },
   {
@@ -75,6 +133,7 @@ exports[`app-config > convertAppConfigToMothertreeConfig > should convert a basi
   ],
   "name": "test-app",
   "path": "@truffle/test-app",
+  "powerups": [],
   "productVariants": [
     {
       "actionPath": "./_Action/default-exchange-action",
@@ -134,6 +193,7 @@ exports[`app-config > convertAppConfigToMothertreeConfig > should convert a post
   "name": "test-app",
   "path": "@truffle/test-app",
   "postInstallActionPath": "./_Action/post-install-action",
+  "powerups": [],
   "productVariants": [],
   "products": [],
 }

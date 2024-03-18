@@ -19,9 +19,9 @@ export const OPERATION_TYPES = [
   'webhook',
   'workflow',
   'exchange',
+  'apply-powerup',
   // TODO: support these
   // 'conditional',
-  // 'apply-powerup',
 ] as const;
 export type OperationType = (typeof OPERATION_TYPES)[number];
 
@@ -73,13 +73,28 @@ export const ASSET_SCHEMA = Joi.object({
   quantity: Joi.number().required(),
 });
 
+const POWERUP_SCHEMA = Joi.object({
+  slug: Joi.string().required(),
+  name: Joi.string().optional(),
+  data: Joi.object().optional(),
+  imageFileReference: Joi.object().optional(),
+});
+
 export const ACTION_SCHEMA = Joi.object({
   operation: Joi.string()
     .valid(...OPERATION_TYPES)
     .required(),
+
+  // webhook inputs
   url: Joi.when('operation', {
     is: 'webhook',
     then: Joi.string().required(),
+  }),
+
+  // workflow inputs
+  strategy: Joi.when('operation', {
+    is: 'workflow',
+    then: Joi.string().valid('sequential', 'parallel').required(),
   }),
 
   actions: Joi.when('operation', {
@@ -87,9 +102,31 @@ export const ACTION_SCHEMA = Joi.object({
     then: Joi.array().items(Joi.link('#actionSchema')).required(),
   }),
 
-  strategy: Joi.when('operation', {
-    is: 'workflow',
-    then: Joi.string().valid('sequential', 'parallel').required(),
+  // exchange inputs
+  assets: Joi.when('operation', {
+    is: 'exchange',
+    then: Joi.array().items(ASSET_SCHEMA).required(),
+  }),
+
+  // apply-pwerup inputs
+  powerup: Joi.when('operation', {
+    is: 'apply-powerup',
+    then: Joi.alternatives().try(Joi.string(), POWERUP_SCHEMA).required(),
+  }),
+
+  targetType: Joi.when('operation', {
+    is: 'apply-powerup',
+    then: Joi.string().required(),
+  }),
+
+  targetId: Joi.when('operation', {
+    is: 'apply-powerup',
+    then: Joi.string().required(),
+  }),
+
+  ttlSeconds: Joi.when('operation', {
+    is: 'apply-powerup',
+    then: Joi.number().required(),
   }),
 
   inputsTemplate: Joi.object().optional(),
@@ -103,21 +140,12 @@ const ACTION_WITH_SLUG_SCHEMA = ACTION_SCHEMA.concat(
   }),
 );
 
-const POWERUP_SCHEMA = Joi.object({
-  slug: Joi.string().required(),
-  name: Joi.string().optional(),
-  data: Joi.object().optional(),
-  imageFileReference: Joi.object().optional(),
-});
-
 export const PRODUCT_VARIANT_SCHEMA = Joi.object({
   slug: Joi.string().required(),
   name: Joi.string().optional(),
   price: Joi.number().required(),
   description: Joi.string().optional(),
-
   action: ACTION_SCHEMA.optional(),
-
   assets: Joi.array().items(ASSET_SCHEMA).optional(),
 });
 
