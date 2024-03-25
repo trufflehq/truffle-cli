@@ -72,6 +72,7 @@ export const EMBED_SCHEMA = Joi.object({
   minTruffleVersion: Joi.string().optional(),
   maxTruffleVersion: Joi.string().optional(),
   deviceType: Joi.string().valid('desktop', 'mobile').optional(),
+  parentQuerySelector: Joi.string().optional(),
   status: Joi.string()
     .valid('published', 'experimental', 'disabled')
     .optional(),
