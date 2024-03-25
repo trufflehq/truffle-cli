@@ -127,6 +127,13 @@ export const ACTION_SCHEMA = Joi.object({
     then: Joi.string().required(),
   }),
 
+  data: Joi.when('operation', {
+    is: 'webhook',
+    then: Joi.alternatives()
+      .try(Joi.object(), Joi.string().valid('{{USE_PROVIDED}}'))
+      .optional(),
+  }),
+
   // workflow inputs
   strategy: Joi.when('operation', {
     is: 'workflow',

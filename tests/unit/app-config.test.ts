@@ -75,6 +75,26 @@ describe('app-config', () => {
       expect(mtAppConfig.actions).toMatchSnapshot();
     });
 
+    it('should convert a basic webhook action with data', () => {
+      const actionConfigs = [
+        {
+          slug: 'test-action',
+          operation: 'webhook',
+          url: 'https://example.com',
+          data: {
+            some: 'data',
+          },
+        },
+      ];
+      const mtAppConfig = {
+        actions: [],
+      };
+
+      convertActionConfigsToMothertreeActionConfigs(actionConfigs, mtAppConfig);
+
+      expect(mtAppConfig.actions).toMatchSnapshot();
+    });
+
     it('should convert a basic workflow action', () => {
       const actionConfigs = [
         {

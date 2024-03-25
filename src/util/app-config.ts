@@ -112,6 +112,7 @@ export function convertActionConfigsToMothertreeActionConfigs(
         case 'webhook': {
           inputsTemplate = {
             url: actionConfig.url,
+            data: actionConfig.data,
           };
           break;
         }

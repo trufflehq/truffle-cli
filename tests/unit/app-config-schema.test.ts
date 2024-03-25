@@ -132,6 +132,41 @@ describe('app-config-schema', () => {
   });
 
   describe('ACTION_SCHEMA', () => {
+    it('should validate a webhook action with {{USE_PROVIDED}} data', () => {
+      const action = {
+        operation: 'webhook',
+        url: 'https://example.com/webhook',
+        data: '{{USE_PROVIDED}}',
+      };
+
+      const { error } = schemas.ACTION_SCHEMA.validate(action);
+      expect(error).toBeUndefined();
+    });
+
+    it('should validate a webhook action with object data', () => {
+      const action = {
+        operation: 'webhook',
+        url: 'https://example.com/webhook',
+        data: {
+          some: 'data',
+        },
+      };
+
+      const { error } = schemas.ACTION_SCHEMA.validate(action);
+      expect(error).toBeUndefined();
+    });
+
+    it('should throw an error if data is an invalid string', () => {
+      const action = {
+        operation: 'webhook',
+        url: 'https://example.com/webhook',
+        data: 'invalid',
+      };
+
+      const { error } = schemas.ACTION_SCHEMA.validate(action);
+      expect(error).toMatchSnapshot();
+    });
+
     it('should validate sub-actions in a workflow', () => {
       const action = {
         operation: 'workflow',
