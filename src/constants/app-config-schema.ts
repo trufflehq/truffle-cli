@@ -25,6 +25,15 @@ export const OPERATION_TYPES = [
 ] as const;
 export type OperationType = (typeof OPERATION_TYPES)[number];
 
+export const ASSET_PARTICIPANT_ENTITY_TYPES = [
+  'user',
+  'org-member',
+  'org',
+  'company',
+] as const;
+export type AssetParticipantEntityType =
+  (typeof ASSET_PARTICIPANT_ENTITY_TYPES)[number];
+
 const COUNTABLE_SCHEMA = Joi.object({
   slug: Joi.string().required(),
   name: Joi.string().optional(),
@@ -68,6 +77,7 @@ export const EMBED_SCHEMA = Joi.object({
     .optional(),
 });
 
+// TODO: actually implement this in app-config.ts
 export const ASSET_SCHEMA = Joi.object({
   path: Joi.string().required(),
   quantity: Joi.number().required(),
@@ -79,6 +89,32 @@ const POWERUP_SCHEMA = Joi.object({
   data: Joi.object().optional(),
   imageFileReference: Joi.object().optional(),
 });
+
+const ASSET_PARTICIPANT_TEMPLATE_SCHEMA = Joi.object({
+  entityType: Joi.string()
+    .valid(...ASSET_PARTICIPANT_ENTITY_TYPES)
+    .required(),
+  entityId: Joi.string().required(),
+  share: Joi.number().required(),
+});
+
+const ASSET_TEMPLATE_SCHEMA = Joi.object({
+  entityType: Joi.string().valid('countable', 'fiat'),
+  entityId: Joi.string(),
+  entityPath: Joi.string(),
+  count: Joi.alternatives()
+    .try(
+      Joi.number().required(),
+      Joi.string().valid('{{USE_PROVIDED}}').required(),
+    )
+    .required(),
+  metadata: Joi.object().optional(),
+  senders: Joi.array().items(ASSET_PARTICIPANT_TEMPLATE_SCHEMA).required(),
+  receivers: Joi.array().items(ASSET_PARTICIPANT_TEMPLATE_SCHEMA).required(),
+})
+  // this makes it so that either entityId and entityType is required or entityPath is required
+  .with('entityId', 'entityType')
+  .xor('entityPath', 'entityId');
 
 export const ACTION_SCHEMA = Joi.object({
   operation: Joi.string()
@@ -105,7 +141,13 @@ export const ACTION_SCHEMA = Joi.object({
   // exchange inputs
   assets: Joi.when('operation', {
     is: 'exchange',
-    then: Joi.array().items(ASSET_SCHEMA).required(),
+    then: Joi.alternatives()
+      .try(
+        Joi.string().valid('{{USE_SECURE_PROVIDED}}').required(),
+        Joi.array().items(ASSET_SCHEMA).required(),
+        Joi.array().items(ASSET_TEMPLATE_SCHEMA).required(),
+      )
+      .required(),
   }),
 
   // apply-pwerup inputs

@@ -5,7 +5,6 @@ import {
   convertProductConfigsToMothertreeProductAndVariantConfigs,
   validateAppConfig,
 } from '../../src/util/app-config';
-import { MothertreeAppConfig } from '../../src/types/mt-app-config';
 
 describe('app-config', () => {
   describe('validateAppConfig', () => {
